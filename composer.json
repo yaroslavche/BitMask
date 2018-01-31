@@ -1,0 +1,12 @@
+{
+    "autoload": {
+        "psr-4": {
+            "BitMask\\": "src/"
+        }
+    },
+    "require-dev": {
+        "behat/behat": "^3.4",
+        "phpunit/phpunit": "^6.5",
+        "symfony/var-dumper": "^4.0"
+    }
+}
