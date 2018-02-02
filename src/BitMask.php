@@ -69,7 +69,8 @@ class BitMask
      */
     public function isSet(int $bit) : bool
     {
-        return $this->storage & $bit === 1 ? true : false;
+        $set = $this->storage & $bit;
+        return $set > 0;
     }
 
     /**
@@ -93,7 +94,13 @@ class BitMask
     {
         if ($this->isSet($bit)) {
             $this->storage ^= $bit;
-            // $this->storage &= ~$bit;
+        }
+    }
+
+    public function unsetBit2(int $bit)
+    {
+        if ($this->isSet($bit)) {
+            $this->storage &= ~$bit;
         }
     }
 
@@ -104,27 +111,5 @@ class BitMask
     public function clear()
     {
         $this->storage = 0b0;
-    }
-
-    /**
-     * Get set bits from decimal mask
-     *  $bm->getSetBits(5); // => [1, 4]
-     *
-     * @todo move to utils? static, add isSingleBit(0b101) => false, isMask() - wrap !isSingleBit() but nonsence (maybe)
-     *
-     * @param  int $decimal
-     * @return array
-     */
-    public function getSetBits(int $decimal)
-    {
-        $scan = 1;
-        $result = [];
-        while ($decimal >= $scan) {
-            if ($decimal & $scan) {
-                $result[] = $scan;
-            }
-            $scan <<= 1;
-        }
-        return $result;
     }
 }

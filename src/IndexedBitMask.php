@@ -47,7 +47,7 @@ class IndexedBitMask extends BitMask
     public function set(int $mask = 0)
     {
         parent::set($mask);
-        foreach ($this->getSetBits($mask) as $bit) {
+        foreach (Util\Bits::getSetBits($mask) as $bit) {
             $index = $this->getBitIndex($bit);
             if (!is_null($index)) {
                 $this->map[$index] = true;

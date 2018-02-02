@@ -21,6 +21,13 @@ class BitMaskContext implements Context
         $this->bitAliases = [];
     }
 
+    public function __get($property)
+    {
+        if (property_exists($this, $property)) {
+            return $this->$property;
+        }
+    }
+
     /**
      * @todo !isSingleBit($bit) exception
      * @todo alias only [a-z]{1-20}[0-9]{3} else exception
