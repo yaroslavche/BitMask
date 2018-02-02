@@ -6,9 +6,9 @@ class AssociativeBitMask extends IndexedBitMask
 {
     protected $keys;
 
-    public function __construct(array $keys = [])
+    public function __construct(array $keys = [], int $mask = 0)
     {
-        parent::__construct();
+        parent::__construct($mask);
         $this->keys = $keys;
         foreach ($keys as $index => $key) {
             $this->map[$index] = false;
@@ -39,9 +39,9 @@ class AssociativeBitMask extends IndexedBitMask
         $index = array_search($key, $this->keys);
         $bit = pow(2, $index);
         if ($isSet) {
-            $this->set($bit);
+            $this->setBit($bit);
         } else {
-            $this->unset($bit);
+            $this->unsetBit($bit);
         }
     }
 }

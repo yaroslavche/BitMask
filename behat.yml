@@ -1,0 +1,5 @@
+default:
+    suites:
+        base_class:
+            paths:    [ '%paths.base%/features' ]
+            contexts: [ BitMaskContext ]

@@ -6,9 +6,9 @@ class IndexedBitMask extends BitMask
 {
     protected $map;
 
-    public function __construct()
+    public function __construct(int $mask = 0)
     {
-        parent::__construct();
+        parent::__construct($mask);
         $this->map = [];
     }
 
@@ -17,22 +17,22 @@ class IndexedBitMask extends BitMask
         return isset($this->map[$index]) ? $this->map[$index] : null;
     }
 
-    public function set($bit)
+    public function setBit($bit)
     {
-        parent::set($bit);
+        parent::setBit($bit);
         $index = $this->getBitIndex($bit);
         if (!is_null($index)) {
             $this->map[$index] = true;
         }
     }
 
-    public function unset($bit)
+    public function unsetBit($bit)
     {
         $index = $this->getBitIndex($bit);
         if (!is_null($index)) {
             $this->map[$index] = false;
         }
-        parent::unset($bit);
+        parent::unsetBit($bit);
     }
 
     public function getBitIndex($bit) : ?int
@@ -44,9 +44,9 @@ class IndexedBitMask extends BitMask
         return null;
     }
 
-    public function setMask(int $mask = 0)
+    public function set(int $mask = 0)
     {
-        parent::setMask($mask);
+        parent::set($mask);
         foreach ($this->getBits($mask) as $bit) {
             $index = $this->getBitIndex($bit);
             if (!is_null($index)) {
