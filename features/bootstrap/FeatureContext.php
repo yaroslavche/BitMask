@@ -13,10 +13,29 @@ use PHPUnit\Framework\Assert;
 class FeatureContext implements Context
 {
     protected $files;
+    private $bitAliases;
 
     public function __construct()
     {
         $this->files = [];
+        $this->bitAliases = [];
+    }
+
+    /**
+     * @todo @see BitMaskContext->parseInteger. Move to utils or inject BitMaskContext
+     *
+     * @param  string $integer
+     * @return int
+     */
+    private function parseInteger(string $integer) : int
+    {
+        if (array_key_exists($integer, $this->bitAliases)) {
+            return $this->bitAliases[$integer];
+        }
+        if (strpos($integer, '0b') === 0) {
+            return (int)base_convert($integer, 2, 10);
+        }
+        return (int)$integer;
     }
 
     /**
@@ -99,8 +118,7 @@ class FeatureContext implements Context
      */
     public function bitmaskValueShouldBe($value, $file = 0)
     {
-        $value = (int)$value;
-        Assert::assertSame($value, $this->files[$file]['bitmask']->getMask());
+        Assert::assertSame($this->parseInteger($value), $this->files[$file]['bitmask']->get());
     }
 
     /**
@@ -108,7 +126,7 @@ class FeatureContext implements Context
      */
     public function iSetMaskTo($mask, $file = 0)
     {
-        $this->files[$file]['bitmask']->setMask((int)$mask);
+        $this->files[$file]['bitmask']->set((int)$mask);
     }
 
     /**
