@@ -26,7 +26,9 @@ Feature: BitMask base class
         When I set bit "executable" in BitMask "test"
         Then BitMask "test" should be "0b111"
         When I unset bit "executable" in BitMask "test"
+        Then BitMask "test" should be "0b11"
         And I unset bit "writable" in BitMask "test"
+        Then BitMask "test" should be "0b1"
         And I unset bit "readable" in BitMask "test"
         Then BitMask "test" should be "0b0"
 
