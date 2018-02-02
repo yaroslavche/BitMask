@@ -34,6 +34,13 @@ class BitMask
         return new static($mask);
     }
 
+    public function __call($method, $args)
+    {
+        if (!method_exists($method)) {
+            throw new \Exception('unknown method ' . $method);
+        }
+    }
+
     /**
      * get bitmask
      *

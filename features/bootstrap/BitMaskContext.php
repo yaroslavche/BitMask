@@ -49,7 +49,7 @@ class BitMaskContext implements Context
     }
 
     /**
-     * @Given I create BitMask base object with alias :arg1 and with mask :mask
+     * @Given I create BitMask with alias :arg1 and with mask :mask
      */
     public function iCreateBitmaskBaseObjectWithAliasAndWithMask($alias, $mask)
     {
@@ -62,7 +62,7 @@ class BitMaskContext implements Context
     }
 
     /**
-     * @When I set bit :bit in BitMask base object :alias
+     * @When I set bit :bit in BitMask :alias
      */
     public function iSetBitInBitmaskBaseObject($bit, $alias)
     {
@@ -71,7 +71,7 @@ class BitMaskContext implements Context
     }
 
     /**
-     * @When I unset bit :bit in BitMask base object :alias
+     * @When I unset bit :bit in BitMask :alias
      */
     public function iUnsetBitInBitmaskBaseObject($bit, $alias)
     {
@@ -80,7 +80,7 @@ class BitMaskContext implements Context
     }
 
     /**
-     * @Then BitMask base object :alias should be :mask
+     * @Then BitMask :alias should be :mask
      */
     public function bitmaskBaseObjectShouldBe($alias, $mask)
     {
@@ -88,7 +88,7 @@ class BitMaskContext implements Context
     }
 
     /**
-     * @When I clear BitMask base object :arg1
+     * @When I clear BitMask :arg1
      */
     public function iClearBitmaskBaseObject($alias)
     {
