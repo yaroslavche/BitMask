@@ -1,5 +1,7 @@
 <?php
 
+namespace Util;
+
 use Behat\Behat\Context\Context;
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
@@ -12,7 +14,7 @@ use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 /**
  * Defines application features from the specific context.
  */
-class BitMaskUtilContext implements Context
+class BitsContext implements Context
 {
     private $results;
     private $baseBitMaskContext;
@@ -55,6 +57,7 @@ class BitMaskUtilContext implements Context
             case 'array':
             {
                 $result = json_decode($result);
+                $storedResult = iterator_to_array($storedResult);
                 break;
             }
             case 'bool':
@@ -71,10 +74,10 @@ class BitMaskUtilContext implements Context
     }
 
     /**
-     * @Then result for BitMask :object should be :result
+     * @When I try parseBits from :string to BitMask :object
      */
-    public function iShouldGetResult($result)
+    public function iTryParsebitsFromToBitmask($string, $object)
     {
-        // dump($this->result);
+        throw new PendingException();
     }
 }
