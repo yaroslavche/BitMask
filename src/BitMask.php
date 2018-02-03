@@ -36,7 +36,7 @@ class BitMask
 
     public function __call($method, $args)
     {
-        if (!method_exists($method)) {
+        if (!method_exists($this, $method)) {
             throw new \Exception('unknown method ' . $method);
         }
     }
@@ -62,14 +62,23 @@ class BitMask
     }
 
     /**
-     * check if given bit is set
+     * set bitmask to 0
+     * @return void
+     */
+    public function unset()
+    {
+        $this->storage = 0;
+    }
+
+    /**
+     * check if given mask is set
      *
-     * @param  int $bit
+     * @param  int $mask
      * @return bool
      */
-    public function isSet(int $bit) : bool
+    public function isSet(int $mask) : bool
     {
-        $set = $this->storage & $bit;
+        $set = $this->storage & $mask;
         return $set > 0;
     }
 
@@ -81,6 +90,9 @@ class BitMask
      */
     public function setBit(int $bit)
     {
+        if (!Util\Bits::isSingleBit($bit)) {
+            throw new \Exception('Must be single bit');
+        }
         $this->storage |= $bit;
     }
 
@@ -92,6 +104,9 @@ class BitMask
      */
     public function unsetBit(int $bit)
     {
+        if (!Util\Bits::isSingleBit($bit)) {
+            throw new \Exception('Must be single bit');
+        }
         if ($this->isSet($bit)) {
             $this->storage ^= $bit;
         }
@@ -99,17 +114,26 @@ class BitMask
 
     public function unsetBit2(int $bit)
     {
+        if (!Util\Bits::isSingleBit($bit)) {
+            throw new \Exception('Must be single bit');
+        }
         if ($this->isSet($bit)) {
             $this->storage &= ~$bit;
         }
     }
 
     /**
-     * clear bitmask
-     * @return void
+     * check if given bit is set
+     *
+     * @param int $bit
+     * @return bool
      */
-    public function clear()
+    public function isSetBit(int $bit) : bool
     {
-        $this->storage = 0b0;
+        if (!Util\Bits::isSingleBit($bit)) {
+            throw new \Exception('Must be single bit');
+        }
+        $set = $this->storage & $bit;
+        return $set > 0;
     }
 }

@@ -49,17 +49,15 @@ final class Bits
      * @param  int   $integer
      * @return array
      */
-    public static function getSetBits(int $integer) : array
+    public static function getSetBits(int $integer) : \Generator
     {
         $scan = 1;
-        $result = [];
         while ($integer >= $scan) {
             if ($integer & $scan) {
-                $result[] = $scan;
+                yield $scan;
             }
             $scan <<= 1;
         }
-        return $result;
     }
 
     /**
@@ -71,7 +69,7 @@ final class Bits
      */
     public static function isSingleBit(int $integer) : bool
     {
-        return count(self::getSetBits($integer)) === 1;
+        return count(iterator_to_array(self::getSetBits($integer))) === 1;
     }
 
     public static function isSingleBit2(int $integer) : bool
