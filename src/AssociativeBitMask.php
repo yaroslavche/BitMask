@@ -10,18 +10,18 @@ class AssociativeBitMask extends IndexedBitMask
     {
         parent::__construct($mask);
         $this->keys = $keys;
-        foreach ($keys as $index => $key) {
-            $this->map[$index] = false;
-        }
     }
 
-    public function getByKey(string $key) : ?bool
+    final public function getByKey(string $key) : bool
     {
         $index = array_search($key, $this->keys);
-        return $index >= 0 ? $this->map[$index] : null;
+        if ($index === false) {
+            throw new \Exception(sprintf('Unknown key "%s"', $key));
+        }
+        return $this->map[$index];
     }
 
-    public function __call($method, $args)
+    final public function __call($method, $args)
     {
         if (!method_exists($this, $method) && strpos($method, 'is') === 0) {
             $key = lcfirst(substr($method, 2));
@@ -29,14 +29,17 @@ class AssociativeBitMask extends IndexedBitMask
         }
     }
 
-    public function __get($key)
+    final public function __get($key)
     {
         return $this->getByKey($key);
     }
 
-    public function __set($key, bool $isSet)
+    final public function __set($key, bool $isSet)
     {
         $index = array_search($key, $this->keys);
+        if ($index === false) {
+            throw new \Exception(sprintf('Unknown key "%s"', $key));
+        }
         $bit = pow(2, $index);
         if ($isSet) {
             $this->setBit($bit);
