@@ -31,9 +31,5 @@ Feature: BitMask base class
         Then BitMask "test" should be "0b1"
         And I unset bit "readable" in BitMask "test"
         Then BitMask "test" should be "0b0"
-
         When I clear BitMask "test"
         Then BitMask "test" should be "0b0"
-
-        # When I set bit "1 << 2" in BitMask "test" # 1 << 2 => 0b100
-        # Then BitMask "test" should be "" # empty => 0b0

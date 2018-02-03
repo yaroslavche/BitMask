@@ -4,11 +4,7 @@ namespace BitMask\Util;
 
 final class Bits
 {
-    public static function parseBits($value) : int
-    {
-        return $value;
-    }
-
+    
     /**
      * get most significant bit position (left)
      *

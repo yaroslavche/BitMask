@@ -44,7 +44,7 @@ class BitMaskContext implements Context
      * @param  string $integer
      * @return int
      */
-    private function parseInteger(string $integer) : int
+    public function parseInteger(string $integer) : int
     {
         if (array_key_exists($integer, $this->bitAliases)) {
             return $this->bitAliases[$integer];
@@ -58,7 +58,7 @@ class BitMaskContext implements Context
     /**
      * @Given I create BitMask with alias :arg1 and with mask :mask
      */
-    public function iCreateBitmaskBaseObjectWithAliasAndWithMask($alias, $mask)
+    public function iCreateBitmaskWithAliasAndWithMask($alias, $mask)
     {
         if (isset($this->objects[$alias])) {
             throw new Exception(sprintf('BitMask object "%s" for this scenario already created', $alias));
@@ -71,7 +71,7 @@ class BitMaskContext implements Context
     /**
      * @When I set bit :bit in BitMask :alias
      */
-    public function iSetBitInBitmaskBaseObject($bit, $alias)
+    public function iSetBitInBitmask($bit, $alias)
     {
         // dump($bit, $this->parseInteger($bit), $this->objects[$alias]->get());
         $this->objects[$alias]->setBit($this->parseInteger($bit));
@@ -80,7 +80,7 @@ class BitMaskContext implements Context
     /**
      * @When I unset bit :bit in BitMask :alias
      */
-    public function iUnsetBitInBitmaskBaseObject($bit, $alias)
+    public function iUnsetBitInBitmask($bit, $alias)
     {
         // dump($bit, $this->parseInteger($bit), $this->objects[$alias]->get());
         $this->objects[$alias]->unsetBit($this->parseInteger($bit));
@@ -89,7 +89,7 @@ class BitMaskContext implements Context
     /**
      * @Then BitMask :alias should be :mask
      */
-    public function bitmaskBaseObjectShouldBe($alias, $mask)
+    public function bitmaskShouldBe($alias, $mask)
     {
         Assert::assertSame($this->parseInteger($mask), $this->objects[$alias]->get());
     }
@@ -97,7 +97,7 @@ class BitMaskContext implements Context
     /**
      * @When I clear BitMask :arg1
      */
-    public function iClearBitmaskBaseObject($alias)
+    public function iClearBitmask($alias)
     {
         $this->objects[$alias]->unset();
     }
