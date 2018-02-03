@@ -17,7 +17,7 @@ use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 class BitsContext implements Context
 {
     private $results;
-    private $baseBitMaskContext;
+    private $contexts;
 
     public function __construct()
     {
@@ -28,7 +28,14 @@ class BitsContext implements Context
     public function gatherContexts(BeforeScenarioScope $scope)
     {
         $environment = $scope->getEnvironment();
-        $this->baseBitMaskContext = $environment->getContext('BitMaskContext');
+        $this->contexts['BitMaskContext'] = $environment->getContext('BitMaskContext');
+    }
+
+    public function __get($property)
+    {
+        if (array_key_exists($property, $this->contexts)) {
+            return $this->contexts[$property];
+        }
     }
 
     /**
@@ -39,7 +46,7 @@ class BitsContext implements Context
         if (!method_exists(Bits::class, $method)) {
             throw new Exception('unknown method ' . $method);
         }
-        $bm = $this->baseBitMaskContext->objects[$object] ?? null;
+        $bm = $this->BitMaskContext->objects[$object] ?? null;
         $this->results[$object] = Bits::$method($bm->get());
     }
 
@@ -71,13 +78,5 @@ class BitsContext implements Context
             }
         }
         Assert::assertSame($storedResult, $result);
-    }
-
-    /**
-     * @When I try parseBits from :string to BitMask :object
-     */
-    public function iTryParsebitsFromToBitmask($string, $object)
-    {
-        throw new PendingException();
     }
 }

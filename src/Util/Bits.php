@@ -4,10 +4,6 @@ namespace BitMask\Util;
 
 final class Bits
 {
-    public static function parseBits($value) : int
-    {
-        return $value;
-    }
 
     /**
      * get most significant bit position (left)
@@ -49,15 +45,17 @@ final class Bits
      * @param  int   $integer
      * @return array
      */
-    public static function getSetBits(int $integer) : \Generator
+    public static function getSetBits(int $integer) : array
     {
+        $bits = [];
         $scan = 1;
         while ($integer >= $scan) {
             if ($integer & $scan) {
-                yield $scan;
+                $bits[] = $scan;
             }
             $scan <<= 1;
         }
+        return $bits;
     }
 
     /**
@@ -69,16 +67,16 @@ final class Bits
      */
     public static function isSingleBit(int $integer) : bool
     {
-        return count(iterator_to_array(self::getSetBits($integer))) === 1;
+        return count(self::getSetBits($integer)) === 1;
     }
 
     public static function isSingleBit2(int $integer) : bool
     {
-        return pow(2, (self::getBitCapacity($integer) - 1)) === $integer;
+        return pow(2, (self::getBitCapacity($integer))) === $integer;
     }
 
     public static function isSingleBit3(int $integer) : bool
     {
-        return 1 << (self::getBitCapacity($integer) - 1) === $integer;
+        return 1 << (self::getBitCapacity($integer)) === $integer;
     }
 }

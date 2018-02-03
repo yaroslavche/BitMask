@@ -2,6 +2,8 @@
 
 namespace BitMask;
 
+use BitMask\Util\Bits;
+
 class IndexedBitMask extends BitMask
 {
     protected $map;
@@ -10,6 +12,11 @@ class IndexedBitMask extends BitMask
     {
         parent::__construct($mask);
         $this->map = [];
+        if ($mask > 0) {
+            for ($index = 0; $index <= Bits::getMSB($mask); $index++) {
+                $this->map[$index] = $this->isSetBit(pow(2, $index));
+            }
+        }
     }
 
     public function getByIndex(int $index = 0) : ?bool
