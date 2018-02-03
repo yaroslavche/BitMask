@@ -14,9 +14,15 @@ Feature: BitMask Util class
         And I define bit "0b1000000" as alias "b7"
         And I define bit "0b10000000" as alias "b8"
 
-    Scenario: parseBits
+    Scenario: parseBits (for contexts)
         Given I create BitMask with alias "test" and with mask "0"
         When I call util function "parseBits" on BitMask "test"
+        When I try parseBits from "0b1101" to BitMask "test"
+        When I try parseBits from "6" to BitMask "test"
+        When I try parseBits from "1 << 1" to BitMask "test"
+        When I try parseBits from "1 << 1 | 1 << 2" to BitMask "test"
+        When I try parseBits from "a" to BitMask "test"
+        When I try parseBits from "0" to BitMask "test"
 
     Scenario: getMSB
         Given I create BitMask with alias "test" and with mask "0"

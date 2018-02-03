@@ -99,6 +99,6 @@ class BitMaskContext implements Context
      */
     public function iClearBitmaskBaseObject($alias)
     {
-        $this->objects[$alias]->clear();
+        $this->objects[$alias]->unset();
     }
 }
