@@ -1,12 +1,21 @@
 {
+    "name": "yaroslavche/bit-mask",
+    "description": "BitMask",
+    "require-dev": {
+        "behat/behat": "^3.4",
+        "phpunit/phpunit": "^7.0",
+        "symfony/var-dumper": "^4.0"
+    },
+    "authors": [
+        {
+            "name": "yaroslavche",
+            "email": "yaroslav429@gmail.com"
+        }
+    ],
+    "require": {},
     "autoload": {
         "psr-4": {
             "BitMask\\": "src/"
         }
-    },
-    "require-dev": {
-        "behat/behat": "^3.4",
-        "phpunit/phpunit": "^6.5",
-        "symfony/var-dumper": "^4.0"
     }
 }
