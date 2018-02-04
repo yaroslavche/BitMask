@@ -64,7 +64,7 @@ class BitsContext implements Context
             case 'array':
             {
                 $result = json_decode($result);
-                $storedResult = iterator_to_array($storedResult);
+                $storedResult = $storedResult;
                 break;
             }
             case 'bool':

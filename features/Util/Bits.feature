@@ -1,4 +1,4 @@
-@util @base
+@base @util
 Feature: BitMask Util class
     In order to test util class functionality
     As an developer
@@ -14,31 +14,61 @@ Feature: BitMask Util class
         And I define bit "0b1000000" as alias "b7"
         And I define bit "0b10000000" as alias "b8"
 
+    @getMSB
     Scenario: getMSB
         Given I create BitMask with alias "test" and with mask "0"
         When I call util function "getMSB" on BitMask "test"
         Then result for BitMask "test" should be "int" "0"
-        When I set bit "b8" in BitMask "test"
+        When I set bit "b1" in BitMask "test"
         And I call util function "getMSB" on BitMask "test"
-        Then result for BitMask "test" should be "int" "7"
-        When I set bit "b3" in BitMask "test"
-        And I call util function "getMSB" on BitMask "test"
-        Then result for BitMask "test" should be "int" "7"
-        When I unset bit "b8" in BitMask "test"
+        Then result for BitMask "test" should be "int" "1"
+        When I set bit "b2" in BitMask "test"
         And I call util function "getMSB" on BitMask "test"
         Then result for BitMask "test" should be "int" "2"
+        When I unset bit "b1" in BitMask "test"
+        And I call util function "getMSB" on BitMask "test"
+        Then result for BitMask "test" should be "int" "2"
+        When I set bit "b3" in BitMask "test"
+        And I call util function "getMSB" on BitMask "test"
+        Then result for BitMask "test" should be "int" "3"
+        When I unset bit "b2" in BitMask "test"
+        And I call util function "getMSB" on BitMask "test"
+        Then result for BitMask "test" should be "int" "3"
+        When I set bit "b1" in BitMask "test"
+        And I call util function "getMSB" on BitMask "test"
+        Then result for BitMask "test" should be "int" "3"
+        When I unset bit "b3" in BitMask "test"
+        And I call util function "getMSB" on BitMask "test"
+        Then result for BitMask "test" should be "int" "1"
 
+    @getBitCapacity
     Scenario: getBitCapacity
         Given I create BitMask with alias "test" and with mask "0"
         When I call util function "getBitCapacity" on BitMask "test"
         Then result for BitMask "test" should be "int" "0"
+        When I set bit "b1" in BitMask "test"
+        And I call util function "getBitCapacity" on BitMask "test"
+        Then result for BitMask "test" should be "int" "1"
+        When I set bit "b2" in BitMask "test"
+        And I call util function "getBitCapacity" on BitMask "test"
+        Then result for BitMask "test" should be "int" "2"
+        When I unset bit "b1" in BitMask "test"
+        And I call util function "getBitCapacity" on BitMask "test"
+        Then result for BitMask "test" should be "int" "2"
         When I set bit "b3" in BitMask "test"
         And I call util function "getBitCapacity" on BitMask "test"
         Then result for BitMask "test" should be "int" "3"
-        When I set bit "b8" in BitMask "test"
+        When I unset bit "b2" in BitMask "test"
         And I call util function "getBitCapacity" on BitMask "test"
-        Then result for BitMask "test" should be "int" "8"
+        Then result for BitMask "test" should be "int" "3"
+        When I set bit "b1" in BitMask "test"
+        And I call util function "getBitCapacity" on BitMask "test"
+        Then result for BitMask "test" should be "int" "3"
+        When I unset bit "b3" in BitMask "test"
+        And I call util function "getBitCapacity" on BitMask "test"
+        Then result for BitMask "test" should be "int" "1"
 
+    @getSetBits
     Scenario: getSetBits
         Given I create BitMask with alias "test" and with mask "0"
         When I call util function "getSetBits" on BitMask "test"
@@ -50,6 +80,7 @@ Feature: BitMask Util class
         And I call util function "getSetBits" on BitMask "test"
         Then result for BitMask "test" should be "array" "[2, 16]"
 
+    @isSingleBit
     Scenario: isSingleBit
         Given I create BitMask with alias "test" and with mask "0"
         When I call util function "isSingleBit" on BitMask "test"

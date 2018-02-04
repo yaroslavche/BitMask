@@ -107,7 +107,7 @@ class BitMask
         if (!Util\Bits::isSingleBit($bit)) {
             throw new \Exception('Must be single bit');
         }
-        if ($this->isSet($bit)) {
+        if ($this->isSetBit($bit)) {
             $this->storage ^= $bit;
         }
     }
@@ -117,7 +117,7 @@ class BitMask
         if (!Util\Bits::isSingleBit($bit)) {
             throw new \Exception('Must be single bit');
         }
-        if ($this->isSet($bit)) {
+        if ($this->isSetBit($bit)) {
             $this->storage &= ~$bit;
         }
     }

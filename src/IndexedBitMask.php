@@ -12,11 +12,7 @@ class IndexedBitMask extends BitMask
     {
         parent::__construct($mask);
         $this->map = [];
-        if ($mask > 0) {
-            for ($index = 0; $index <= Bits::getMSB($mask); $index++) {
-                $this->map[$index] = $this->isSetBit(pow(2, $index));
-            }
-        }
+        $this->set($mask);
     }
 
     public function getByIndex(int $index = 0) : ?bool
@@ -27,37 +23,23 @@ class IndexedBitMask extends BitMask
     public function setBit($bit)
     {
         parent::setBit($bit);
-        $index = $this->getBitIndex($bit);
-        if (!is_null($index)) {
-            $this->map[$index] = true;
-        }
+        $index = Bits::bitToIndex($bit);
+        $this->map[$index] = true;
     }
 
     public function unsetBit($bit)
     {
-        $index = $this->getBitIndex($bit);
-        if (!is_null($index)) {
-            $this->map[$index] = false;
-        }
         parent::unsetBit($bit);
-    }
-
-    public function getBitIndex($bit) : ?int
-    {
-        $index = log($bit, 2);
-        if ($index >= 0) {
-            return (int)$index;
-        }
-        return null;
+        $index = Bits::bitToIndex($bit);
+        $this->map[$index] = false;
     }
 
     public function set(int $mask = 0)
     {
         parent::set($mask);
-        foreach (Util\Bits::getSetBits($mask) as $bit) {
-            $index = $this->getBitIndex($bit);
-            if (!is_null($index)) {
-                $this->map[$index] = true;
+        if ($mask > 0) {
+            for ($index = 0; $index <= Bits::getMSB($mask); $index++) {
+                $this->map[$index] = $this->isSetBit(pow(2, $index));
             }
         }
     }
