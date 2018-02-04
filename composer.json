@@ -1,6 +1,6 @@
 {
-    "name": "yaroslavche/bit-mask",
-    "description": "BitMask",
+    "name": "yaroslavche/bitmask",
+    "description": "BitMask, IndexedBitMask, AssociativeBitMask",
     "license": "MIT",
     "keywords": ["bit", "bitmask", "binary", "bitwise", "php", "php7"],
     "require-dev": {
