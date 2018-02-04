@@ -2,6 +2,8 @@
 
 namespace BitMask;
 
+use BitMask\Util\Bits;
+
 class AssociativeBitMask extends IndexedBitMask
 {
     protected $keys;
@@ -40,7 +42,8 @@ class AssociativeBitMask extends IndexedBitMask
         if ($index === false) {
             throw new \Exception(sprintf('Unknown key "%s"', $key));
         }
-        $bit = pow(2, $index);
+        // $bit = pow(2, $index);
+        $bit = 1 << $index;
         if ($isSet) {
             $this->setBit($bit);
         } else {

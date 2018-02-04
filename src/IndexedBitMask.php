@@ -20,18 +20,18 @@ class IndexedBitMask extends BitMask
         return isset($this->map[$index]) ? $this->map[$index] : null;
     }
 
-    public function setBit($bit)
+    public function setBit(int $bit)
     {
+        parent::setBit($bit);
         $index = Bits::bitToIndex($bit);
         $this->map[$index] = true;
-        parent::setBit($bit);
     }
 
-    public function unsetBit($bit)
+    public function unsetBit(int $bit)
     {
+        parent::unsetBit($bit);
         $index = Bits::bitToIndex($bit);
         $this->map[$index] = false;
-        parent::unsetBit($bit);
     }
 
     public function set(int $mask = 0)

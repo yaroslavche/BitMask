@@ -21,8 +21,11 @@ define('WRITE', 1 << 1);
 define('EXECUTE', 1 << 2);
 define('ALL', READ | WRITE | EXECUTE);
 $t = new FilePermissions(ALL ^ WRITE);
+$t->setBit(WRITE);
+$t->writable = false;
 dump($t->isReadable(), $t->readable); // true true
 dump($t->isWritable(), $t->writable); // false false
 dump($t->isExecutable(), $t->executable); // true true
 dump(Bits::getSetBits($t->get())); // [1, 4]
 dump($t); // storage 5
+// fix $t::map[3]. unexpected key
