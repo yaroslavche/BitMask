@@ -16,11 +16,11 @@ final class Bits
         $scan = 1;
         $msb = 0;
         while ($integer >= $scan) {
+            $msb++;
             $scan <<= 1;
             if ($integer < $scan) {
                 break;
             }
-            $msb++;
         }
         return $msb;
     }
@@ -34,8 +34,7 @@ final class Bits
      */
     public static function getBitCapacity(int $integer) : int
     {
-        $msb = self::getMSB($integer);
-        return $msb === 0 ? 0 : $msb + 1;
+        return self::getMSB($integer);
     }
 
     /**
@@ -72,11 +71,11 @@ final class Bits
 
     public static function isSingleBit2(int $integer) : bool
     {
-        return pow(2, (self::getBitCapacity($integer))) === $integer;
+        return pow(2, (self::getMSB($integer))) === $integer;
     }
 
     public static function isSingleBit3(int $integer) : bool
     {
-        return 1 << (self::getBitCapacity($integer)) === $integer;
+        return 1 << (self::getMSB($integer)) === $integer;
     }
 }
