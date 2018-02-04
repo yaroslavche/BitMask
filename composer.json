@@ -1,6 +1,8 @@
 {
     "name": "yaroslavche/bit-mask",
     "description": "BitMask",
+    "license": "MIT",
+    "keywords": ["bit", "bitmask", "binary", "bitwise", "php", "php7"],
     "require-dev": {
         "behat/behat": "^3.4",
         "phpunit/phpunit": "^7.0",
@@ -12,11 +14,14 @@
             "email": "yaroslav429@gmail.com"
         }
     ],
-    "require": {},
+    "require": {
+        "php":"^7.0"
+    },
     "autoload": {
         "psr-4": {
             "BitMask\\": "src/"
         }
     },
-    "minimum-stability": "dev"
+    "minimum-stability": "dev",
+    "prefer-stable": true,
 }
