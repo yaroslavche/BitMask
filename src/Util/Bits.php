@@ -71,11 +71,45 @@ final class Bits
 
     public static function isSingleBit2(int $integer) : bool
     {
-        return pow(2, (self::getMSB($integer))) === $integer;
+        return pow(2, self::getMSB($integer)) === $integer;
     }
 
     public static function isSingleBit3(int $integer) : bool
     {
-        return 1 << (self::getMSB($integer)) === $integer;
+        return 1 << self::getMSB($integer) === $integer;
+    }
+
+    /**
+     * single bit to index (left > right)
+     *
+     * @param int $integer single bit
+     * @return int
+     */
+    public static function bitToIndex(int $integer) : int
+    {
+        if (!self::isSingleBit($integer)) {
+            throw new \Exception('Must be single bit');
+        }
+        return (int)log(2, $integer);
+    }
+
+    /**
+     * index to single bit
+     *  0 => 0b1 (1), 1 => 0b10 (2), 2 => 0b100 (4), ...
+     * @param int $index
+     * @return int
+     */
+    public static function indexToBit(int $index) : int
+    {
+        if ($index < 0) {
+            throw new \Exception('index must be > 0');
+        }
+        return pow(2, $index);
+    }
+
+    public static function indexToBit2(int $index) : int
+    {
+        // if($index < 0) throw new \Exception('index must be > 0'); // no need - thrown ariphmetic exception
+        return 1 << $index;
     }
 }
