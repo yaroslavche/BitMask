@@ -13,13 +13,8 @@ class AssociativeBitMask extends IndexedBitMask
         if (empty($keys)) {
             throw new \Exception('Keys must be non empty');
         }
-        parent::__construct($mask);
         $this->keys = $keys;
-        foreach ($keys as $index => $key) {
-            if (!isset($this->map[$index])) {
-                $this->map[$index] = false;
-            }
-        }
+        parent::__construct($mask);
     }
 
     final public function getByKey(string $key) : bool

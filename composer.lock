@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "4a968357c01aba3da9bd473f0a5d3708",
+    "content-hash": "8907c814fde661a45d6d94418c14e626",
     "packages": [],
     "packages-dev": [
         {
@@ -2352,6 +2352,66 @@
             ],
             "description": "A small library for converting tokenized PHP source code into XML and potentially other formats",
             "time": "2017-04-07T12:08:54+00:00"
+        },
+        {
+            "name": "ucsdmath/testing",
+            "version": "2.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ucsdmath/Testing.git",
+                "reference": "8c33e44e5d4d5d226809f3972373ce120bea249f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ucsdmath/Testing/zipball/8c33e44e5d4d5d226809f3972373ce120bea249f",
+                "reference": "8c33e44e5d4d5d226809f3972373ce120bea249f",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1.3"
+            },
+            "require-dev": {
+                "fzaninotto/faker": "1.7.1",
+                "mockery/mockery": "1.0.0",
+                "phpunit/phpunit": "5.7.9",
+                "squizlabs/php_codesniffer": "3.2.2",
+                "symfony/browser-kit": "4.0.3",
+                "symfony/debug": "4.0.3",
+                "symfony/dom-crawler": "4.0.3",
+                "symfony/options-resolver": "4.0.3",
+                "symfony/var-dumper": "4.0.3",
+                "ucsdmath/date": "2.3.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.3-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "UCSDMath\\Testing\\": "src/Testing/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Daryl Eisner",
+                    "email": "deisner@ucsd.edu"
+                }
+            ],
+            "description": "Some PHP testing routines.",
+            "homepage": "https://github.com/ucsdmath",
+            "keywords": [
+                "benchmark",
+                "component",
+                "testing",
+                "ucsdmath"
+            ],
+            "time": "2018-01-28T00:00:00+00:00"
         },
         {
             "name": "webmozart/assert",
