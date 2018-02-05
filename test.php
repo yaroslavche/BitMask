@@ -8,24 +8,15 @@ use BitMask\Util\Bits;
 
 $loader = require __DIR__ . '/vendor/autoload.php';
 
-final class FilePermissions extends AssociativeBitMask
-{
-    public function __construct(int $mask = 0)
-    {
-        parent::__construct(['readable', 'writable', 'executable'], $mask);
-    }
-}
-
 define('READ', 1 << 0);
 define('WRITE', 1 << 1);
 define('EXECUTE', 1 << 2);
 define('ALL', READ | WRITE | EXECUTE);
-$t = new FilePermissions(ALL ^ WRITE);
-$t->setBit(WRITE);
-$t->writable = false;
-dump($t->isReadable(), $t->readable); // true true
-dump($t->isWritable(), $t->writable); // false false
-dump($t->isExecutable(), $t->executable); // true true
-dump(Bits::getSetBits($t->get())); // [1, 4]
-dump($t); // storage 5
-// fix $t::map[3]. unexpected key
+
+$fp = new AssociativeBitMask(['readable', 'writable', 'executable'], ALL ^ WRITE);
+$fp->setBit(WRITE);
+$fp->writable = false;
+dump(sprintf('Readable. __call: %s, __get: %s isSetBit: %s', $fp->isReadable(), $fp->readable, $fp->isSetBit(READ))); // true true true
+dump(sprintf('Writable. __call: %s, __get: %s isSetBit: %s', $fp->isWritable(), $fp->writable, $fp->isSetBit(WRITE))); // false false false
+dump(sprintf('Executable. __call: %s, __get: %s isSetBit: %s', $fp->isExecutable(), $fp->executable, $fp->isSetBit(EXECUTE))); // true true true
+dump(Bits::getSetBits($fp->get())); // [1, 4]
