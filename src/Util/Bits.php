@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 namespace BitMask\Util;
 
@@ -90,7 +91,7 @@ final class Bits
         if (!self::isSingleBit($integer)) {
             throw new \Exception('Must be single bit');
         }
-        return (int)log(2, $integer);
+        return (int)log($integer, 2);
     }
 
     /**

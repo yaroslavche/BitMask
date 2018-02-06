@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 namespace BitMask;
 
@@ -10,38 +11,32 @@ class IndexedBitMask extends BitMask
 
     public function __construct(int $mask = 0)
     {
-        parent::__construct($mask);
         $this->map = [];
         $this->set($mask);
-    }
-
-    public function getByIndex(int $index = 0) : ?bool
-    {
-        return isset($this->map[$index]) ? $this->map[$index] : null;
-    }
-
-    public function setBit(int $bit)
-    {
-        parent::setBit($bit);
-        $index = Bits::bitToIndex($bit);
-        $this->map[$index] = true;
-    }
-
-    public function unsetBit(int $bit)
-    {
-        parent::unsetBit($bit);
-        $index = Bits::bitToIndex($bit);
-        $this->map[$index] = false;
     }
 
     public function set(int $mask = 0)
     {
         parent::set($mask);
-        if ($mask > 0) {
-            $lastIndex = property_exists($this, 'keys') && !empty($this->keys) ? count($this->keys) - 1 : Bits::getMSB($mask);
-            for ($index = 0; $index <= $lastIndex; $index++) {
-                $this->map[$index] = $this->isSetBit(pow(2, $index));
-            }
+        for ($index = 0; $index < Bits::getMSB($mask); $index++) {
+            $this->map[$index] = $this->isSetBit(pow(2, $index));
         }
+    }
+
+    public function setBit(int $bit, bool $state = true)
+    {
+        parent::setBit($bit);
+        $index = Bits::bitToIndex($bit);
+        $this->map[$index] = $state;
+    }
+
+    public function unsetBit(int $bit)
+    {
+        $this->setBit($bit, false);
+    }
+
+    public function getByIndex(int $index = 0) : ?bool
+    {
+        return isset($this->map[$index]) ? $this->map[$index] : null;
     }
 }

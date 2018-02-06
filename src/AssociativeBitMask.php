@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 namespace BitMask;
 
@@ -8,13 +9,28 @@ class AssociativeBitMask extends IndexedBitMask
 {
     protected $keys;
 
-    public function __construct(array $keys = [], int $mask = 0)
+    public function __construct(array $keys, int $mask = 0)
     {
         if (empty($keys)) {
             throw new \Exception('Keys must be non empty');
         }
         $this->keys = $keys;
-        parent::__construct($mask);
+        $this->set($mask);
+    }
+
+    final public function set(int $mask = 0)
+    {
+        parent::set($mask);
+        $keysCount = count($this->keys);
+        $maxValue = pow(2, $keysCount) - 1;
+        if ($mask > $maxValue) {
+            throw new \Exception(sprintf('Invalid given mask "%d". Maximum value for %d keys is %d', $mask, $keysCount, $maxValue));
+        }
+        for ($index = 0; $index < $keysCount - 1; $index++) {
+            if (!isset($this->map[$index])) {
+                $this->map[$index] = false;
+            }
+        }
     }
 
     final public function getByKey(string $key) : bool
