@@ -20,12 +20,12 @@ class AssociativeBitMask extends IndexedBitMask
 
     final public function set(int $mask = 0)
     {
-        parent::set($mask);
         $keysCount = count($this->keys);
         $maxValue = pow(2, $keysCount) - 1;
         if ($mask > $maxValue) {
             throw new \Exception(sprintf('Invalid given mask "%d". Maximum value for %d keys is %d', $mask, $keysCount, $maxValue));
         }
+        parent::set($mask);
         for ($index = 0; $index < $keysCount - 1; $index++) {
             if (!isset($this->map[$index])) {
                 $this->map[$index] = false;

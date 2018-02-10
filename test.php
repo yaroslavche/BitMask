@@ -10,5 +10,13 @@ use BitMask\Util\Bits;
 
 $loader = require __DIR__ . '/vendor/autoload.php';
 
-$bm = new AssociativeBitMask(['k1', 'k2', 'k3'], 7);
-// dump($bm);
+define('READ', 1 << 0);
+define('WRITE', 1 << 1);
+define('EXECUTE', 1 << 2);
+define('ALL', READ | WRITE | EXECUTE);
+
+$t = new AssociativeBitMask(['readable', 'writable', 'executable'], ALL ^ WRITE);
+dump($t->isReadable(), $t->readable); // true true
+dump($t->isWritable(), $t->writable); // false false
+dump($t->isExecutable(), $t->executable); // true true
+dump(Bits::getSetBits($t->get())); // [1, 4]

@@ -7,7 +7,8 @@ final class Bits
 {
 
     /**
-     * get most significant bit position (left)
+     * get most significant bit position (right -> left)
+     *  10001 -> 5, 0010 -> 2, 00100010 -> 6
      *
      * @param int $integer
      * @return int
@@ -24,18 +25,6 @@ final class Bits
             }
         }
         return $msb;
-    }
-
-    /**
-     * get used bits, capacity size
-     *  10010 => 5, 111 => 3, 00010 => 2 (msb = 1)
-     *
-     * @param int $integer
-     * @return int
-     */
-    public static function getBitCapacity(int $integer) : int
-    {
-        return self::getMSB($integer);
     }
 
     /**
