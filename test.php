@@ -20,3 +20,5 @@ dump($t->isReadable(), $t->readable); // true true
 dump($t->isWritable(), $t->writable); // false false
 dump($t->isExecutable(), $t->executable); // true true
 dump(Bits::getSetBits($t->get())); // [1, 4]
+dump($t(EXECUTE));
+echo json_encode($t, JSON_PRETTY_PRINT), PHP_EOL;

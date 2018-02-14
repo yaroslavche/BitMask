@@ -41,33 +41,6 @@ Feature: BitMask Util class
         And I call util function "getMSB" on BitMask "test"
         Then result for BitMask "test" should be "int" "1"
 
-    @getBitCapacity
-    Scenario: getBitCapacity
-        Given I create BitMask with alias "test" and with mask "0"
-        When I call util function "getBitCapacity" on BitMask "test"
-        Then result for BitMask "test" should be "int" "0"
-        When I set bit "b1" in BitMask "test"
-        And I call util function "getBitCapacity" on BitMask "test"
-        Then result for BitMask "test" should be "int" "1"
-        When I set bit "b2" in BitMask "test"
-        And I call util function "getBitCapacity" on BitMask "test"
-        Then result for BitMask "test" should be "int" "2"
-        When I unset bit "b1" in BitMask "test"
-        And I call util function "getBitCapacity" on BitMask "test"
-        Then result for BitMask "test" should be "int" "2"
-        When I set bit "b3" in BitMask "test"
-        And I call util function "getBitCapacity" on BitMask "test"
-        Then result for BitMask "test" should be "int" "3"
-        When I unset bit "b2" in BitMask "test"
-        And I call util function "getBitCapacity" on BitMask "test"
-        Then result for BitMask "test" should be "int" "3"
-        When I set bit "b1" in BitMask "test"
-        And I call util function "getBitCapacity" on BitMask "test"
-        Then result for BitMask "test" should be "int" "3"
-        When I unset bit "b3" in BitMask "test"
-        And I call util function "getBitCapacity" on BitMask "test"
-        Then result for BitMask "test" should be "int" "1"
-
     @getSetBits
     Scenario: getSetBits
         Given I create BitMask with alias "test" and with mask "0"

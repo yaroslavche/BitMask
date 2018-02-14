@@ -34,7 +34,7 @@ class BitMask implements BitMaskInterface
 
     public function isSet(int $mask) : bool
     {
-        $set = $this->storage & $mask;
+        $set = ($this->storage > $mask) ? $this->storage & $mask : 0;
         return $set > 0;
     }
 
@@ -62,5 +62,31 @@ class BitMask implements BitMaskInterface
             throw new \Exception('Must be single bit');
         }
         return $this->isSet($bit);
+    }
+
+    public function __toString()
+    {
+        return (string)$this->storage;
+    }
+
+    public function __invoke(int $mask)
+    {
+        return $this->isSet($mask);
+    }
+
+    public function serialize()
+    {
+    }
+
+    public function unserialize($serialized)
+    {
+    }
+
+    public function __sleep()
+    {
+    }
+
+    public function __wakeup()
+    {
     }
 }

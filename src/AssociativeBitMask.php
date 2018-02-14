@@ -5,7 +5,7 @@ namespace BitMask;
 
 use BitMask\Util\Bits;
 
-class AssociativeBitMask extends IndexedBitMask
+class AssociativeBitMask extends IndexedBitMask implements \JsonSerializable
 {
     protected $keys;
 
@@ -57,9 +57,9 @@ class AssociativeBitMask extends IndexedBitMask
 
     final public function __set($key, bool $isSet)
     {
-        $index = array_search($key, $this->keys);
-        if ($index === false) {
-            throw new \Exception(sprintf('Unknown key "%s"', $key));
+        $state = $this->getByKey($key);
+        if ($state === $isSet) {
+            return;
         }
         // $bit = pow(2, $index);
         $bit = 1 << $index;
@@ -68,5 +68,23 @@ class AssociativeBitMask extends IndexedBitMask
         } else {
             $this->unsetBit($bit);
         }
+    }
+
+    final public function __isset($key)
+    {
+        $index = array_search($key, $this->keys);
+        if ($index === false) {
+            throw new \Exception(sprintf('Unknown key "%s"', $key));
+        }
+        return $this->map[$index];
+    }
+
+    public function jsonSerialize()
+    {
+        $array = [];
+        foreach ($this->keys as $index => $key) {
+            $array[$key] = $this->map[$index];
+        }
+        return $array;
     }
 }

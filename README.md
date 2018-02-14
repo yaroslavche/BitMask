@@ -33,7 +33,8 @@ example
 use BitMask\AssociativeBitMask;
 use BitMask\Util\Bits;
 
-$t = new AssociativeBitMask(['readable', 'writable', 'executable'], ALL ^ WRITE);
+$t = new AssociativeBitMask(['readable', 'writable', 'executable'], ALL);
+$t->writable = false;
 dump($t->isReadable(), $t->readable); // true true
 dump($t->isWritable(), $t->writable); // false false
 dump($t->isExecutable(), $t->executable); // true true
