@@ -68,3 +68,21 @@ Feature: BitMask Util class
         When I unset bit "b1" in BitMask "test"
         And I call util function "isSingleBit" on BitMask "test"
         Then result for BitMask "test" should be "bool" "true"
+
+    @toString
+    Scenario: toString
+        Given I create BitMask with alias "test" and with mask "0b10010"
+        When I call util function "toString" on BitMask "test"
+        Then result for BitMask "test" should be "string" "10010"
+        When I unset bit "0b10" in BitMask "test"
+        And I call util function "toString" on BitMask "test"
+        Then result for BitMask "test" should be "string" "10000"
+
+    @getSetBitsIndexes
+    Scenario: getSetBitsIndexes
+        Given I create BitMask with alias "test" and with mask "0b10010"
+        When I call util function "getSetBitsIndexes" on BitMask "test"
+        Then result for BitMask "test" should be "array" "[1, 4]"
+        When I unset bit "0b10" in BitMask "test"
+        And I call util function "getSetBitsIndexes" on BitMask "test"
+        Then result for BitMask "test" should be "array" "[4]"

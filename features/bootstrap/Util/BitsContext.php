@@ -44,9 +44,9 @@ class BitsContext implements Context
     public function iCallUtilFunctionOnBitmask($method, $object)
     {
         if (!method_exists(Bits::class, $method)) {
-            throw new Exception('unknown method ' . $method);
+            throw new \Exception('unknown method ' . $method);
         }
-        $bm = $this->BitMaskContext->objects[$object] ?? null;
+        $bm = $this->BitMaskContext->objects[$object];
         $this->results[$object] = Bits::$method($bm->get());
     }
 

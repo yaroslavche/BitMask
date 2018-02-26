@@ -56,7 +56,7 @@ class BitMaskContext implements Context
     }
 
     /**
-     * @Given I create BitMask with alias :arg1 and with mask :mask
+     * @Given I create BitMask with alias :alias and with mask :mask
      */
     public function iCreateBitmaskWithAliasAndWithMask($alias, $mask)
     {
@@ -95,7 +95,7 @@ class BitMaskContext implements Context
     }
 
     /**
-     * @When I clear BitMask :arg1
+     * @When I clear BitMask :alias
      */
     public function iClearBitmask($alias)
     {

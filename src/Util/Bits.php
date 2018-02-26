@@ -102,4 +102,22 @@ final class Bits
         // if($index < 0) throw new \Exception('index must be > 0'); // no need - thrown ariphmetic exception
         return 1 << $index;
     }
+
+    public static function toString(int $mask) : string
+    {
+        return decbin($mask);
+    }
+
+    public static function getSetBitsIndexes(int $mask) : array
+    {
+        $bitIndexes = [];
+        $scan = 1;
+        while ($mask >= $scan) {
+            if ($mask & $scan) {
+                $bitIndexes[] = self::bitToIndex($scan);
+            }
+            $scan <<= 1;
+        }
+        return $bitIndexes;
+    }
 }
