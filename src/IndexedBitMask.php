@@ -25,7 +25,7 @@ class IndexedBitMask extends BitMask
 
     public function setBit(int $bit, bool $state = true)
     {
-        parent::setBit($bit);
+        parent::setBit($bit, $state);
         $index = Bits::bitToIndex($bit);
         $this->map[$index] = $state;
     }

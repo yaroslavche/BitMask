@@ -1,4 +1,3 @@
-```php
 <?php
 
 Error_Reporting(E_ALL);
@@ -23,31 +22,6 @@ echo sprintf('isExecutable() => %s, executable => %s', $t->isExecutable(), $t->e
 
 dump('getSetBits', Bits::getSetBits($t->get())); // [1, 4]
 dump('getSetBitsIndexes', Bits::getSetBitsIndexes($t->get())); // [0, 2]
-dump($t(EXECUTE)); // true. __invoke
+
+dump($t(EXECUTABLE)); // true. __invoke
 echo json_encode($t, JSON_PRETTY_PRINT), PHP_EOL; // jsonSerialize
-```
-
-=>
-
-```
-isReadable() => 1, readable => 1
-isWritable() => , writable =>
-isExecutable() => 1, executable => 1
-"getSetBits"
-array:2 [
-  0 => 1
-  1 => 4
-]
-"getSetBitsIndexes"
-array:2 [
-  0 => 0
-  1 => 2
-]
-
-true
-{
-    "readable": true,
-    "writable": false,
-    "executable": true
-}
-```

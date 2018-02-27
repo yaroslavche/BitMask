@@ -120,4 +120,13 @@ final class Bits
         }
         return $bitIndexes;
     }
+
+    public static function getSetBitsIndexes2(int $mask) : array
+    {
+        $bitIndexes = [];
+        foreach (self::getSetBits($mask) as $index => $bit) {
+            $bitIndexes[$index] = (int)log($bit, 2);
+        }
+        return $bitIndexes;
+    }
 }

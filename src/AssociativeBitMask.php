@@ -61,6 +61,7 @@ class AssociativeBitMask extends IndexedBitMask implements \JsonSerializable
         if ($state === $isSet) {
             return;
         }
+        $index = array_search($key, $this->keys);
         // $bit = pow(2, $index);
         $bit = 1 << $index;
         if ($isSet) {
