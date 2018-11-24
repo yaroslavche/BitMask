@@ -1,44 +1,78 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace BitMask;
 
+/**
+ * Class BitMask
+ * @package BitMask
+ */
 class BitMask implements BitMaskInterface
 {
+    /**
+     * @var int $storage
+     * @todo add type in 7.3
+     */
     private $storage;
 
+    /**
+     * BitMask constructor.
+     * @param int $mask
+     */
     public function __construct(int $mask = 0)
     {
         $this->set($mask);
     }
 
-    public static function init(int $mask = 0)
+    /**
+     * @param int $mask
+     * @return BitMask
+     */
+    public static function init(int $mask = 0): self
     {
         return new static($mask);
     }
 
-    public function get() : int
+    /**
+     * @return int
+     */
+    public function get(): int
     {
         return $this->storage;
     }
 
-    public function set(int $mask)
+    /**
+     * @param int $mask
+     */
+    public function set(int $mask): void
     {
         $this->storage = $mask;
     }
 
-    public function unset()
+    /**
+     *
+     */
+    public function unset(): void
     {
         $this->storage = 0;
     }
 
-    public function isSet(int $mask) : bool
+    /**
+     * @param int $mask
+     * @return bool
+     */
+    public function isSet(int $mask): bool
     {
         $set = ($this->storage > $mask) ? $this->storage & $mask : 0;
         return $set > 0;
     }
 
-    public function setBit(int $bit, bool $state = true)
+    /**
+     * @param int $bit
+     * @param bool $state
+     * @throws \Exception
+     */
+    public function setBit(int $bit, bool $state = true): void
     {
         if (!Util\Bits::isSingleBit($bit)) {
             throw new \Exception('Must be single bit');
@@ -51,12 +85,21 @@ class BitMask implements BitMaskInterface
         }
     }
 
-    public function unsetBit(int $bit)
+    /**
+     * @param int $bit
+     * @throws \Exception
+     */
+    public function unsetBit(int $bit): void
     {
         $this->setBit($bit, false);
     }
 
-    public function isSetBit(int $bit) : bool
+    /**
+     * @param int $bit
+     * @return bool
+     * @throws \Exception
+     */
+    public function isSetBit(int $bit): bool
     {
         if (!Util\Bits::isSingleBit($bit)) {
             throw new \Exception('Must be single bit');
@@ -64,28 +107,47 @@ class BitMask implements BitMaskInterface
         return $this->isSet($bit);
     }
 
-    public function __toString()
+    /**
+     * @return string
+     */
+    public function __toString(): string
     {
         return (string)$this->storage;
     }
 
-    public function __invoke(int $mask)
+    /**
+     * @param int $mask
+     * @return bool
+     */
+    public function __invoke(int $mask): bool
     {
         return $this->isSet($mask);
     }
 
+    /**
+     *
+     */
     public function serialize()
     {
     }
 
+    /**
+     * @param $serialized
+     */
     public function unserialize($serialized)
     {
     }
 
+    /**
+     *
+     */
     public function __sleep()
     {
     }
 
+    /**
+     *
+     */
     public function __wakeup()
     {
     }

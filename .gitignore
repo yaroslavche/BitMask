@@ -1,3 +1,3 @@
 vendor/
-bench.php
-test.php
+.idea
+.php_cs.cache

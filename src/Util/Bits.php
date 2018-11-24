@@ -1,8 +1,12 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace BitMask\Util;
 
+/**
+ * Class Bits
+ * @package BitMask\Util
+ */
 final class Bits
 {
 
@@ -13,7 +17,7 @@ final class Bits
      * @param int $integer
      * @return int
      */
-    public static function getMSB(int $integer) : int
+    public static function getMSB(int $integer): int
     {
         $scan = 1;
         $msb = 0;
@@ -31,10 +35,10 @@ final class Bits
      * get array of set bits
      *  10010 => [2, 16], 111 => [1, 2, 4]
      *
-     * @param  int   $integer
+     * @param  int $integer
      * @return array
      */
-    public static function getSetBits(int $integer) : array
+    public static function getSetBits(int $integer): array
     {
         $bits = [];
         $scan = 1;
@@ -54,17 +58,25 @@ final class Bits
      * @param int $integer
      * @return bool
      */
-    public static function isSingleBit(int $integer) : bool
+    public static function isSingleBit(int $integer): bool
     {
         return count(self::getSetBits($integer)) === 1;
     }
 
-    public static function isSingleBit2(int $integer) : bool
+    /**
+     * @param int $integer
+     * @return bool
+     */
+    public static function isSingleBit2(int $integer): bool
     {
         return pow(2, self::getMSB($integer)) === $integer;
     }
 
-    public static function isSingleBit3(int $integer) : bool
+    /**
+     * @param int $integer
+     * @return bool
+     */
+    public static function isSingleBit3(int $integer): bool
     {
         return 1 << self::getMSB($integer) === $integer;
     }
@@ -74,8 +86,9 @@ final class Bits
      *
      * @param int $integer single bit
      * @return int
+     * @throws \Exception
      */
-    public static function bitToIndex(int $integer) : int
+    public static function bitToIndex(int $integer): int
     {
         if (!self::isSingleBit($integer)) {
             throw new \Exception('Must be single bit');
@@ -88,8 +101,9 @@ final class Bits
      *  0 => 0b1 (1), 1 => 0b10 (2), 2 => 0b100 (4), ...
      * @param int $index
      * @return int
+     * @throws \Exception
      */
-    public static function indexToBit(int $index) : int
+    public static function indexToBit(int $index): int
     {
         if ($index < 0) {
             throw new \Exception('index must be > 0');
@@ -97,18 +111,31 @@ final class Bits
         return pow(2, $index);
     }
 
-    public static function indexToBit2(int $index) : int
+    /**
+     * @param int $index
+     * @return int
+     */
+    public static function indexToBit2(int $index): int
     {
         // if($index < 0) throw new \Exception('index must be > 0'); // no need - thrown ariphmetic exception
         return 1 << $index;
     }
 
-    public static function toString(int $mask) : string
+    /**
+     * @param int $mask
+     * @return string
+     */
+    public static function toString(int $mask): string
     {
         return decbin($mask);
     }
 
-    public static function getSetBitsIndexes(int $mask) : array
+    /**
+     * @param int $mask
+     * @return array
+     * @throws \Exception
+     */
+    public static function getSetBitsIndexes(int $mask): array
     {
         $bitIndexes = [];
         $scan = 1;
@@ -121,7 +148,11 @@ final class Bits
         return $bitIndexes;
     }
 
-    public static function getSetBitsIndexes2(int $mask) : array
+    /**
+     * @param int $mask
+     * @return array
+     */
+    public static function getSetBitsIndexes2(int $mask): array
     {
         $bitIndexes = [];
         foreach (self::getSetBits($mask) as $index => $bit) {

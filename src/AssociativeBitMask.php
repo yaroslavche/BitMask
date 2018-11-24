@@ -1,24 +1,40 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace BitMask;
 
-use BitMask\Util\Bits;
-
+/**
+ * Class AssociativeBitMask
+ * @package BitMask
+ */
 class AssociativeBitMask extends IndexedBitMask implements \JsonSerializable
 {
+    /**
+     * @var array $keys
+     * @todo add type in 7.3
+     */
     protected $keys;
 
+    /**
+     * AssociativeBitMask constructor.
+     * @param array $keys
+     * @param int $mask
+     * @throws \Exception
+     */
     public function __construct(array $keys, int $mask = 0)
     {
         if (empty($keys)) {
             throw new \Exception('Keys must be non empty');
         }
         $this->keys = $keys;
-        $this->set($mask);
+        parent::__construct($mask);
     }
 
-    final public function set(int $mask = 0)
+    /**
+     * @param int $mask
+     * @throws \Exception
+     */
+    final public function set(int $mask = 0): void
     {
         $keysCount = count($this->keys);
         $maxValue = pow(2, $keysCount) - 1;
@@ -33,7 +49,12 @@ class AssociativeBitMask extends IndexedBitMask implements \JsonSerializable
         }
     }
 
-    final public function getByKey(string $key) : bool
+    /**
+     * @param string $key
+     * @return bool
+     * @throws \Exception
+     */
+    final public function getByKey(string $key): bool
     {
         $index = array_search($key, $this->keys);
         if ($index === false) {
@@ -42,6 +63,13 @@ class AssociativeBitMask extends IndexedBitMask implements \JsonSerializable
         return $this->map[$index];
     }
 
+    /**
+     * @param $method
+     * @param $args
+     * @return bool
+     * @throws \Exception
+     * @todo: Warning: Missing return statement
+     */
     final public function __call($method, $args)
     {
         if (!method_exists($this, $method) && strpos($method, 'is') === 0) {
@@ -50,11 +78,21 @@ class AssociativeBitMask extends IndexedBitMask implements \JsonSerializable
         }
     }
 
+    /**
+     * @param $key
+     * @return bool
+     * @throws \Exception
+     */
     final public function __get($key)
     {
         return $this->getByKey($key);
     }
 
+    /**
+     * @param $key
+     * @param bool $isSet
+     * @throws \Exception
+     */
     final public function __set($key, bool $isSet)
     {
         $state = $this->getByKey($key);
@@ -71,6 +109,11 @@ class AssociativeBitMask extends IndexedBitMask implements \JsonSerializable
         }
     }
 
+    /**
+     * @param $key
+     * @return mixed
+     * @throws \Exception
+     */
     final public function __isset($key)
     {
         $index = array_search($key, $this->keys);
@@ -80,6 +123,9 @@ class AssociativeBitMask extends IndexedBitMask implements \JsonSerializable
         return $this->map[$index];
     }
 
+    /**
+     * @return array|mixed
+     */
     public function jsonSerialize()
     {
         $array = [];
