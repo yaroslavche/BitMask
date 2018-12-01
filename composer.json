@@ -14,7 +14,8 @@
     "behat/behat": "^3.4",
     "phpunit/phpunit": "^7.0",
     "symfony/var-dumper": "^4.0",
-    "leanphp/behat-code-coverage": "^3.4"
+    "leanphp/behat-code-coverage": "^3.4",
+    "phpbench/phpbench": "@dev"
   },
   "authors": [
     {
