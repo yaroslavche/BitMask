@@ -13,7 +13,8 @@
   "require-dev": {
     "behat/behat": "^3.4",
     "phpunit/phpunit": "^7.0",
-    "symfony/var-dumper": "^4.0"
+    "symfony/var-dumper": "^4.0",
+    "leanphp/behat-code-coverage": "^3.4"
   },
   "authors": [
     {

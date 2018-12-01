@@ -3,3 +3,16 @@ default:
         base_class:
             paths:    [ '%paths.base%/features' ]
             contexts: [ BitMaskContext, Util\BitsContext ]
+    extensions:
+        LeanPHP\Behat\CodeCoverage\Extension:
+            drivers:
+                - local
+            filter:
+                whitelist:
+                    include:
+                        directories:
+                            'src': ~
+            report:
+                format: clover
+                options:
+                    target: clover.xml
