@@ -19,9 +19,9 @@ class BitMask implements BitMaskInterface
      * BitMask constructor.
      * @param int $mask
      */
-    public function __construct(int $mask = 0)
+    public function __construct(?int $mask = 0)
     {
-        $this->set($mask);
+        $this->set($mask ?? 0);
     }
 
     /**

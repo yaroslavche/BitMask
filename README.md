@@ -1,40 +1,68 @@
-### Install
+# BitMask
+
+PHP library for working with bitmask values
+
+## Getting Started
+
+Usage example for BitMask and BitsUtil
+```php
+use BitMask\BitMask;
+use BitMask\Util\Bits as BitsUtil;
+
+$bitmask = new BitMask();
+$bitmask->set(0b111); // 7, 1 << 0 | 1 << 1 | 1 << 2
+
+// get value and check if single bit or mask is set 
+$integerMask = $bitmask->get(); // int 7
+$boolIsSetBit = $bitmask->isSetBit(4); // bool true
+$boolIsSetMask = $bitmask->isSet(6); // bool true
+
+// get some info about bits
+$integerMostSignificantBit = BitsUtil::getMSB($bitmask->get()); // int 3
+$arraySetBits = BitsUtil::getSetBits($bitmask->get()); // array:3 [1, 2, 4]
+$arraySetBitsIndexes = BitsUtil::getSetBitsIndexes($bitmask->get()); // array:3 [0, 1, 2]
+$string = BitsUtil::toString($bitmask->get()); // string "111"
+
+// some helpers
+$integerBit = BitsUtil::indexToBit(16); // int 65536
+$integerIndex = BitsUtil::bitToIndex(65536); // int 16
+$boolIsSingleBit = BitsUtil::isSingleBit(8); // true
+
+// change mask 
+$bitmask->unsetBit(4);
+$bitmask->setBit(8);
+
+BitsUtil::getSetBits($bitmask->get()); // array:3 [1, 2, 8]
+```
+
+Also exists `IndexedBitMask` and `AssociativeBitMask` helper classes:
+```php
+$indexed = new BitMask\IndexedBitMask(1 << 1 | 1 << 2);
+// Indexes is RTL, starts from 0. Equals to left shift offset
+$indexed->getByIndex(2); // true
+$indexed->getByIndex(0); // false
+
+$assoc = new AssociativeBitMask(['flag1', 'flag2', 'other'], 1 << 0 | 1 << 1 | 1 << 2);
+$assoc->getByKey('other'); // true
+$assoc->isFlag2(); // true
+``` 
+
+### Installing
+
+Install package via [composer](https://getcomposer.org/) 
 ```bash
 composer require yaroslavche/bitmask
 ```
 
-### Test
+## Running the tests
+
 ```bash
 ./vendor/bin/behat
 ```
+## Contributing
 
-### Example
+Feel free to fork or contribute =)
 
-```php
-<?php
+## License
 
-Error_Reporting(E_ALL);
-ini_set('display_errors', 1);
-
-require_once 'vendor/autoload.php';
-
-use BitMask\AssociativeBitMask;
-use BitMask\Util\Bits;
-
-$flagNames = ['readable', 'writable', 'executable'];
-define('READABLE', 0b1);
-define('WRITABLE', 2);
-define('EXECUTABLE', 1 << 2);
-define('ALL', READABLE | WRITABLE | EXECUTABLE);
-
-$t = new AssociativeBitMask($flagNames, ALL);
-$t->writable = false;
-echo sprintf('isReadable() => %s, readable => %s', $t->isReadable(), $t->readable), PHP_EOL; // true true
-echo sprintf('isWritable() => %s, writable => %s', $t->isWritable(), $t->writable), PHP_EOL; // false false
-echo sprintf('isExecutable() => %s, executable => %s', $t->isExecutable(), $t->executable), PHP_EOL; // true true
-
-dump('getSetBits', Bits::getSetBits($t->get())); // [1, 4]
-dump('getSetBitsIndexes', Bits::getSetBitsIndexes($t->get())); // [0, 2]
-dump($t(EXECUTE)); // true. __invoke
-echo json_encode($t, JSON_PRETTY_PRINT), PHP_EOL; // jsonSerialize
-```
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details

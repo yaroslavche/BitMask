@@ -44,11 +44,12 @@ class BitMaskContext implements Context
      * @param  string $integer
      * @return int
      */
-    public function parseInteger(string $integer) : int
+    public function parseInteger(string $integer): ?int
     {
         if (array_key_exists($integer, $this->bitAliases)) {
             return $this->bitAliases[$integer];
         }
+        if ($integer === 'null') return null;
         if (strpos($integer, '0b') === 0) {
             return (int)base_convert($integer, 2, 10);
         }

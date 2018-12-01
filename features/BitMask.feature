@@ -33,3 +33,8 @@ Feature: BitMask base class
         Then BitMask "test" should be "0b0"
         When I clear BitMask "test"
         Then BitMask "test" should be "0b0"
+
+    @construct_null
+    Scenario: passing null into constructor
+        Given I create BitMask with alias "test" and with mask "null"
+        Then BitMask "test" should be "0b0"

@@ -57,7 +57,7 @@ Feature: BitMask Util class
     Scenario: isSingleBit
         Given I create BitMask with alias "test" and with mask "0"
         When I call util function "isSingleBit" on BitMask "test"
-        # mb true?
+        # mb true? because also it's not a non-single bits. Or maybe return null?
         Then result for BitMask "test" should be "bool" "false"
         When I set bit "b1" in BitMask "test"
         And I call util function "isSingleBit" on BitMask "test"

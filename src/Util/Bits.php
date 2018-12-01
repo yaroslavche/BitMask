@@ -11,20 +11,21 @@ final class Bits
 {
 
     /**
+     * @todo read and use https://www.geeksforgeeks.org/find-significant-set-bit-number/
      * get most significant bit position (right -> left)
      *  10001 -> 5, 0010 -> 2, 00100010 -> 6
      *
-     * @param int $integer
+     * @param int $mask
      * @return int
      */
-    public static function getMSB(int $integer): int
+    public static function getMSB(int $mask): int
     {
         $scan = 1;
         $msb = 0;
-        while ($integer >= $scan) {
+        while ($mask >= $scan) {
             $msb++;
             $scan <<= 1;
-            if ($integer < $scan) {
+            if ($mask < $scan) {
                 break;
             }
         }
@@ -35,15 +36,15 @@ final class Bits
      * get array of set bits
      *  10010 => [2, 16], 111 => [1, 2, 4]
      *
-     * @param  int $integer
+     * @param  int $mask
      * @return array
      */
-    public static function getSetBits(int $integer): array
+    public static function getSetBits(int $mask): array
     {
         $bits = [];
         $scan = 1;
-        while ($integer >= $scan) {
-            if ($integer & $scan) {
+        while ($mask >= $scan) {
+            if ($mask & $scan) {
                 $bits[] = $scan;
             }
             $scan <<= 1;
@@ -55,45 +56,45 @@ final class Bits
      * is given bit was single checked bit (msb === 1 && other === 0)
      *  1000 => true, 010100 => false, 0000100 => true
      *
-     * @param int $integer
+     * @param int $mask
      * @return bool
      */
-    public static function isSingleBit(int $integer): bool
+    public static function isSingleBit(int $mask): bool
     {
-        return count(self::getSetBits($integer)) === 1;
+        return count(self::getSetBits($mask)) === 1;
     }
 
     /**
-     * @param int $integer
+     * @param int $mask
      * @return bool
      */
-    public static function isSingleBit2(int $integer): bool
+    public static function isSingleBit2(int $mask): bool
     {
-        return pow(2, self::getMSB($integer)) === $integer;
+        return pow(2, self::getMSB($mask)) === $mask;
     }
 
     /**
-     * @param int $integer
+     * @param int $mask
      * @return bool
      */
-    public static function isSingleBit3(int $integer): bool
+    public static function isSingleBit3(int $mask): bool
     {
-        return 1 << self::getMSB($integer) === $integer;
+        return 1 << self::getMSB($mask) === $mask;
     }
 
     /**
      * single bit to index (left > right)
      *
-     * @param int $integer single bit
+     * @param int $mask single bit
      * @return int
      * @throws \Exception
      */
-    public static function bitToIndex(int $integer): int
+    public static function bitToIndex(int $mask): int
     {
-        if (!self::isSingleBit($integer)) {
+        if (!self::isSingleBit($mask)) {
             throw new \Exception('Must be single bit');
         }
-        return (int)log($integer, 2);
+        return (int)log($mask, 2);
     }
 
     /**
