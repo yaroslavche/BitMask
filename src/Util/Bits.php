@@ -58,9 +58,9 @@ final class Bits
      *
      * @see benchmarks/IsSingleBitBench.php
      * ./vendor/bin/phpbench run benchmarks/IsSingleBitBench.php --report=default
-     * benchIsSingleBit1             I4 P0         [μ Mo]/r: 2.493 2.478 (μs)      [μSD μRSD]/r: 0.079μs 3.17%
-     * benchIsSingleBit2             I4 P0         [μ Mo]/r: 2.917 2.857 (μs)      [μSD μRSD]/r: 0.081μs 2.77%
-     * benchIsSingleBit3             I4 P0         [μ Mo]/r: 2.497 2.508 (μs)      [μSD μRSD]/r: 0.026μs 1.04%
+     * benchIsSingleBit1             I4 P3         [μ Mo]/r: 7.573 7.503 (μs)      [μSD μRSD]/r: 0.110μs 1.46%
+     * benchIsSingleBit2             I4 P3         [μ Mo]/r: 9.869 9.818 (μs)      [μSD μRSD]/r: 0.120μs 1.22%
+     * benchIsSingleBit3             I4 P3         [μ Mo]/r: 9.485 9.483 (μs)      [μSD μRSD]/r: 0.038μs 0.40%
      *
      * maybe getMSB must return shift offset and then isSingleBit3 might be faster
      * return 1 << BitUtils::getMSB($mask) === $mask;
@@ -83,6 +83,9 @@ final class Bits
     public static function bitToIndex(int $mask): int
     {
         if (!self::isSingleBit($mask)) {
+            /**
+             * @todo BitMask\InvalidArgumentException
+             */
             throw new \Exception('Must be single bit');
         }
         return (int)log($mask, 2);
@@ -119,10 +122,8 @@ final class Bits
     /**
      *  @see benchmarks/GetSetBitsIndexBench.php
      * ./vendor/bin/phpbench run benchmarks/GetSetBitsIndexBench.php --report=default
-     * benchGetSetBitsIndex1         I4 P0         [μ Mo]/r: 1.668 1.686 (μs)      [μSD μRSD]/r: 0.046μs 2.76%
-     * benchGetSetBitsIndex2         I4 P0         [μ Mo]/r: 2.580 2.610 (μs)      [μSD μRSD]/r: 0.041μs 1.61%
-     *
-     * benchGetSetBitsIndex2 don't throw exception
+     * benchGetSetBitsIndex1         I4 P3         [μ Mo]/r: 15.368 15.468 (μs)    [μSD μRSD]/r: 0.204μs 1.33%
+     * benchGetSetBitsIndex2         I4 P3         [μ Mo]/r: 8.562 8.578 (μs)      [μSD μRSD]/r: 0.044μs 0.52%
      *
      * @param int $mask
      * @return array
@@ -131,12 +132,8 @@ final class Bits
     public static function getSetBitsIndexes(int $mask): array
     {
         $bitIndexes = [];
-        $scan = 1;
-        while ($mask >= $scan) {
-            if ($mask & $scan) {
-                $bitIndexes[] = self::bitToIndex($scan);
-            }
-            $scan <<= 1;
+        foreach (static::getSetBits($mask) as $index => $bit) {
+            $bitIndexes[$index] = (int)log($bit, 2);
         }
         return $bitIndexes;
     }

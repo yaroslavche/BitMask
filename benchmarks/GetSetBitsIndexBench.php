@@ -2,6 +2,7 @@
 
 use BitMask\Util\Bits as BitUtils;
 use PhpBench\Benchmark\Metadata\Annotations\Iterations;
+use PhpBench\Benchmark\Metadata\Annotations\ParamProviders;
 use PhpBench\Benchmark\Metadata\Annotations\Revs;
 
 /**
@@ -9,30 +10,39 @@ use PhpBench\Benchmark\Metadata\Annotations\Revs;
  */
 class GetSetBitsIndexBench
 {
-    /**
-     * @Revs(10000)
-     * @Iterations(5)
-     */
-    public function benchGetSetBitsIndex1()
+    public function provideMask()
     {
-        $mask = 1 << 64;
-        $this->getSetBitsIndex1($mask);
+        yield [1];
+        yield [1 << 5];
+        yield [1 << 16];
+        yield [1 << 32];
+    }
+
+    /**
+     * @Revs(100000)
+     * @Iterations(5)
+     * @ParamProviders({"provideMask"})
+     */
+    public function benchGetSetBitsIndex1($mask)
+    {
+        $this->getSetBitsIndex1($mask[0]);
     }
 
     /**
      * @Revs(10000)
      * @Iterations(5)
+     * @ParamProviders({"provideMask"})
      */
-    public function benchGetSetBitsIndex2()
+    public function benchGetSetBitsIndex2($mask)
     {
-        $mask = 1 << 64;
-        $this->getSetBitsIndex2($mask);
+        $this->getSetBitsIndex2($mask[0]);
     }
 
     /**
      * @param int $mask
      * @return array
      * @throws Exception
+     * @ParamProviders({"provideMask"})
      */
     private function getSetBitsIndex1(int $mask = 0): array
     {

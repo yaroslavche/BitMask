@@ -90,7 +90,15 @@ Feature: BitMask Util class
     @indexToBit
     # little bit tricky. BitMask in this case is index. And when call "indexToBit" on BitMask result would be bit.
     # indexToBit(3) =>  1 << 3 = 8
+    # todo: When I call util function "indexToBit" with arguments "3"
+    # todo: Then result should be "exception" "Must be single bit"
     Scenario: indexToBit
         Given I create BitMask with alias "test" and with mask "3"
         When I call util function "indexToBit" on BitMask "test"
         Then result for BitMask "test" should be "int" "8"
+
+    @bitToIndexException
+    Scenario: bitToIndexException
+        Given I create BitMask with alias "test" and with mask "3"
+        When I call util function "bitToIndex" on BitMask "test"
+        Then result for BitMask "test" should be "exception" "Must be single bit"

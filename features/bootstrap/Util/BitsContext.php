@@ -47,7 +47,11 @@ class BitsContext implements Context
             throw new \Exception('unknown method ' . $method);
         }
         $bm = $this->BitMaskContext->objects[$object];
-        $this->results[$object] = Bits::$method($bm->get());
+        try {
+            $this->results[$object] = Bits::$method($bm->get());
+        } catch (\Exception $exception) {
+            $this->results[$object] = $exception->getMessage();
+        }
     }
 
     /**
@@ -55,12 +59,16 @@ class BitsContext implements Context
      */
     public function resultForBitmaskShouldBe($object, $type, $result)
     {
-        $availableTypes = ['bool', 'int', 'array', 'string'];
+        $availableTypes = ['bool', 'int', 'array', 'string', 'exception'];
         if (!in_array($type, $availableTypes)) {
             throw new \Exception(sprintf('Unsupported type %s. Available: %s', $type, implode('\', \'', $availableTypes)));
         }
         $storedResult = $this->results[$object];
         switch ($type) {
+            case 'exception':
+            {
+                break;
+            }
             case 'array':
             {
                 $result = json_decode($result);
