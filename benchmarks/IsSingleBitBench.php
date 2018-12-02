@@ -2,6 +2,7 @@
 
 use BitMask\Util\Bits as BitUtils;
 use PhpBench\Benchmark\Metadata\Annotations\Iterations;
+use PhpBench\Benchmark\Metadata\Annotations\ParamProviders;
 use PhpBench\Benchmark\Metadata\Annotations\Revs;
 
 /**
@@ -9,34 +10,42 @@ use PhpBench\Benchmark\Metadata\Annotations\Revs;
  */
 class IsSingleBitBench
 {
-    /**
-     * @Revs(10000)
-     * @Iterations(5)
-     */
-    public function benchIsSingleBit1()
+    public function provideMask()
     {
-        $mask = 1 << 64;
-        $this->isSingleBit1($mask);
+        yield [1];
+        yield [1 << 5];
+        yield [1 << 16];
+        yield [1 << 32];
     }
 
     /**
-     * @Revs(10000)
+     * @Revs(100000)
      * @Iterations(5)
+     * @ParamProviders({"provideMask"})
      */
-    public function benchIsSingleBit2()
+    public function benchIsSingleBit1($mask)
     {
-        $mask = 1 << 64;
-        $this->isSingleBit2($mask);
+        $this->isSingleBit1($mask[0]);
     }
 
     /**
-     * @Revs(10000)
+     * @Revs(100000)
      * @Iterations(5)
+     * @ParamProviders({"provideMask"})
      */
-    public function benchIsSingleBit3()
+    public function benchIsSingleBit2($mask)
     {
-        $mask = 1 << 64;
-        $this->isSingleBit3($mask);
+        $this->isSingleBit2($mask[0]);
+    }
+
+    /**
+     * @Revs(100000)
+     * @Iterations(5)
+     * @ParamProviders({"provideMask"})
+     */
+    public function benchIsSingleBit3($mask)
+    {
+        $this->isSingleBit3($mask[0]);
     }
 
     /**
