@@ -17,7 +17,7 @@ class BitMask implements BitMaskInterface
 
     /**
      * BitMask constructor.
-     * @param int $mask
+     * @param int|null $mask
      */
     public function __construct(?int $mask = 0)
     {
@@ -25,10 +25,10 @@ class BitMask implements BitMaskInterface
     }
 
     /**
-     * @param int $mask
+     * @param int|null $mask
      * @return BitMask
      */
-    public static function init(int $mask = 0): self
+    public static function init(?int $mask = 0): self
     {
         return new static($mask);
     }
@@ -68,8 +68,7 @@ class BitMask implements BitMaskInterface
     }
 
     /**
-     * @param int $bit
-     * @param bool $state
+     * @inheritdoc
      * @throws \Exception
      */
     public function setBit(int $bit, bool $state = true): void
@@ -86,7 +85,7 @@ class BitMask implements BitMaskInterface
     }
 
     /**
-     * @param int $bit
+     * @inheritdoc
      * @throws \Exception
      */
     public function unsetBit(int $bit): void
@@ -95,8 +94,7 @@ class BitMask implements BitMaskInterface
     }
 
     /**
-     * @param int $bit
-     * @return bool
+     * @inheritdoc
      * @throws \Exception
      */
     public function isSetBit(int $bit): bool
@@ -122,20 +120,6 @@ class BitMask implements BitMaskInterface
     public function __invoke(int $mask): bool
     {
         return $this->isSet($mask);
-    }
-
-    /**
-     *
-     */
-    public function serialize()
-    {
-    }
-
-    /**
-     * @param $serialized
-     */
-    public function unserialize($serialized)
-    {
     }
 
     /**
