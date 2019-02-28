@@ -74,7 +74,7 @@ class BitMask implements BitMaskInterface
     public function setBit(int $bit, bool $state = true): void
     {
         if (!Util\Bits::isSingleBit($bit)) {
-            throw new \Exception('Must be single bit');
+            throw new \InvalidArgumentException('Must be single bit');
         }
         if ($state) {
             $this->storage |= $bit;
@@ -100,7 +100,7 @@ class BitMask implements BitMaskInterface
     public function isSetBit(int $bit): bool
     {
         if (!Util\Bits::isSingleBit($bit)) {
-            throw new \Exception('Must be single bit');
+            throw new \InvalidArgumentException('Must be single bit');
         }
         return $this->isSet($bit);
     }

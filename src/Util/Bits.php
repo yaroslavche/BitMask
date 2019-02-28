@@ -83,10 +83,7 @@ final class Bits
     public static function bitToIndex(int $mask): int
     {
         if (!self::isSingleBit($mask)) {
-            /**
-             * @todo BitMask\InvalidArgumentException
-             */
-            throw new \Exception('Must be single bit');
+            throw new \InvalidArgumentException('Must be single bit');
         }
         return (int)log($mask, 2);
     }

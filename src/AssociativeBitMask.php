@@ -27,7 +27,7 @@ class AssociativeBitMask extends IndexedBitMask implements \JsonSerializable
     public function __construct(array $keys, int $mask = 0)
     {
         if (empty($keys)) {
-            throw new \Exception('Keys must be non empty');
+            throw new \InvalidArgumentException('Keys must be non empty');
         }
         $this->keys = $keys;
         parent::__construct($mask);
@@ -43,7 +43,7 @@ class AssociativeBitMask extends IndexedBitMask implements \JsonSerializable
         $maxValue = pow(2, $keysCount) - 1;
         if ($mask > $maxValue) {
             $message = sprintf('Invalid given mask "%d". Maximum value for %d keys is %d', $mask, $keysCount, $maxValue);
-            throw new \Exception($message);
+            throw new \InvalidArgumentException($message);
         }
         parent::set($mask);
         for ($index = 0; $index < $keysCount - 1; $index++) {
@@ -62,7 +62,7 @@ class AssociativeBitMask extends IndexedBitMask implements \JsonSerializable
     {
         $index = array_search($key, $this->keys);
         if ($index === false) {
-            throw new \Exception(sprintf('Unknown key "%s"', $key));
+            throw new \InvalidArgumentException(sprintf('Unknown key "%s"', $key));
         }
         return $this->map[$index];
     }
@@ -106,7 +106,7 @@ class AssociativeBitMask extends IndexedBitMask implements \JsonSerializable
         }
         $index = array_search($key, $this->keys);
         if ($index === false) {
-            throw new \Exception(sprintf('Unknown key "%s"', $key));
+            throw new \InvalidArgumentException(sprintf('Unknown key "%s"', $key));
         }
         /**
          * @todo add benchmark for faster
@@ -127,11 +127,7 @@ class AssociativeBitMask extends IndexedBitMask implements \JsonSerializable
      */
     final public function __isset(string $key)
     {
-        $index = array_search($key, $this->keys);
-        if ($index === false) {
-            throw new \Exception(sprintf('Unknown key "%s"', $key));
-        }
-        return $this->map[$index];
+        return $this->getByKey($key);
     }
 
     /**
