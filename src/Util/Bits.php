@@ -36,8 +36,8 @@ final class Bits
      * get array of set bits
      *  10010 => [2, 16], 111 => [1, 2, 4]
      *
-     * @param  int $mask
-     * @return array
+     * @param int $mask
+     * @return int[]
      */
     public static function getSetBits(int $mask): array
     {
@@ -83,10 +83,7 @@ final class Bits
     public static function bitToIndex(int $mask): int
     {
         if (!self::isSingleBit($mask)) {
-            /**
-             * @todo BitMask\InvalidArgumentException
-             */
-            throw new \Exception('Must be single bit');
+            throw new \InvalidArgumentException('Must be single bit');
         }
         return (int)log($mask, 2);
     }
@@ -126,7 +123,7 @@ final class Bits
      * benchGetSetBitsIndex2         I4 P3         [μ Mo]/r: 8.562 8.578 (μs)      [μSD μRSD]/r: 0.044μs 0.52%
      *
      * @param int $mask
-     * @return array
+     * @return int[]
      * @throws \Exception
      */
     public static function getSetBitsIndexes(int $mask): array

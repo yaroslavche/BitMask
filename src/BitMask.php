@@ -17,7 +17,7 @@ class BitMask implements BitMaskInterface
 
     /**
      * BitMask constructor.
-     * @param int $mask
+     * @param int|null $mask
      */
     public function __construct(?int $mask = 0)
     {
@@ -25,10 +25,10 @@ class BitMask implements BitMaskInterface
     }
 
     /**
-     * @param int $mask
+     * @param int|null $mask
      * @return BitMask
      */
-    public static function init(int $mask = 0): self
+    public static function init(?int $mask = 0): self
     {
         return new static($mask);
     }
@@ -68,14 +68,13 @@ class BitMask implements BitMaskInterface
     }
 
     /**
-     * @param int $bit
-     * @param bool $state
+     * @inheritdoc
      * @throws \Exception
      */
     public function setBit(int $bit, bool $state = true): void
     {
         if (!Util\Bits::isSingleBit($bit)) {
-            throw new \Exception('Must be single bit');
+            throw new \InvalidArgumentException('Must be single bit');
         }
         if ($state) {
             $this->storage |= $bit;
@@ -86,7 +85,7 @@ class BitMask implements BitMaskInterface
     }
 
     /**
-     * @param int $bit
+     * @inheritdoc
      * @throws \Exception
      */
     public function unsetBit(int $bit): void
@@ -95,14 +94,13 @@ class BitMask implements BitMaskInterface
     }
 
     /**
-     * @param int $bit
-     * @return bool
+     * @inheritdoc
      * @throws \Exception
      */
     public function isSetBit(int $bit): bool
     {
         if (!Util\Bits::isSingleBit($bit)) {
-            throw new \Exception('Must be single bit');
+            throw new \InvalidArgumentException('Must be single bit');
         }
         return $this->isSet($bit);
     }
@@ -122,20 +120,6 @@ class BitMask implements BitMaskInterface
     public function __invoke(int $mask): bool
     {
         return $this->isSet($mask);
-    }
-
-    /**
-     *
-     */
-    public function serialize()
-    {
-    }
-
-    /**
-     * @param $serialized
-     */
-    public function unserialize($serialized)
-    {
     }
 
     /**

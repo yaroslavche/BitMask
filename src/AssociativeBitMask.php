@@ -3,6 +3,9 @@ declare(strict_types=1);
 
 namespace BitMask;
 
+use function Safe\sprintf;
+use function Safe\substr;
+
 /**
  * Class AssociativeBitMask
  * @package BitMask
@@ -24,7 +27,7 @@ class AssociativeBitMask extends IndexedBitMask implements \JsonSerializable
     public function __construct(array $keys, int $mask = 0)
     {
         if (empty($keys)) {
-            throw new \Exception('Keys must be non empty');
+            throw new \InvalidArgumentException('Keys must be non empty');
         }
         $this->keys = $keys;
         parent::__construct($mask);
@@ -39,7 +42,8 @@ class AssociativeBitMask extends IndexedBitMask implements \JsonSerializable
         $keysCount = count($this->keys);
         $maxValue = pow(2, $keysCount) - 1;
         if ($mask > $maxValue) {
-            throw new \Exception(sprintf('Invalid given mask "%d". Maximum value for %d keys is %d', $mask, $keysCount, $maxValue));
+            $message = sprintf('Invalid given mask "%d". Maximum value for %d keys is %d', $mask, $keysCount, $maxValue);
+            throw new \InvalidArgumentException($message);
         }
         parent::set($mask);
         for ($index = 0; $index < $keysCount - 1; $index++) {
@@ -58,50 +62,57 @@ class AssociativeBitMask extends IndexedBitMask implements \JsonSerializable
     {
         $index = array_search($key, $this->keys);
         if ($index === false) {
-            throw new \Exception(sprintf('Unknown key "%s"', $key));
+            throw new \InvalidArgumentException(sprintf('Unknown key "%s"', $key));
         }
         return $this->map[$index];
     }
 
     /**
-     * @param $method
-     * @param $args
+     * @param string $method
+     * @param mixed[] $args
      * @return bool
      * @throws \Exception
      * @todo: Warning: Missing return statement
      */
-    final public function __call($method, $args)
+    final public function __call(string $method, array $args)
     {
         if (!method_exists($this, $method) && strpos($method, 'is') === 0) {
             $key = lcfirst(substr($method, 2));
             return $this->getByKey($key);
         }
+        return false;
     }
 
     /**
-     * @param $key
+     * @param string $key
      * @return bool
      * @throws \Exception
      */
-    final public function __get($key)
+    final public function __get(string $key): bool
     {
         return $this->getByKey($key);
     }
 
     /**
-     * @param $key
+     * @param string $key
      * @param bool $isSet
      * @throws \Exception
      */
-    final public function __set($key, bool $isSet)
+    final public function __set(string $key, bool $isSet)
     {
         $state = $this->getByKey($key);
         if ($state === $isSet) {
             return;
         }
         $index = array_search($key, $this->keys);
-        // $bit = pow(2, $index);
-        $bit = 1 << $index;
+        if ($index === false) {
+            throw new \InvalidArgumentException(sprintf('Unknown key "%s"', $key));
+        }
+        /**
+         * @todo add benchmark for faster
+         *       $bit = pow(2, $index);
+         */
+        $bit = 1 << (int)$index;
         if ($isSet) {
             $this->setBit($bit);
         } else {
@@ -110,17 +121,13 @@ class AssociativeBitMask extends IndexedBitMask implements \JsonSerializable
     }
 
     /**
-     * @param $key
+     * @param string $key
      * @return mixed
      * @throws \Exception
      */
-    final public function __isset($key)
+    final public function __isset(string $key)
     {
-        $index = array_search($key, $this->keys);
-        if ($index === false) {
-            throw new \Exception(sprintf('Unknown key "%s"', $key));
-        }
-        return $this->map[$index];
+        return $this->getByKey($key);
     }
 
     /**

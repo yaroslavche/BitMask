@@ -10,6 +10,8 @@ before_script:
 
 script:
   - vendor/bin/behat
+  - composer cscheck
+  - composer phpstan
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
