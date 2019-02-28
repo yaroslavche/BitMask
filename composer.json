@@ -40,7 +40,8 @@
   "scripts": {
     "cscheck": "phpcs --ignore=features/**",
     "csfix": "phpcbf --ignore=features/**",
-    "phpstan": "phpstan analyse src/ -c phpstan.neon --level=7 --no-progress -vvv --memory-limit=1024M"
+    "phpstan": "phpstan analyse src/ -c phpstan.neon --level=7 --no-progress -vvv --memory-limit=1024M",
+    "benchmarks": "phpbench run benchmarks --report=default"
   },
   "minimum-stability": "dev",
   "prefer-stable": true

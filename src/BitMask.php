@@ -121,18 +121,4 @@ class BitMask implements BitMaskInterface
     {
         return $this->isSet($mask);
     }
-
-    /**
-     *
-     */
-    public function __sleep()
-    {
-    }
-
-    /**
-     *
-     */
-    public function __wakeup()
-    {
-    }
 }
