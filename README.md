@@ -56,11 +56,38 @@ Install package via [composer](https://getcomposer.org/)
 composer require yaroslavche/bitmask
 ```
 
-## Running the tests
-
+## Scripts:
+#### Tests
 ```bash
-./vendor/bin/behat
+$ composer tests
 ```
+```bash
+$ ./vendor/bin/behat
+```
+#### Benchmarks
+```bash
+$ composer benchmarks
+```
+```bash
+$ ./vendor/bin/phpbench run benchmarks --report=default
+```
+#### PHPStan
+```bash
+$ composer phpstan
+```
+```bash
+$ ./vendor/bin/phpstan analyse src/ -c phpstan.neon --level=7 --no-progress -vvv --memory-limit=1024M
+```
+#### PHP-CS
+```bash
+$ composer cscheck
+$ composer csfix
+```
+```bash
+$ ./vendor/bin/phpcs --ignore=features/**
+$ ./vendor/bin/phpcbf --ignore=features/**
+```
+
 ## Contributing
 
 Feel free to fork or contribute =)

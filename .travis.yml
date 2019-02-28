@@ -9,9 +9,9 @@ before_script:
   - travis_retry composer install --no-interaction --prefer-source --dev
 
 script:
-  - vendor/bin/behat
   - composer cscheck
   - composer phpstan
+  - composer tests
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
