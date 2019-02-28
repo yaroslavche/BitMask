@@ -134,4 +134,29 @@ final class Bits
         }
         return $bitIndexes;
     }
+
+    /**
+     * Bitwise-based check if given number is even
+
+     * benchEvenOdd1 # 3.......................I0 [μ Mo]/r: 0.171 0.171 (μs) [μSD μRSD]/r: 0.000μs 0.00%
+     * benchEvenOdd2 # 3.......................I0 [μ Mo]/r: 0.227 0.227 (μs) [μSD μRSD]/r: 0.000μs 0.00%
+     *
+     * @param int $number
+     * @return bool
+     */
+    public static function isEvenNumber(int $number): bool
+    {
+        return ($number & 1) === 0;
+    }
+
+    /**
+     * Bitwise-based check if given number is odd
+     *
+     * @param int $number
+     * @return bool
+     */
+    public static function isOddNumber(int $number): bool
+    {
+        return ($number & 1) === 1;
+    }
 }
