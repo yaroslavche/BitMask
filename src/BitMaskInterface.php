@@ -34,7 +34,7 @@ interface BitMaskInterface
      * @param int $bit
      * @param bool $state
      */
-    public function setBit(int $bit, bool $state = true): void;
+    public function setBit(int $bit, bool $state = null): void;
 
     /**
      * @param int $bit

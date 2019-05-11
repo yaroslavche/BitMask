@@ -63,7 +63,7 @@ class BitMask implements BitMaskInterface
      */
     public function isSet(int $mask): bool
     {
-        $set = ($this->storage > $mask) ? $this->storage & $mask : 0;
+        $set = ($this->storage >= $mask) ? $this->storage & $mask : 0;
         return $set > 0;
     }
 
@@ -71,8 +71,9 @@ class BitMask implements BitMaskInterface
      * @inheritdoc
      * @throws \Exception
      */
-    public function setBit(int $bit, bool $state = true): void
+    public function setBit(int $bit, bool $state = null): void
     {
+        $state = $state ?? true;
         if (!Util\Bits::isSingleBit($bit)) {
             throw new \InvalidArgumentException('Must be single bit');
         }
