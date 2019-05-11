@@ -44,7 +44,7 @@ class IndexedBitMask extends BitMask
      * @param bool $state
      * @throws \Exception
      */
-    public function setBit(int $bit, bool $state = true): void
+    public function setBit(int $bit, bool $state = null): void
     {
         parent::setBit($bit, $state);
         $index = Bits::bitToIndex($bit);
