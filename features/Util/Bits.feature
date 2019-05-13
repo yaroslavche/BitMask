@@ -101,4 +101,4 @@ Feature: BitMask Util class
     Scenario: bitToIndexException
         Given I create BitMask with alias "test" and with mask "3"
         When I call util function "bitToIndex" on BitMask "test"
-        Then result for BitMask "test" should be "exception" "Must be single bit"
+        Then result for BitMask "test" should be "exception" "Argument must be a single bit"
