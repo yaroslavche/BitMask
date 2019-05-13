@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace BitMask\Util;
 
+use InvalidArgumentException;
+
 /**
  * Class Bits
  * @package BitMask\Util
@@ -56,6 +58,9 @@ final class Bits
      * is given bit was single checked bit (msb === 1 && other === 0)
      *  1000 => true, 010100 => false, 0000100 => true
      *
+     * @param int $mask
+     * @return bool
+     *
      * @see benchmarks/IsSingleBitBench.php
      * ./vendor/bin/phpbench run benchmarks/IsSingleBitBench.php --report=default
      * benchIsSingleBit1             I4 P3         [μ Mo]/r: 7.573 7.503 (μs)      [μSD μRSD]/r: 0.110μs 1.46%
@@ -64,9 +69,6 @@ final class Bits
      *
      * maybe getMSB must return shift offset and then isSingleBit3 might be faster
      * return 1 << BitUtils::getMSB($mask) === $mask;
-     *
-     * @param int $mask
-     * @return bool
      */
     public static function isSingleBit(int $mask): bool
     {
@@ -78,12 +80,11 @@ final class Bits
      *
      * @param int $mask single bit
      * @return int
-     * @throws \Exception
      */
     public static function bitToIndex(int $mask): int
     {
         if (!self::isSingleBit($mask)) {
-            throw new \InvalidArgumentException('Must be single bit');
+            throw new InvalidArgumentException('Argument must be a single bit');
         }
         return (int)log($mask, 2);
     }
@@ -92,18 +93,19 @@ final class Bits
      * index to single bit
      *  0 => 0b1 (1), 1 => 0b10 (2), 2 => 0b100 (4), ...
      *
+     * @param int $index
+     * @return int
+     *
      * @see benchmarks/IndexToBitBench.php
      * ./vendor/bin/phpbench run benchmarks/IndexToBitBench.php --report=default
      * benchIndexToBit1              I4 P0         [μ Mo]/r: 2.035 1.995 (μs)      [μSD μRSD]/r: 0.053μs 2.61%
      * benchIndexToBit2              I4 P0         [μ Mo]/r: 1.501 1.486 (μs)      [μSD μRSD]/r: 0.037μs 2.45%
-     *
-     * @param int $index
-     * @return int
-     * @throws \Exception
      */
     public static function indexToBit(int $index): int
     {
-        // if($index < 0) throw new \Exception('index must be > 0'); // no need - thrown ariphmetic exception
+        if ($index < 0) {
+            throw new InvalidArgumentException('Index (zero based) must be greater than or equal to zero');
+        }
         return 1 << $index;
     }
 
@@ -117,14 +119,14 @@ final class Bits
     }
 
     /**
-     *  @see benchmarks/GetSetBitsIndexBench.php
+     * @param int $mask
+     * @return int[]
+     * @throws \Exception
+     * @see benchmarks/GetSetBitsIndexBench.php
      * ./vendor/bin/phpbench run benchmarks/GetSetBitsIndexBench.php --report=default
      * benchGetSetBitsIndex1         I4 P3         [μ Mo]/r: 15.368 15.468 (μs)    [μSD μRSD]/r: 0.204μs 1.33%
      * benchGetSetBitsIndex2         I4 P3         [μ Mo]/r: 8.562 8.578 (μs)      [μSD μRSD]/r: 0.044μs 0.52%
      *
-     * @param int $mask
-     * @return int[]
-     * @throws \Exception
      */
     public static function getSetBitsIndexes(int $mask): array
     {
@@ -137,7 +139,6 @@ final class Bits
 
     /**
      * Bitwise-based check if given number is even
-
      * benchEvenOdd1 # 3.......................I0 [μ Mo]/r: 0.171 0.171 (μs) [μSD μRSD]/r: 0.000μs 0.00%
      * benchEvenOdd2 # 3.......................I0 [μ Mo]/r: 0.227 0.227 (μs) [μSD μRSD]/r: 0.000μs 0.00%
      *

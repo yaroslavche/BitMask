@@ -27,8 +27,8 @@ class UnsetBitBench
     }
 
     /**
-     * @Revs(200000)
-     * @Iterations(10)
+     * @Revs(300000)
+     * @Iterations(1)
      * @ParamProviders({"provideBit"})
      * @throws Exception
      */
@@ -38,8 +38,8 @@ class UnsetBitBench
     }
 
     /**
-     * @Revs(200000)
-     * @Iterations(10)
+     * @Revs(300000)
+     * @Iterations(1)
      * @ParamProviders({"provideBit"})
      */
     public function benchUnsetBit2($bit)

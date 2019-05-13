@@ -3,6 +3,9 @@ declare(strict_types=1);
 
 namespace BitMask;
 
+use BitMask\Util\Bits;
+use InvalidArgumentException;
+
 /**
  * Class BitMask
  * @package BitMask
@@ -11,7 +14,6 @@ class BitMask implements BitMaskInterface
 {
     /**
      * @var int $storage
-     * @todo add type in 7.3
      */
     private $storage;
 
@@ -19,7 +21,7 @@ class BitMask implements BitMaskInterface
      * BitMask constructor.
      * @param int|null $mask
      */
-    public function __construct(?int $mask = 0)
+    public function __construct(?int $mask = null)
     {
         $this->set($mask ?? 0);
     }
@@ -28,7 +30,7 @@ class BitMask implements BitMaskInterface
      * @param int|null $mask
      * @return BitMask
      */
-    public static function init(?int $mask = 0): self
+    public static function init(?int $mask = null): self
     {
         return new static($mask);
     }
@@ -44,9 +46,9 @@ class BitMask implements BitMaskInterface
     /**
      * @param int $mask
      */
-    public function set(int $mask): void
+    public function set(int $mask = null): void
     {
-        $this->storage = $mask;
+        $this->storage = $mask ?? 0;
     }
 
     /**
@@ -63,31 +65,32 @@ class BitMask implements BitMaskInterface
      */
     public function isSet(int $mask): bool
     {
-        $set = ($this->storage >= $mask) ? $this->storage & $mask : 0;
-        return $set > 0;
+        return $this->storage >= $mask && $this->storage & $mask;
     }
 
     /**
      * @inheritdoc
-     * @throws \Exception
      */
     public function setBit(int $bit, bool $state = null): void
     {
         $state = $state ?? true;
-        if (!Util\Bits::isSingleBit($bit)) {
-            throw new \InvalidArgumentException('Must be single bit');
+        if (!Bits::isSingleBit($bit)) {
+            throw new InvalidArgumentException('Argument must be a single bit');
         }
         if ($state) {
             $this->storage |= $bit;
         } else {
-            // $this->storage &= ~$bit;
             $this->storage ^= $bit;
+            /**
+             * maybe it's just obviously - one operation vs. two. But work almost same
+             * @see ./vendor/bin/phpbench run benchmarks/UnsetBitBench.php --report=default
+             */
+            // $this->storage &= ~$bit;
         }
     }
 
     /**
      * @inheritdoc
-     * @throws \Exception
      */
     public function unsetBit(int $bit): void
     {
@@ -96,12 +99,11 @@ class BitMask implements BitMaskInterface
 
     /**
      * @inheritdoc
-     * @throws \Exception
      */
     public function isSetBit(int $bit): bool
     {
-        if (!Util\Bits::isSingleBit($bit)) {
-            throw new \InvalidArgumentException('Must be single bit');
+        if (!Bits::isSingleBit($bit)) {
+            throw new InvalidArgumentException('Argument must be a single bit');
         }
         return $this->isSet($bit);
     }
