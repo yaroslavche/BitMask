@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/yaroslavche/BitMask.svg?branch=master)](https://travis-ci.org/yaroslavche/BitMask)
 [![codecov](https://codecov.io/gh/yaroslavche/bitmask/branch/master/graph/badge.svg)](https://codecov.io/gh/yaroslavche/bitmask)
-[![Infection MSI](https://badge.stryker-mutator.io/github.com/yaroslavche/bitmask/master)](https://infection.github.io)
+[![Infection MSI](https://badge.stryker-mutator.io/github.com/yaroslavche/BitMask/master)](https://infection.github.io)
 
 # BitMask
 
@@ -76,11 +76,12 @@ doctrine:
 
 ## Scripts:
 #### Tests
-##### Behat
+PHPUnit
 ```bash
-$ composer behat
-$ ./vendor/bin/behat
+$ composer phpunit
+$ ./vendor/bin/phpunit
 ```
+Infection
 ```bash
 $ composer infection
 $ ./vendor/bin/infection --min-msi=50 --min-covered-msi=70

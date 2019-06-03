@@ -9,8 +9,8 @@ before_script:
 script:
   - composer cscheck
   - composer phpstan
+  - composer phpunit
   - composer infection
-  - composer phpunit_clover
 after_success:
   - bash <(curl -s https://codecov.io/bash)
 env:
