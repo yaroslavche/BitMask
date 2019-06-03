@@ -49,6 +49,8 @@ class BitMaskTest extends TestCase
         $bitmask = new BitMask(7);
         $this->assertFalse($bitmask->isSetBit(8));
         $this->assertTrue($bitmask->isSetBit(4));
+        $this->expectExceptionObject(new InvalidArgumentException('Argument must be a single bit'));
+        $this->assertTrue($bitmask->isSetBit(5));
     }
 
     public function testSetBit()

@@ -3,6 +3,7 @@
 namespace BitMask\Tests\Util;
 
 use BitMask\Util\Bits;
+use Exception;
 use PHPUnit\Framework\TestCase;
 
 class BitsTest extends TestCase
@@ -29,11 +30,23 @@ class BitsTest extends TestCase
     public function testBitToIndex()
     {
         $this->assertEquals(3, Bits::bitToIndex(8));
+        try {
+            Bits::bitToIndex(7);
+            $this->assertTrue(false);
+        } catch (Exception $exception) {
+            $this->assertTrue(true);
+        }
     }
 
     public function testIndexToBit()
     {
         $this->assertEquals(8, Bits::indexToBit(3));
+        try {
+            Bits::indexToBit(-1);
+            $this->assertTrue(false);
+        } catch (Exception $exception) {
+            $this->assertTrue(true);
+        }
     }
 
     public function testToString()

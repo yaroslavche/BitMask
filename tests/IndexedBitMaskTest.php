@@ -3,6 +3,7 @@
 namespace BitMask\Tests;
 
 use BitMask\IndexedBitMask;
+use Exception;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
@@ -26,6 +27,19 @@ class IndexedBitMaskTest extends TestCase
         $this->assertTrue($bitmask->getByIndex(0));
         $this->assertFalse($bitmask->getByIndex(1));
         $this->assertTrue($bitmask->getByIndex(2));
+        try {
+            $bitmask->getByIndex(-1);
+            $this->assertTrue(false);
+        } catch (Exception $exception) {
+            $this->assertTrue(true);
+        }
+        try {
+            $bitmask->getByIndex(3);
+            $this->assertTrue(false);
+        } catch (Exception $exception) {
+            $this->assertTrue(true);
+        }
+
     }
 
     /**

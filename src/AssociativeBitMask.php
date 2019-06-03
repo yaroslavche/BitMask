@@ -109,9 +109,6 @@ class AssociativeBitMask extends IndexedBitMask
             return;
         }
         $index = array_search($key, $this->keys);
-        if (!is_int($index)) {
-            throw new InvalidArgumentException('Key not found');
-        }
         $bit = Bits::indexToBit($index);
         if ($isSet) {
             $this->setBit($bit);
