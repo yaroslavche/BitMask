@@ -11,7 +11,10 @@ before_script:
 script:
   - composer cscheck
   - composer phpstan
-  - composer tests
+#  - composer behat
+  - composer infection
 
-after_success:
-  - bash <(curl -s https://codecov.io/bash)
+#after_success:
+#  - bash <(curl -s https://codecov.io/bash)
+
+# todo: update codecov config for phpunit report
