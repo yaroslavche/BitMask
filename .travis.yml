@@ -1,17 +1,18 @@
 language: php
-
 php:
   - 7.2
   - 7.3
-
 before_script:
   - travis_retry composer self-update
+  - travis_retry composer global require hirak/prestissimo
   - travis_retry composer install --no-interaction --prefer-source --dev
-
 script:
   - composer cscheck
   - composer phpstan
-  - composer tests
-
+  - composer infection
+  - composer phpunit_clover
 after_success:
   - bash <(curl -s https://codecov.io/bash)
+env:
+  global:
+    secure: bFkCcOCSVR2UY30B0XlprJ881oeb2h9Bde8TezH40aqyzNe8ilU/+6v6KxBcNm1Ly1fj0sNdeOjpP+YI0doS0iyRCtTFH3RMwWD8tI9TNYYuYfFJUucPf6GWnNNuGcYUKKHWpmhokuNhFxwbVkfqzh5doqEoqrNE4h+BMHPvYz7rvQMQ/4scGMmMPGR1EFOSZsFCtJhsl1Y6CO79AGqPChXAna7ioEIYchdCDCbsOjk0Wh/KCVHr7OGy0TRpmHvfdH39p56LQVH6KSSZB47slYrx4BX/xPKHcOX4u6XS7Srg0vCsKfKxorh4VWl9MAOXlOG7dzynlpR/MBf8s9Z3+kPq4XBgA5GRmBQDpRlkpqJnovlhGjIth8OTs5X2/4bmJiDYXKBfbDPViuEzTxPRrConOS/YiJgD6dMqUDQScIXa8F+4s7DofoI9addM7XpRbehGd8BUp75vSjXGTJEdVHRrzA/Yj1BmoFSq1TG+jUlDKnC0eJHwAbcN14LBo+gfodgBw5zWXC4Ti3htnoBQCg4jZ3gQY2E6HIp5rrp8Rdx+VPgDX5iPN2g1tZUKGLP2oWE1ImUvEppPdm3ddV5VlSxepCZh62X6YhXmz01vbvgqTTZC5vxgWduRRtdc/4s9LrTVk1BsTJ9j22FtcImUB5D3Woq9pjYLjEfamkPmC8I=

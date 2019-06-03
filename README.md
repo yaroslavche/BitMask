@@ -1,4 +1,6 @@
 [![Build Status](https://travis-ci.org/yaroslavche/BitMask.svg?branch=master)](https://travis-ci.org/yaroslavche/BitMask)
+[![codecov](https://codecov.io/gh/yaroslavche/bitmask/branch/master/graph/badge.svg)](https://codecov.io/gh/yaroslavche/bitmask)
+[![Infection MSI](https://badge.stryker-mutator.io/github.com/yaroslavche/bitmask/master)](https://infection.github.io)
 
 # BitMask
 
@@ -74,33 +76,32 @@ doctrine:
 
 ## Scripts:
 #### Tests
+##### Behat
 ```bash
-$ composer tests
+$ composer behat
+$ ./vendor/bin/behat
 ```
 ```bash
-$ ./vendor/bin/behat
+$ composer infection
+$ ./vendor/bin/infection --min-msi=50 --min-covered-msi=70
 ```
 #### Benchmarks
 ```bash
 $ composer benchmarks
-```
-```bash
 $ ./vendor/bin/phpbench run benchmarks --report=default
 ```
 #### PHPStan
 ```bash
 $ composer phpstan
-```
-```bash
 $ ./vendor/bin/phpstan analyse src/ -c phpstan.neon --level=7 --no-progress -vvv --memory-limit=1024M
 ```
 #### PHP-CS
 ```bash
 $ composer cscheck
-$ composer csfix
+$ ./vendor/bin/phpcs --ignore=features/**
 ```
 ```bash
-$ ./vendor/bin/phpcs --ignore=features/**
+$ composer csfix
 $ ./vendor/bin/phpcbf --ignore=features/**
 ```
 
