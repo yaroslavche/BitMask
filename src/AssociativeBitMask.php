@@ -24,6 +24,9 @@ class AssociativeBitMask extends IndexedBitMask
      * AssociativeBitMask constructor.
      * @param array $keys
      * @param int $mask
+     *
+     * @todo check keys. Must be valid PHP identifier name ^[a-zA-Z_\x80-\xff][a-zA-Z0-9_\x80-\xff]*$
+     * @see https://www.php.net/manual/en/language.variables.basics.php
      */
     public function __construct(array $keys, int $mask = null)
     {

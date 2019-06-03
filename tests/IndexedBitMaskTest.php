@@ -20,6 +20,14 @@ class IndexedBitMaskTest extends TestCase
         $this->assertEquals(0, $bitmask->get());
     }
 
+    public function testGetByIndex()
+    {
+        $bitmask = new IndexedBitMask(5);
+        $this->assertTrue($bitmask->getByIndex(0));
+        $this->assertFalse($bitmask->getByIndex(1));
+        $this->assertTrue($bitmask->getByIndex(2));
+    }
+
     /**
      * @todo check PHP_INT_MAX
      */
