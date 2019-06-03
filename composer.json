@@ -49,7 +49,8 @@
     "phpstan": "phpstan analyse src/ -c phpstan.neon --level=7 --no-progress -vvv --memory-limit=1024M",
     "benchmarks": "phpbench run benchmarks --report=default",
     "infection": "infection --min-msi=50 --min-covered-msi=70",
-    "behat": "behat"
+    "behat": "behat",
+    "phpunit_clover": "phpunit --coverage-clover clover.xml"
   },
   "minimum-stability": "dev",
   "prefer-stable": true

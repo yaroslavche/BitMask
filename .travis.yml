@@ -14,8 +14,9 @@ script:
   - composer phpstan
 #  - composer behat
   - composer infection
+  - composer phpunit_clover
 
-#after_success:
-#  - bash <(curl -s https://codecov.io/bash)
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
 
 # todo: update codecov config for phpunit report
