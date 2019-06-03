@@ -109,7 +109,7 @@ class AssociativeBitMask extends IndexedBitMask
             return;
         }
         $index = array_search($key, $this->keys);
-        $bit = Bits::indexToBit($index);
+        $bit = Bits::indexToBit((int)$index);
         if ($isSet) {
             $this->setBit($bit);
         } else {
