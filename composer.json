@@ -41,8 +41,8 @@
     }
   },
   "scripts": {
-    "cscheck": "phpcs --ignore=features/**",
-    "csfix": "phpcbf --ignore=features/**",
+    "cscheck": "phpcs",
+    "csfix": "phpcbf",
     "phpstan": "phpstan analyse src/ -c phpstan.neon --level=7 --no-progress -vvv --memory-limit=1024M",
     "benchmarks": "phpbench run benchmarks --report=default",
     "phpunit": "phpunit",

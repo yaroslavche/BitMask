@@ -43,7 +43,7 @@ class AssociativeBitMaskTest extends TestCase
         $this->assertTrue($bitmask->isP1());
         $this->assertFalse($bitmask->isP2());
         $this->assertTrue($bitmask->isP4());
-        $this->expectExceptionMessageRegExp('/Unknown key "[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*"$/');
+        /** need catch exception */
         try {
             $this->assertFalse($bitmask->isP8());
         } catch (Exception $exception) {
@@ -54,7 +54,7 @@ class AssociativeBitMaskTest extends TestCase
         $this->assertTrue($bitmask->p1);
         $this->assertFalse($bitmask->p2);
         $this->assertTrue($bitmask->p4);
-        $this->expectExceptionMessageRegExp('/Unknown key "[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*"$/');
+        /** need catch exception */
         try {
             $this->assertFalse($bitmask->p8());
         } catch (Exception $exception) {
@@ -67,13 +67,15 @@ class AssociativeBitMaskTest extends TestCase
         $this->assertTrue($bitmask->p2);
         $bitmask->p4 = false;
         $this->assertFalse($bitmask->p4);
-        /** wrong behavior */
-        $this->expectExceptionMessageRegExp('/Unknown key "[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*"$/');
+        /** need catch exception */
         try {
             $bitmask->p8 = true;
         } catch (Exception $exception) {
         }
-        $this->assertFalse($bitmask->p8);
+
+        /** __isset */
+        $this->assertFalse(isset($bitmask->p1));
+        $this->assertTrue(isset($bitmask->p2));
     }
 
     /**
@@ -141,5 +143,13 @@ class AssociativeBitMaskTest extends TestCase
         $this->expectExceptionObject(new InvalidArgumentException('Argument must be a single bit'));
         $bitmask->unsetBit(3);
         $this->assertEquals(0, $bitmask->get());
+    }
+
+    public function testJsonSerialize()
+    {
+        $bitmask = new AssociativeBitMask(['k1', 'k2', 'k3', 'k4']);
+        $bitmask->set(9);
+        $jsonArray = $bitmask->jsonSerialize();
+        $this->assertSame(['k1' => true, 'k2' => false, 'k3' => false, 'k4' => true], $jsonArray);
     }
 }

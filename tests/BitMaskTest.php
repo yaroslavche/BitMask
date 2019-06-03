@@ -71,4 +71,28 @@ class BitMaskTest extends TestCase
         $bitmask->unsetBit(3);
         $this->assertEquals(0, $bitmask->get());
     }
+
+    public function testToString()
+    {
+        $bitmask = new BitMask(7);
+        $this->assertSame('7', (string)$bitmask);
+        $bitmask->set(9);
+        $this->assertSame('9', (string)$bitmask);
+    }
+
+    public function testInvoke()
+    {
+        $bitmask = new BitMask(7);
+        $this->assertTrue($bitmask(1));
+        $this->assertFalse($bitmask(8));
+        $bitmask->set(9);
+        $this->assertTrue($bitmask(8));
+        $this->assertFalse($bitmask(4));
+    }
+
+    public function testInit()
+    {
+        $bitmask = BitMask::init(7);
+        $this->assertInstanceOf(BitMask::class, $bitmask);
+    }
 }

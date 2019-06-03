@@ -99,11 +99,11 @@ $ ./vendor/bin/phpstan analyse src/ -c phpstan.neon --level=7 --no-progress -vvv
 #### PHP-CS
 ```bash
 $ composer cscheck
-$ ./vendor/bin/phpcs --ignore=features/**
+$ ./vendor/bin/phpcs
 ```
 ```bash
 $ composer csfix
-$ ./vendor/bin/phpcbf --ignore=features/**
+$ ./vendor/bin/phpcbf
 ```
 
 ## Contributing
