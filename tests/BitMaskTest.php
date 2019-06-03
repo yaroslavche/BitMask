@@ -8,27 +8,18 @@ use PHPUnit\Framework\TestCase;
 
 class BitMaskTest extends TestCase
 {
-    /**
-     * @covers \BitMask\BitMask::__construct
-     */
     public function testBitMask()
     {
         $bitmask = new BitMask();
         $this->assertInstanceOf(BitMask::class, $bitmask);
     }
 
-    /**
-     * @covers \BitMask\BitMask::get
-     */
     public function testGet()
     {
         $bitmask = new BitMask();
         $this->assertEquals(0, $bitmask->get());
     }
 
-    /**
-     * @covers \BitMask\BitMask::set
-     */
     public function testSet()
     {
         $bitmask = new BitMask();
@@ -38,9 +29,6 @@ class BitMaskTest extends TestCase
         $this->assertEquals(0, $bitmask->get());
     }
 
-    /**
-     * @covers \BitMask\BitMask::unset
-     */
     public function testUnset()
     {
         $bitmask = new BitMask(PHP_INT_MAX);
@@ -48,9 +36,6 @@ class BitMaskTest extends TestCase
         $this->assertEquals(0, $bitmask->get());
     }
 
-    /**
-     * @covers \BitMask\BitMask::isSet
-     */
     public function testIsSet()
     {
         $bitmask = new BitMask(PHP_INT_MAX);
@@ -59,9 +44,6 @@ class BitMaskTest extends TestCase
         $this->assertFalse($bitmask->isSet(PHP_INT_MAX));
     }
 
-    /**
-     * @covers \BitMask\BitMask::isSetBit
-     */
     public function testIsSetBit()
     {
         $bitmask = new BitMask(7);
@@ -69,9 +51,6 @@ class BitMaskTest extends TestCase
         $this->assertTrue($bitmask->isSetBit(4));
     }
 
-    /**
-     * @covers \BitMask\BitMask::setBit
-     */
     public function testSetBit()
     {
         $bitmask = new BitMask();
@@ -82,9 +61,6 @@ class BitMaskTest extends TestCase
         $this->assertEquals(8, $bitmask->get());
     }
 
-    /**
-     * @covers \BitMask\BitMask::unsetBit
-     */
     public function testUnsetBit()
     {
         $bitmask = new BitMask();

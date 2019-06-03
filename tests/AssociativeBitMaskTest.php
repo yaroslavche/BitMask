@@ -8,18 +8,12 @@ use PHPUnit\Framework\TestCase;
 
 class AssociativeBitMaskTest extends TestCase
 {
-    /**
-     * @covers \BitMask\AssociativeBitMask::__construct
-     */
     public function testAssociativeBitMask()
     {
         $bitmask = new AssociativeBitMask(['first']);
         $this->assertInstanceOf(AssociativeBitMask::class, $bitmask);
     }
 
-    /**
-     * @covers \BitMask\AssociativeBitMask::get
-     */
     public function testGet()
     {
         $bitmask = new AssociativeBitMask(['first']);
@@ -28,7 +22,6 @@ class AssociativeBitMaskTest extends TestCase
 
     /**
      * @todo check PHP_INT_MAX
-     * @covers \BitMask\AssociativeBitMask::set
      */
     public function testSet()
     {
@@ -41,7 +34,6 @@ class AssociativeBitMaskTest extends TestCase
 
     /**
      * @todo check PHP_INT_MAX
-     * @covers \BitMask\AssociativeBitMask::unset
      */
     public function testUnset()
     {
@@ -52,7 +44,6 @@ class AssociativeBitMaskTest extends TestCase
 
     /**
      * @todo check PHP_INT_MAX
-     * @covers \BitMask\AssociativeBitMask::isSet
      */
     public function testIsSet()
     {
@@ -64,7 +55,6 @@ class AssociativeBitMaskTest extends TestCase
 
     /**
      * @todo not working properly
-     * @covers \BitMask\AssociativeBitMask::isSetBit
      */
     public function testIsSetBit()
     {
@@ -73,9 +63,6 @@ class AssociativeBitMaskTest extends TestCase
 //        $this->assertTrue($bitmask->isSetBit(4));
     }
 
-    /**
-     * @covers \BitMask\AssociativeBitMask::setBit
-     */
     public function testSetBit()
     {
         $bitmask = new AssociativeBitMask(['first']);
@@ -86,9 +73,6 @@ class AssociativeBitMaskTest extends TestCase
         $this->assertEquals(8, $bitmask->get());
     }
 
-    /**
-     * @covers \BitMask\AssociativeBitMask::unsetBit
-     */
     public function testUnsetBit()
     {
         $bitmask = new AssociativeBitMask(['first']);
