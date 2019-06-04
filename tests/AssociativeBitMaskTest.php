@@ -3,7 +3,6 @@
 namespace BitMask\Tests;
 
 use BitMask\AssociativeBitMask;
-use Exception;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
@@ -11,10 +10,16 @@ class AssociativeBitMaskTest extends TestCase
 {
     public function testAssociativeBitMask()
     {
-        $bitmask = new AssociativeBitMask(['first']);
+        $bitmask = new AssociativeBitMask(['first', 'second'], 3);
         $this->assertInstanceOf(AssociativeBitMask::class, $bitmask);
-        $this->expectExceptionObject(new InvalidArgumentException('Keys must be non empty'));
-        $bitmask = new AssociativeBitMask([]);
+        $this->assertSame(['first' => true, 'second' => true], $bitmask->jsonSerialize());
+        $this->assertSame(3, $bitmask->get());
+        try {
+            $bitmask = new AssociativeBitMask([]);
+            $this->assertNull($bitmask);
+        } catch (InvalidArgumentException $exception) {
+            $this->assertSame('Keys must be non empty', $exception->getMessage());
+        }
     }
 
     public function testGet()
@@ -38,45 +43,48 @@ class AssociativeBitMaskTest extends TestCase
 
     public function testMagicMethods()
     {
-        $bitmask = new AssociativeBitMask(['p1', 'p2', 'p4'], 5);
+        $bitmask = new AssociativeBitMask(['readable', 'writable', 'executable'], 5);
         /** __call */
-        $this->assertTrue($bitmask->isP1());
-        $this->assertFalse($bitmask->isP2());
-        $this->assertTrue($bitmask->isP4());
-        /** need catch exception */
+        $this->assertTrue($bitmask->isReadable());
+        $this->assertFalse($bitmask->isWritable());
+        $this->assertTrue($bitmask->isExecutable());
         try {
-            $this->assertFalse($bitmask->isP8());
-        } catch (Exception $exception) {
+            $result = $bitmask->isUnknownKey();
+            $this->assertNull($result);
+        } catch (InvalidArgumentException $exception) {
+            $this->assertSame('Unknown key "unknownKey"', $exception->getMessage());
         }
-
+        $this->assertNull($bitmask->unknownMethodName());
 
         /** __get */
-        $this->assertTrue($bitmask->p1);
-        $this->assertFalse($bitmask->p2);
-        $this->assertTrue($bitmask->p4);
-        /** need catch exception */
+        $this->assertTrue($bitmask->readable);
+        $this->assertFalse($bitmask->writable);
+        $this->assertTrue($bitmask->executable);
         try {
-            $this->assertFalse($bitmask->p8());
-        } catch (Exception $exception) {
+            $result = $bitmask->unknownKey;
+            $this->assertNull($result);
+        } catch (InvalidArgumentException $exception) {
+            $this->assertSame('Unknown key "unknownKey"', $exception->getMessage());
         }
 
         /** __set */
-        $bitmask->p1 = false;
-        $this->assertFalse($bitmask->p1);
-        $bitmask->p2 = true;
-        $this->assertTrue($bitmask->p2);
-        $bitmask->p4 = false;
-        $this->assertFalse($bitmask->p4);
-        $bitmask->p4 = false;
-        /** need catch exception */
+        $bitmask->readable = false;
+        $this->assertFalse($bitmask->readable);
+        $bitmask->writable = true;
+        $this->assertTrue($bitmask->writable);
+        $bitmask->executable = false;
+        $this->assertFalse($bitmask->executable);
+        $bitmask->executable = false;
         try {
-            $bitmask->p8 = true;
-        } catch (Exception $exception) {
+            $bitmask->unknownKey = true;
+            $this->assertNull($result);
+        } catch (InvalidArgumentException $exception) {
+            $this->assertSame('Unknown key "unknownKey"', $exception->getMessage());
         }
 
         /** __isset */
-        $this->assertFalse(isset($bitmask->p1));
-        $this->assertTrue(isset($bitmask->p2));
+        $this->assertFalse(isset($bitmask->readable));
+        $this->assertTrue(isset($bitmask->writable));
     }
 
     /**
@@ -126,20 +134,27 @@ class AssociativeBitMaskTest extends TestCase
 
     public function testSetBit()
     {
-        $bitmask = new AssociativeBitMask(['first']);
-        $bitmask->setBit(8);
-        $this->assertTrue($bitmask->isSetBit(8));
-        $this->expectExceptionObject(new InvalidArgumentException('Argument must be a single bit'));
-        $bitmask->setBit(3);
-        $this->assertEquals(8, $bitmask->get());
+        $bitmask = new AssociativeBitMask(['r', 'w', 'x'], 1);
+        $bitmask->setBit(4);
+        $this->assertTrue($bitmask->isSetBit(4));
+        $this->assertSame(5, $bitmask->get());
+        try {
+            $bitmask->setBit(3);
+        } catch (InvalidArgumentException $exception) {
+            $this->assertSame('Argument must be a single bit', $exception->getMessage());
+        }
     }
 
     public function testUnsetBit()
     {
-        $bitmask = new AssociativeBitMask(['k1', 'k2', 'k3', 'k4']);
-        $bitmask->setBit(8);
-        $bitmask->unsetBit(8);
-        $this->assertFalse($bitmask->isSetBit(8));
+        $bitmask = new AssociativeBitMask(['read', 'write', 'execute'], 7);
+        $bitmask->unsetBit(1);
+        $this->assertFalse($bitmask->isSetBit(1));
+        $bitmask->unsetBit(2);
+        $this->assertFalse($bitmask->isSetBit(2));
+        $bitmask->unsetBit(4);
+        $this->assertFalse($bitmask->isSetBit(4));
+        $this->assertSame(0, $bitmask->get());
         $this->expectExceptionObject(new InvalidArgumentException('Argument must be a single bit'));
         $bitmask->unsetBit(3);
         $this->assertEquals(0, $bitmask->get());
@@ -147,9 +162,7 @@ class AssociativeBitMaskTest extends TestCase
 
     public function testJsonSerialize()
     {
-        $bitmask = new AssociativeBitMask(['k1', 'k2', 'k3', 'k4']);
-        $bitmask->set(9);
-        $jsonArray = $bitmask->jsonSerialize();
-        $this->assertSame(['k1' => true, 'k2' => false, 'k3' => false, 'k4' => true], $jsonArray);
+        $bitmask = new AssociativeBitMask(['read', 'write', 'execute'], 7);
+        $this->assertSame(['read' => true, 'write' => true, 'execute' => true], $bitmask->jsonSerialize());
     }
 }
