@@ -67,6 +67,7 @@ class AssociativeBitMaskTest extends TestCase
         $this->assertTrue($bitmask->p2);
         $bitmask->p4 = false;
         $this->assertFalse($bitmask->p4);
+        $bitmask->p4 = false;
         /** need catch exception */
         try {
             $bitmask->p8 = true;
@@ -90,7 +91,6 @@ class AssociativeBitMaskTest extends TestCase
         $this->assertEquals(0, $bitmask->get());
         $this->expectExceptionMessageRegExp('/Invalid given mask "[\d+]". Maximum value for [\d+] keys is [\d+]$/');
         $bitmask->set(8);
-        $this->assertEquals(0, $bitmask->get());
     }
 
     /**
