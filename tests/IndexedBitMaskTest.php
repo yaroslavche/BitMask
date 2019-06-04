@@ -39,12 +39,8 @@ class IndexedBitMaskTest extends TestCase
         } catch (Exception $exception) {
             $this->assertTrue(true);
         }
-
     }
 
-    /**
-     * @todo check PHP_INT_MAX
-     */
     public function testSet()
     {
         $bitmask = new IndexedBitMask();
@@ -54,9 +50,6 @@ class IndexedBitMaskTest extends TestCase
         $this->assertEquals(0, $bitmask->get());
     }
 
-    /**
-     * @todo check PHP_INT_MAX
-     */
     public function testUnset()
     {
         $bitmask = new IndexedBitMask(7);
@@ -64,9 +57,6 @@ class IndexedBitMaskTest extends TestCase
         $this->assertEquals(0, $bitmask->get());
     }
 
-    /**
-     * @todo check PHP_INT_MAX
-     */
     public function testIsSet()
     {
         $bitmask = new IndexedBitMask(7);

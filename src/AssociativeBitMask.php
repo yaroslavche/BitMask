@@ -33,7 +33,7 @@ class AssociativeBitMask extends IndexedBitMask
         if (empty($keys)) {
             throw new InvalidArgumentException('Keys must be non empty');
         }
-        $this->keys = array_reverse($keys);
+        $this->keys = $keys;
         parent::__construct($mask);
         $this->set($mask);
     }
@@ -133,6 +133,6 @@ class AssociativeBitMask extends IndexedBitMask
         foreach ($this->keys as $index => $key) {
             $array[$key] = $this->map[$index];
         }
-        return array_reverse($array, true);
+        return $array;
     }
 }

@@ -6,8 +6,12 @@ use BitMask\Util\Bits;
 use Exception;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @todo check PHP_INT_MAX
+ */
 class BitsTest extends TestCase
 {
+
     public function testGetMSB()
     {
         $this->assertEquals(0, Bits::getMSB(0));

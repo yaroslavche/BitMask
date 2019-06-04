@@ -10,10 +10,10 @@ class AssociativeBitMaskTest extends TestCase
 {
     public function testAssociativeBitMask()
     {
-        $bitmask = new AssociativeBitMask(['first', 'second'], 3);
+        $bitmask = new AssociativeBitMask(['r', 'w', 'x'], 6);
         $this->assertInstanceOf(AssociativeBitMask::class, $bitmask);
-        $this->assertSame(['first' => true, 'second' => true], $bitmask->jsonSerialize());
-        $this->assertSame(3, $bitmask->get());
+        $this->assertSame(['r' => false, 'w' => true, 'x' => true], $bitmask->jsonSerialize());
+        $this->assertSame(6, $bitmask->get());
         try {
             $bitmask = new AssociativeBitMask([]);
             $this->assertNull($bitmask);
@@ -28,17 +28,17 @@ class AssociativeBitMaskTest extends TestCase
         $this->assertEquals(0, $bitmask->get());
     }
 
-    /**
-     * "[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*"
-     */
     public function testGetByKey()
     {
-        $bitmask = new AssociativeBitMask(['k1', 'k2', 'k4'], 5);
-        $this->assertTrue($bitmask->getByKey('k1'));
-        $this->assertFalse($bitmask->getByKey('k2'));
-        $this->assertTrue($bitmask->getByKey('k4'));
-        $this->expectExceptionMessageRegExp('/Unknown key "[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*"$/');
-        $this->assertFalse($bitmask->getByKey('k8'));
+        $bitmask = new AssociativeBitMask(['r', 'w', 'x'], 5);
+        $this->assertTrue($bitmask->getByKey('r'));
+        $this->assertFalse($bitmask->getByKey('w'));
+        $this->assertTrue($bitmask->getByKey('x'));
+        try {
+            $this->assertFalse($bitmask->getByKey('unknownKey'));
+        } catch (InvalidArgumentException $exception) {
+            $this->assertSame('Unknown key "unknownKey"', $exception->getMessage());
+        }
     }
 
     public function testMagicMethods()
@@ -87,9 +87,6 @@ class AssociativeBitMaskTest extends TestCase
         $this->assertTrue(isset($bitmask->writable));
     }
 
-    /**
-     * @todo check PHP_INT_MAX
-     */
     public function testSet()
     {
         $bitmask = new AssociativeBitMask(['k1', 'k2', 'k4']);
@@ -101,35 +98,28 @@ class AssociativeBitMaskTest extends TestCase
         $bitmask->set(8);
     }
 
-    /**
-     * @todo check PHP_INT_MAX
-     */
     public function testUnset()
     {
-        $bitmask = new AssociativeBitMask(['first']);
+        $bitmask = new AssociativeBitMask(['first'], 1);
         $bitmask->unset();
         $this->assertEquals(0, $bitmask->get());
     }
 
-    /**
-     * @todo check PHP_INT_MAX
-     */
     public function testIsSet()
     {
-        $bitmask = new AssociativeBitMask(['k1', 'k2', 'k4'], 7);
+        $bitmask = new AssociativeBitMask(['r', 'w', 'x'], 7);
         $this->assertTrue($bitmask->isSet(7));
         $bitmask->set(0);
         $this->assertFalse($bitmask->isSet(7));
     }
 
-    /**
-     * @todo not working properly
-     */
     public function testIsSetBit()
     {
-        $bitmask = new AssociativeBitMask(['k1', 'k2', 'k3', 'k4']);
+        $bitmask = new AssociativeBitMask(['r', 'w', 'x', 's'], 7);
         $this->assertFalse($bitmask->isSetBit(8));
-//        $this->assertTrue($bitmask->isSetBit(4));
+        $this->assertTrue($bitmask->isSetBit(4));
+        $bitmask->set(15);
+        $this->assertTrue($bitmask->isSetBit(8));
     }
 
     public function testSetBit()

@@ -32,8 +32,8 @@ class IndexedBitMask extends BitMask
      */
     public function set(int $mask = null): void
     {
-        parent::set($mask);
         $mask = $mask ?? 0;
+        parent::set($mask);
         for ($index = 0; $index < Bits::getMSB($mask); $index++) {
             $this->map[$index] = $this->isSetBit(pow(2, $index));
         }
