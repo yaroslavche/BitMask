@@ -99,8 +99,11 @@ class AssociativeBitMaskTest extends TestCase
     public function testSetInvalidMask()
     {
         $bitmask = new AssociativeBitMask(['r', 'w', 'x']);
-        $this->expectExceptionMessageRegExp('/Invalid given mask "[\d+]". Maximum value for [\d+] keys is [\d+]$/');
-        $bitmask->set(8);
+        try {
+            $bitmask->set(8);
+        } catch (InvalidArgumentException $exception) {
+            $this->assertRegExp('/Invalid given mask "[\d+]". Maximum value for [\d+] keys is [\d+]$/', $exception->getMessage());
+        }
     }
 
     public function testUnset()
@@ -138,6 +141,7 @@ class AssociativeBitMaskTest extends TestCase
         } catch (InvalidArgumentException $exception) {
             $this->assertSame('Argument must be a single bit', $exception->getMessage());
         }
+        $this->assertSame(5, $bitmask->get());
     }
 
     public function testUnsetBit()
@@ -149,10 +153,12 @@ class AssociativeBitMaskTest extends TestCase
         $this->assertFalse($bitmask->isSetBit(2));
         $bitmask->unsetBit(4);
         $this->assertFalse($bitmask->isSetBit(4));
+        try {
+            $bitmask->unsetBit(3);
+        } catch (InvalidArgumentException $exception) {
+            $this->assertSame('Argument must be a single bit', $exception->getMessage());
+        }
         $this->assertSame(0, $bitmask->get());
-        $this->expectExceptionObject(new InvalidArgumentException('Argument must be a single bit'));
-        $bitmask->unsetBit(3);
-        $this->assertEquals(0, $bitmask->get());
     }
 
     public function testJsonSerialize()
