@@ -104,6 +104,7 @@ class AssociativeBitMaskTest extends TestCase
         } catch (InvalidArgumentException $exception) {
             $this->assertRegExp('/Invalid given mask "[\d+]". Maximum value for [\d+] keys is [\d+]$/', $exception->getMessage());
         }
+        $this->assertSame(0, $bitmask->get());
     }
 
     public function testUnset()
