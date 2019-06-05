@@ -5,9 +5,6 @@ namespace BitMask;
 
 use BitMask\Util\Bits;
 use InvalidArgumentException;
-use Safe\Exceptions\StringsException;
-use function Safe\sprintf;
-use function Safe\substr;
 
 /**
  * Class AssociativeBitMask
@@ -47,7 +44,7 @@ class AssociativeBitMask extends IndexedBitMask
         $keysCount = count($this->keys);
         $maxValue = (1 << $keysCount) - 1;
         if ($maxValue < $mask) {
-            $message = @sprintf('Invalid given mask "%d". Maximum value for %d keys is %d', $mask, $keysCount, $maxValue);
+            $message = sprintf('Invalid given mask "%d". Maximum value for %d keys is %d', $mask, $keysCount, $maxValue);
             throw new InvalidArgumentException($message);
         }
         parent::set($mask);
@@ -56,7 +53,6 @@ class AssociativeBitMask extends IndexedBitMask
     /**
      * @param string $key
      * @return bool
-     * @throws StringsException
      */
     final public function getByKey(string $key): bool
     {
@@ -71,7 +67,6 @@ class AssociativeBitMask extends IndexedBitMask
      * @param string $method
      * @param mixed[] $args
      * @return bool
-     * @throws StringsException
      * @todo: Warning: Missing return statement
      */
     final public function __call(string $method, array $args): ?bool
@@ -86,7 +81,6 @@ class AssociativeBitMask extends IndexedBitMask
     /**
      * @param string $key
      * @return bool
-     * @throws StringsException
      */
     final public function __get(string $key): bool
     {
@@ -96,7 +90,6 @@ class AssociativeBitMask extends IndexedBitMask
     /**
      * @param string $key
      * @param bool $isSet
-     * @throws StringsException
      */
     final public function __set(string $key, bool $isSet)
     {
@@ -117,7 +110,6 @@ class AssociativeBitMask extends IndexedBitMask
     /**
      * @param string $key
      * @return mixed
-     * @throws StringsException
      */
     final public function __isset(string $key)
     {
