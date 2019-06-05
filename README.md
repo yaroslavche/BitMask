@@ -51,28 +51,12 @@ $assoc->getByKey('other'); // true
 $assoc->isFlag2(); // true
 ``` 
 
-### Installing
+## Installing
 
 Install package via [composer](https://getcomposer.org/) 
 ```bash
 composer require yaroslavche/bitmask
 ```
-
-### Doctrine custom mapping type
-For using Doctrine mapping type as `bitmask` need to register type. See example [in Doctrine documentation](https://www.doctrine-project.org/projects/doctrine-orm/en/latest/cookbook/custom-mapping-types.html)
-
-For Symfony need only add custom type in Doctrine config:
-```yaml
-# config/packages/doctrine.yaml
-
-doctrine:
-    dbal:
-        types:
-            bitmask: BitMask\Doctrine\Types\BitMaskType
-
-```
-
-[Usage example](https://medium.com/@yaroslav429/symfony-4-doctrine-custom-mapping-type-1c8ff679f4c1)
 
 ## Scripts:
 #### Tests
@@ -85,6 +69,11 @@ Infection
 ```bash
 $ composer infection
 $ ./vendor/bin/infection --min-msi=50 --min-covered-msi=70
+```
+#### BC
+```bash
+$ composer bccheck
+$ ./vendor/bin/roave-backward-compatibility-check
 ```
 #### Benchmarks
 ```bash
