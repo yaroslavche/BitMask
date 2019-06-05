@@ -12,10 +12,11 @@ use InvalidArgumentException;
  */
 class AssociativeBitMask extends IndexedBitMask
 {
-    /**
-     * @var array $keys
-     */
+    /** @var array $keys */
     protected $keys;
+
+    /** @var int $maxValue */
+    protected $maxValue;
 
     /**
      * AssociativeBitMask constructor.
@@ -31,6 +32,7 @@ class AssociativeBitMask extends IndexedBitMask
             throw new InvalidArgumentException('Keys must be non empty');
         }
         $this->keys = $keys;
+        $this->maxValue = Bits::indexToBit(count($this->keys)) - 1;
         parent::__construct($mask);
         $this->set($mask);
     }
@@ -41,10 +43,13 @@ class AssociativeBitMask extends IndexedBitMask
      */
     final public function set(int $mask = null): void
     {
-        $keysCount = count($this->keys);
-        $maxValue = (1 << $keysCount) - 1;
-        if ($maxValue < $mask) {
-            $message = sprintf('Invalid given mask "%d". Maximum value for %d keys is %d', $mask, $keysCount, $maxValue);
+        if ($this->maxValue < $mask) {
+            $message = sprintf(
+                'Invalid given mask "%d". Maximum value for %d keys is %d',
+                $mask,
+                Bits::bitToIndex($this->maxValue + 1),
+                $this->maxValue
+            );
             throw new InvalidArgumentException($message);
         }
         parent::set($mask);
