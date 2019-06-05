@@ -10,7 +10,7 @@ script:
   - composer cscheck
   - composer phpstan
   - composer phpunit
-  - composer bccheck
+#  - composer bccheck
   - composer infection
   - composer clover
 after_success:
