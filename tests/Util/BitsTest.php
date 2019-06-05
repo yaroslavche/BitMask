@@ -4,6 +4,7 @@ namespace BitMask\Tests\Util;
 
 use BitMask\Util\Bits;
 use Exception;
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -14,9 +15,12 @@ class BitsTest extends TestCase
 
     public function testGetMSB()
     {
+        $this->assertEquals(0, Bits::getMSB(-1));
         $this->assertEquals(0, Bits::getMSB(0));
         $this->assertEquals(1, Bits::getMSB(1));
         $this->assertEquals(4, Bits::getMSB(8));
+        $this->assertEquals(4, Bits::getMSB(15));
+//        $this->assertEquals(4, Bits::getMSB(PHP_INT_MAX));
     }
 
     public function testGetSetBits()
@@ -35,10 +39,10 @@ class BitsTest extends TestCase
     {
         $this->assertEquals(3, Bits::bitToIndex(8));
         try {
-            Bits::bitToIndex(7);
-            $this->assertTrue(false);
-        } catch (Exception $exception) {
-            $this->assertTrue(true);
+            $result = Bits::bitToIndex(7);
+            $this->assertNull($result);
+        } catch (InvalidArgumentException $exception) {
+            $this->assertSame('Argument must be a single bit', $exception->getMessage());
         }
     }
 

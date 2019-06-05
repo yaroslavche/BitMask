@@ -45,8 +45,8 @@ class AssociativeBitMask extends IndexedBitMask
     final public function set(int $mask = null): void
     {
         $keysCount = count($this->keys);
-        $maxValue = pow(2, $keysCount) - 1;
-        if ($mask > $maxValue) {
+        $maxValue = (1 << $keysCount) - 1;
+        if ($maxValue < $mask) {
             $message = @sprintf('Invalid given mask "%d". Maximum value for %d keys is %d', $mask, $keysCount, $maxValue);
             throw new InvalidArgumentException($message);
         }

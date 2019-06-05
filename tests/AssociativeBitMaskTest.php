@@ -89,11 +89,16 @@ class AssociativeBitMaskTest extends TestCase
 
     public function testSet()
     {
-        $bitmask = new AssociativeBitMask(['k1', 'k2', 'k4']);
+        $bitmask = new AssociativeBitMask(['r', 'w', 'x']);
         $bitmask->set(7);
         $this->assertEquals(7, $bitmask->get());
         $bitmask->set();
         $this->assertEquals(0, $bitmask->get());
+    }
+
+    public function testSetInvalidMask()
+    {
+        $bitmask = new AssociativeBitMask(['r', 'w', 'x']);
         $this->expectExceptionMessageRegExp('/Invalid given mask "[\d+]". Maximum value for [\d+] keys is [\d+]$/');
         $bitmask->set(8);
     }

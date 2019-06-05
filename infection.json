@@ -13,9 +13,30 @@
   },
   "mutators": {
     "@default": true,
-    "TrueValue": {
+    "IncrementInteger": {
       "ignore": [
-        "BitMask\\BitMask::setBit::76"
+        "BitMask\\AssociativeBitMask::set::48"
+      ]
+    },
+    "OneZeroInteger": {
+      "ignore": [
+        "BitMask\\AssociativeBitMask::set::48"
+      ]
+    },
+    "MethodCallRemoval": {
+      "ignore": [
+        "BitMask\\AssociativeBitMask::__construct::37",
+        "BitMask\\AssociativeBitMask::__construct::38"
+      ]
+    },
+    "Minus": {
+      "ignore": [
+        "BitMask\\AssociativeBitMask::set::48"
+      ]
+    },
+    "LessThan": {
+      "ignore": [
+        "BitMask\\IndexedBitMask::set::37"
       ]
     }
   }

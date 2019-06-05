@@ -58,9 +58,19 @@ class BitMaskTest extends TestCase
         $bitmask = new BitMask();
         $bitmask->setBit(8);
         $this->assertTrue($bitmask->isSetBit(8));
+        $this->assertSame(8, $bitmask->get());
+        $bitmask->setBit(4);
+        $this->assertSame(12, $bitmask->get());
+        $bitmask->setBit(8, false);
+        $bitmask->setBit(2);
+        $this->assertSame(6, $bitmask->get());
+    }
+
+    public function testSetBitNonSingleBit()
+    {
+        $bitmask = new BitMask();
         $this->expectExceptionObject(new InvalidArgumentException('Argument must be a single bit'));
         $bitmask->setBit(3);
-        $this->assertEquals(8, $bitmask->get());
     }
 
     public function testUnsetBit()
@@ -69,9 +79,14 @@ class BitMaskTest extends TestCase
         $bitmask->setBit(8);
         $bitmask->unsetBit(8);
         $this->assertFalse($bitmask->isSetBit(8));
+        $this->assertSame(0, $bitmask->get());
+    }
+
+    public function testUnsetBitNonSingleBit()
+    {
+        $bitmask = new BitMask();
         $this->expectExceptionObject(new InvalidArgumentException('Argument must be a single bit'));
         $bitmask->unsetBit(3);
-        $this->assertEquals(0, $bitmask->get());
     }
 
     public function testToString()

@@ -27,9 +27,6 @@ final class Bits
         while ($mask >= $scan) {
             $msb++;
             $scan <<= 1;
-            if ($mask < $scan) {
-                break;
-            }
         }
         return $msb;
     }
@@ -132,7 +129,7 @@ final class Bits
     {
         $bitIndexes = [];
         foreach (static::getSetBits($mask) as $index => $bit) {
-            $bitIndexes[$index] = (int)log($bit, 2);
+            $bitIndexes[$index] = intval(log($bit, 2));
         }
         return $bitIndexes;
     }

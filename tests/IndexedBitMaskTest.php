@@ -29,15 +29,13 @@ class IndexedBitMaskTest extends TestCase
         $this->assertTrue($bitmask->getByIndex(2));
         try {
             $bitmask->getByIndex(-1);
-            $this->assertTrue(false);
-        } catch (Exception $exception) {
-            $this->assertTrue(true);
+        } catch (InvalidArgumentException $exception) {
+            $this->assertSame('Index (zero based) must be greater than or equal to zero', $exception->getMessage());
         }
         try {
             $bitmask->getByIndex(3);
-            $this->assertTrue(false);
-        } catch (Exception $exception) {
-            $this->assertTrue(true);
+        } catch (InvalidArgumentException $exception) {
+            $this->assertSame('Index not exists in bitmask', $exception->getMessage());
         }
     }
 

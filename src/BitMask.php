@@ -73,19 +73,14 @@ class BitMask implements BitMaskInterface
      */
     public function setBit(int $bit, bool $state = null): void
     {
-        $state = $state ?? true;
         if (!Bits::isSingleBit($bit)) {
             throw new InvalidArgumentException('Argument must be a single bit');
         }
-        if ($state) {
-            $this->storage |= $bit;
-        } else {
+        if ($state === false) {
             $this->storage ^= $bit;
-            /**
-             * maybe it's just obviously - one operation vs. two. But work almost same
-             * @see ./vendor/bin/phpbench run benchmarks/UnsetBitBench.php --report=default
-             */
             // $this->storage &= ~$bit;
+        } else {
+            $this->storage |= $bit;
         }
     }
 
