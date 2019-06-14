@@ -58,7 +58,10 @@ Install package via [composer](https://getcomposer.org/)
 composer require yaroslavche/bitmask
 ```
 
-## Scripts:
+## Contributing
+
+Feel free to fork or contribute =)
+
 #### Tests
 PHPUnit
 ```bash
@@ -94,10 +97,6 @@ $ ./vendor/bin/phpcs
 $ composer csfix
 $ ./vendor/bin/phpcbf
 ```
-
-## Contributing
-
-Feel free to fork or contribute =)
 
 ## License
 
