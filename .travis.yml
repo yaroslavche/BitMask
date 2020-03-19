@@ -7,12 +7,12 @@ before_script:
   - travis_retry composer global require hirak/prestissimo
   - travis_retry composer install --no-interaction --prefer-source --dev
 script:
-  - composer cscheck
+  - composer phpcs
   - composer phpstan
   - composer phpunit
   - composer bccheck
   - composer infection
-  - composer clover
+  - composer coverage
 after_success:
   - bash <(curl -s https://codecov.io/bash)
 env:

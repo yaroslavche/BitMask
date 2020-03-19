@@ -108,11 +108,6 @@ $ ./vendor/bin/phpbench run benchmarks --report=default
 $ composer phpstan
 $ ./vendor/bin/phpstan analyse src/ -c phpstan.neon --level=7 --no-progress -vvv --memory-limit=1024M
 ```
-##### PHPMD
-```bash
-$ composer phpmd
-$ ./vendor/bin/phpmd src text cleancode,codesize,controversial,design,naming,unusedcode
-```
 ##### PHP-CS
 ###### Code style check
 ```bash
