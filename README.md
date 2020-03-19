@@ -7,8 +7,20 @@
 PHP library for working with bitmask values
 
 ## Getting Started
+Usually enough for checking bits: 
+```php
+define('READ', 1 << 0);
+define('WRITE', 1 << 1);
+define('EXECUTE', 1 << 2);
+$mask = READ | WRITE | EXECUTE;
+// read: 1 write: 2 execute: 4 mask: 7
+echo sprintf('read: %d write: %d execute: %d mask: %d', READ, WRITE, EXECUTE, $mask);
+if ($mask & READ) {
+    // $mask have a READ
+}
+```
 
-Usage example for BitMask and BitsUtil
+But you can try other way with this package:
 ```php
 use BitMask\BitMask;
 use BitMask\Util\Bits as BitsUtil;
@@ -46,9 +58,21 @@ $indexed = new BitMask\IndexedBitMask(1 << 1 | 1 << 2);
 $indexed->getByIndex(2); // true
 $indexed->getByIndex(0); // false
 
-$assoc = new AssociativeBitMask(['flag1', 'flag2', 'other'], 1 << 0 | 1 << 1 | 1 << 2);
-$assoc->getByKey('other'); // true
-$assoc->isFlag2(); // true
+$bitmask = new BitMask\AssociativeBitMask(['readable', 'writable', 'executable'], 5);
+/** __call */
+$boolReadable = $bitmask->isReadable(); // bool true
+$boolWritable = $bitmask->isWritable(); // bool false
+$boolExecutable = $bitmask->isExecutable(); // bool true
+$result = $bitmask->isUnknownKey(); // null
+/** __get */
+$boolReadable = $bitmask->readable; // bool true
+$boolWritable = $bitmask->writable; // bool false
+$boolExecutable = $bitmask->executable; // bool true
+$result = $bitmask->unknownKey; // null
+/** __set */
+$bitmask->readable = false;
+$bitmask->writable = true;
+$bitmask->executable = false;
 ``` 
 
 ## Installing
@@ -63,39 +87,47 @@ composer require yaroslavche/bitmask
 Feel free to fork or contribute =)
 
 #### Tests
-PHPUnit
+##### PHPUnit
 ```bash
 $ composer phpunit
 $ ./vendor/bin/phpunit
 ```
-Infection
+##### Infection
 ```bash
 $ composer infection
 $ ./vendor/bin/infection --min-msi=50 --min-covered-msi=70
 ```
-#### BC
-```bash
-$ composer bccheck
-$ ./vendor/bin/roave-backward-compatibility-check
-```
 #### Benchmarks
 ```bash
-$ composer benchmarks
+$ composer phpbench
 $ ./vendor/bin/phpbench run benchmarks --report=default
 ```
-#### PHPStan
+#### Static analyzer, mess detector and code style
+##### PHPStan
 ```bash
 $ composer phpstan
 $ ./vendor/bin/phpstan analyse src/ -c phpstan.neon --level=7 --no-progress -vvv --memory-limit=1024M
 ```
-#### PHP-CS
+##### PHPMD
 ```bash
-$ composer cscheck
+$ composer phpmd
+$ ./vendor/bin/phpmd src text cleancode,codesize,controversial,design,naming,unusedcode
+```
+##### PHP-CS
+###### Code style check
+```bash
+$ composer phpcs
 $ ./vendor/bin/phpcs
 ```
+###### Code style fix
 ```bash
-$ composer csfix
+$ composer phpcbf
 $ ./vendor/bin/phpcbf
+```
+#### Backward Compatibility
+```bash
+$ composer bccheck
+$ ./vendor/bin/roave-backward-compatibility-check
 ```
 
 ## License

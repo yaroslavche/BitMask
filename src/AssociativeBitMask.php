@@ -34,6 +34,7 @@ class AssociativeBitMask extends IndexedBitMask
         $this->keys = $keys;
         $this->maxValue = Bits::indexToBit(count($this->keys)) - 1;
         parent::__construct($mask);
+        $this->map = array_fill(0, count($keys), false);
         $this->set($mask);
     }
 
@@ -52,6 +53,7 @@ class AssociativeBitMask extends IndexedBitMask
             );
             throw new InvalidArgumentException($message);
         }
+        $this->map = array_fill(0, count($this->keys), false);
         parent::set($mask);
     }
 

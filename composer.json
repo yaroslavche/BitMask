@@ -39,13 +39,13 @@
     }
   },
   "scripts": {
-    "cscheck": "phpcs",
-    "csfix": "phpcbf",
-    "phpstan": "phpstan analyse src/ -c phpstan.neon --level=7 --no-progress -vvv --memory-limit=1024M",
-    "benchmarks": "phpbench run benchmarks --report=default",
+    "phpcs": "phpcs",
+    "phpcbf": "phpcbf",
+    "phpstan": "phpstan analyse src/ -c phpstan.neon --level=7 --no-progress -vv --memory-limit=-1",
+    "phpbench": "phpbench run benchmarks --report=default",
     "phpunit": "phpunit",
     "infection": "infection --min-msi=50 --min-covered-msi=70 --log-verbosity=all",
-    "clover": "phpunit --coverage-clover clover.xml",
+    "coverage": "phpunit --coverage-text --coverage-html ./build/coverage/html --coverage-clover ./build/coverage/clover.xml",
     "bccheck": "roave-backward-compatibility-check"
   },
   "minimum-stability": "dev",

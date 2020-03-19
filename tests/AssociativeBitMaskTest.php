@@ -134,9 +134,15 @@ class AssociativeBitMaskTest extends TestCase
     public function testSetBit()
     {
         $bitmask = new AssociativeBitMask(['r', 'w', 'x'], 1);
+        $this->assertTrue($bitmask->isR());
+        $this->assertFalse($bitmask->isW());
+        $this->assertFalse($bitmask->isX());
         $bitmask->setBit(4);
         $this->assertTrue($bitmask->isSetBit(4));
         $this->assertSame(5, $bitmask->get());
+        $this->assertTrue($bitmask->isR());
+        $this->assertFalse($bitmask->isW());
+        $this->assertTrue($bitmask->isX());
         try {
             $bitmask->setBit(3);
         } catch (InvalidArgumentException $exception) {
@@ -166,5 +172,17 @@ class AssociativeBitMaskTest extends TestCase
     {
         $bitmask = new AssociativeBitMask(['read', 'write', 'execute'], 7);
         $this->assertSame(['read' => true, 'write' => true, 'execute' => true], $bitmask->jsonSerialize());
+    }
+
+    public function testIssue1()
+    {
+        $bitmask = new AssociativeBitMask(['readable', 'writable', 'executable'], 7);
+        $this->assertTrue($bitmask->isReadable());
+        $this->assertTrue($bitmask->isWritable());
+        $this->assertTrue($bitmask->isExecutable());
+        $bitmask->set(1);
+        $this->assertTrue($bitmask->isReadable());
+        $this->assertFalse($bitmask->isWritable());
+        $this->assertFalse($bitmask->isExecutable());
     }
 }

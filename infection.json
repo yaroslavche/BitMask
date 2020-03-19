@@ -1,43 +1,46 @@
 {
-  "timeout": 1,
-  "source": {
-    "directories": [
-      "src"
-    ]
-  },
-  "logs": {
-    "text": "infection.log",
-    "badge": {
-      "branch": "master"
+    "timeout": 1,
+    "source": {
+        "directories": [
+            "src"
+        ]
+    },
+    "logs": {
+        "text": "build/infection/text.log",
+        "summary": "build/infection/summary.log",
+        "debug": "build/infection/debug.log",
+        "perMutator": "build/infection/perMutator.md",
+        "badge": {
+            "branch": "master"
+        }
+    },
+    "mutators": {
+        "@default": true,
+        "DecrementInteger": {
+            "ignore": [
+                "BitMask\\AssociativeBitMask::__construct::37"
+            ]
+        },
+        "OneZeroInteger": {
+            "ignore": [
+                "BitMask\\AssociativeBitMask::__construct::37",
+                "BitMask\\AssociativeBitMask::set::56"
+            ]
+        },
+        "LessThan": {
+            "ignore": [
+                "BitMask\\IndexedBitMask::set::37"
+            ]
+        },
+        "FalseValue": {
+            "ignore": [
+                "BitMask\\AssociativeBitMask::__construct::37"
+            ]
+        },
+        "MethodCallRemoval": {
+            "ignore": [
+                "BitMask\\AssociativeBitMask::__construct::36"
+            ]
+        }
     }
-  },
-  "mutators": {
-    "@default": true,
-    "IncrementInteger": {
-      "ignore": [
-        "BitMask\\AssociativeBitMask::set::48"
-      ]
-    },
-    "OneZeroInteger": {
-      "ignore": [
-        "BitMask\\AssociativeBitMask::set::48"
-      ]
-    },
-    "MethodCallRemoval": {
-      "ignore": [
-        "BitMask\\AssociativeBitMask::__construct::36",
-        "BitMask\\AssociativeBitMask::__construct::37"
-      ]
-    },
-    "Minus": {
-      "ignore": [
-        "BitMask\\AssociativeBitMask::set::48"
-      ]
-    },
-    "LessThan": {
-      "ignore": [
-        "BitMask\\IndexedBitMask::set::37"
-      ]
-    }
-  }
 }
