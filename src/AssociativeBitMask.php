@@ -5,6 +5,7 @@ namespace BitMask;
 
 use BitMask\Util\Bits;
 use InvalidArgumentException;
+use LogicException;
 
 /**
  * Class AssociativeBitMask
@@ -15,46 +16,22 @@ class AssociativeBitMask extends IndexedBitMask
     /** @var array $keys */
     protected $keys;
 
-    /** @var int $maxValue */
-    protected $maxValue;
-
     /**
      * AssociativeBitMask constructor.
-     * @param array $keys
      * @param int $mask
+     * @param int|null $bitsCount
+     * @param array|null $keys
      *
      * @see https://www.php.net/manual/en/language.variables.basics.php
      * @todo check keys. Must be valid PHP identifier name ^[a-zA-Z_\x80-\xff][a-zA-Z0-9_\x80-\xff]*$
      */
-    public function __construct(array $keys, int $mask = null)
+    public function __construct(?int $mask = null, ?int $bitsCount = null, ?array $keys = [])
     {
         if (empty($keys)) {
-            throw new InvalidArgumentException('Keys must be non empty');
+            throw new InvalidArgumentException('Third argument "$keys" must be non empty array');
         }
         $this->keys = $keys;
-        $this->maxValue = Bits::indexToBit(count($this->keys)) - 1;
         parent::__construct($mask);
-        $this->map = array_fill(0, count($keys), false);
-        $this->set($mask);
-    }
-
-    /**
-     * @param int $mask
-     * @throws InvalidArgumentException
-     */
-    final public function set(int $mask = null): void
-    {
-        if ($this->maxValue < $mask) {
-            $message = sprintf(
-                'Invalid given mask "%d". Maximum value for %d keys is %d',
-                $mask,
-                Bits::bitToIndex($this->maxValue + 1),
-                $this->maxValue
-            );
-            throw new InvalidArgumentException($message);
-        }
-        $this->map = array_fill(0, count($this->keys), false);
-        parent::set($mask);
     }
 
     /**
@@ -67,22 +44,21 @@ class AssociativeBitMask extends IndexedBitMask
         if ($index === false) {
             throw new InvalidArgumentException(sprintf('Unknown key "%s"', $key));
         }
-        return $this->map[$index];
+        return $this->getByIndex($index);
     }
 
     /**
      * @param string $method
      * @param mixed[] $args
      * @return bool
-     * @todo: Warning: Missing return statement
      */
-    final public function __call(string $method, array $args): ?bool
+    final public function __call(string $method, array $args): bool
     {
         if (!method_exists($this, $method) && strpos($method, 'is') === 0) {
             $key = lcfirst(substr($method, 2));
             return $this->getByKey($key);
         }
-        return null;
+        throw new LogicException('Magic call should be related only for keys');
     }
 
     /**
@@ -130,7 +106,7 @@ class AssociativeBitMask extends IndexedBitMask
     {
         $array = [];
         foreach ($this->keys as $index => $key) {
-            $array[$key] = $this->map[$index];
+            $array[$key] = $this->getByIndex($index);
         }
         return $array;
     }

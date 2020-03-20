@@ -49,9 +49,9 @@ class BitsTest extends TestCase
     public function testIndexToBit()
     {
         $this->assertEquals(8, Bits::indexToBit(3));
+        $this->assertEquals(1, Bits::indexToBit(0)); // Bits.php:103 [M] LessThan
         try {
             Bits::indexToBit(-1);
-            $this->assertTrue(false);
         } catch (Exception $exception) {
             $this->assertTrue(true);
         }

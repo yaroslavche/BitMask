@@ -31,6 +31,7 @@ $bitmask->set(0b111); // 7, 1 << 0 | 1 << 1 | 1 << 2
 // get value and check if single bit or mask is set 
 $integerMask = $bitmask->get(); // int 7
 $boolIsSetBit = $bitmask->isSetBit(4); // bool true
+$boolIsSetBit = $bitmask->isSetBitByShiftOffset(2); // true
 $boolIsSetMask = $bitmask->isSet(6); // bool true
 
 // get some info about bits
@@ -46,19 +47,26 @@ $boolIsSingleBit = BitsUtil::isSingleBit(8); // true
 
 // change mask 
 $bitmask->unsetBit(4);
+$bitmask->unsetBitByShiftOffset(2);
 $bitmask->setBit(8);
 
 BitsUtil::getSetBits($bitmask->get()); // array:3 [1, 2, 8]
 ```
 
-Also exists `IndexedBitMask` and `AssociativeBitMask` helper classes:
+Also you can see some examples [here](/src/BitMaskInterface.php)
+
+Exists `IndexedBitMask` and `AssociativeBitMask` helper classes:
 ```php
-$indexed = new BitMask\IndexedBitMask(1 << 1 | 1 << 2);
+use BitMask\IndexedBitMask;
+use BitMask\AssociativeBitMask;
+
+$indexed = new IndexedBitMask(1 << 1 | 1 << 2);
 // Indexes is RTL, starts from 0. Equals to left shift offset
 $indexed->getByIndex(2); // true
 $indexed->getByIndex(0); // false
 
-$bitmask = new BitMask\AssociativeBitMask(['readable', 'writable', 'executable'], 5);
+$bitmask = new AssociativeBitMask(5, 3, ['readable', 'writable', 'executable']);
+$bitmask->getByKey('readable');
 /** __call */
 $boolReadable = $bitmask->isReadable(); // bool true
 $boolWritable = $bitmask->isWritable(); // bool false
@@ -102,7 +110,7 @@ $ ./vendor/bin/infection --min-msi=50 --min-covered-msi=70
 $ composer phpbench
 $ ./vendor/bin/phpbench run benchmarks --report=default
 ```
-#### Static analyzer, mess detector and code style
+#### Static analyzer and code style
 ##### PHPStan
 ```bash
 $ composer phpstan

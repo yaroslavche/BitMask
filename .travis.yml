@@ -2,6 +2,7 @@ language: php
 php:
   - 7.2
   - 7.3
+  - 7.4
 before_script:
   - travis_retry composer self-update
   - travis_retry composer global require hirak/prestissimo
@@ -10,7 +11,7 @@ script:
   - composer phpcs
   - composer phpstan
   - composer phpunit
-  - composer bccheck
+#  - composer bccheck
   - composer infection
   - composer coverage
 after_success:

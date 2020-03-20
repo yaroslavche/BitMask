@@ -15,32 +15,6 @@
         }
     },
     "mutators": {
-        "@default": true,
-        "DecrementInteger": {
-            "ignore": [
-                "BitMask\\AssociativeBitMask::__construct::37"
-            ]
-        },
-        "OneZeroInteger": {
-            "ignore": [
-                "BitMask\\AssociativeBitMask::__construct::37",
-                "BitMask\\AssociativeBitMask::set::56"
-            ]
-        },
-        "LessThan": {
-            "ignore": [
-                "BitMask\\IndexedBitMask::set::37"
-            ]
-        },
-        "FalseValue": {
-            "ignore": [
-                "BitMask\\AssociativeBitMask::__construct::37"
-            ]
-        },
-        "MethodCallRemoval": {
-            "ignore": [
-                "BitMask\\AssociativeBitMask::__construct::36"
-            ]
-        }
+        "@default": true
     }
 }
