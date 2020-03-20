@@ -2,9 +2,11 @@
 
 namespace BitMask\Tests;
 
+use BitMask\Exception\NotSingleBitException;
 use BitMask\IndexedBitMask;
 use Exception;
 use InvalidArgumentException;
+use OutOfRangeException;
 use PHPUnit\Framework\TestCase;
 
 class IndexedBitMaskTest extends TestCase
@@ -23,19 +25,19 @@ class IndexedBitMaskTest extends TestCase
 
     public function testGetByIndex()
     {
-        $bitmask = new IndexedBitMask(5);
+        $bitmask = new IndexedBitMask(5, 3);
         $this->assertTrue($bitmask->getByIndex(0));
         $this->assertFalse($bitmask->getByIndex(1));
         $this->assertTrue($bitmask->getByIndex(2));
         try {
             $bitmask->getByIndex(-1);
-        } catch (InvalidArgumentException $exception) {
-            $this->assertSame('Index (zero based) must be greater than or equal to zero', $exception->getMessage());
+        } catch (OutOfRangeException $exception) {
+            $this->assertSame('-1', $exception->getMessage());
         }
         try {
             $bitmask->getByIndex(3);
-        } catch (InvalidArgumentException $exception) {
-            $this->assertSame('Index not exists in bitmask', $exception->getMessage());
+        } catch (OutOfRangeException $exception) {
+            $this->assertSame('3', $exception->getMessage());
         }
     }
 
@@ -44,7 +46,7 @@ class IndexedBitMaskTest extends TestCase
         $bitmask = new IndexedBitMask();
         $bitmask->set(7);
         $this->assertEquals(7, $bitmask->get());
-        $bitmask->set();
+        $bitmask->set(0);
         $this->assertEquals(0, $bitmask->get());
     }
 
@@ -75,7 +77,7 @@ class IndexedBitMaskTest extends TestCase
         $bitmask = new IndexedBitMask();
         $bitmask->setBit(8);
         $this->assertTrue($bitmask->isSetBit(8));
-        $this->expectExceptionObject(new InvalidArgumentException('Argument must be a single bit'));
+        $this->expectExceptionObject(new NotSingleBitException('3'));
         $bitmask->setBit(3);
         $this->assertEquals(8, $bitmask->get());
     }
@@ -86,7 +88,7 @@ class IndexedBitMaskTest extends TestCase
         $bitmask->setBit(8);
         $bitmask->unsetBit(8);
         $this->assertFalse($bitmask->isSetBit(8));
-        $this->expectExceptionObject(new InvalidArgumentException('Argument must be a single bit'));
+        $this->expectExceptionObject(new NotSingleBitException('3'));
         $bitmask->unsetBit(3);
         $this->assertEquals(0, $bitmask->get());
     }
