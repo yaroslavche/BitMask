@@ -30,6 +30,9 @@ class AssociativeBitMask extends IndexedBitMask
         if (empty($keys)) {
             throw new InvalidArgumentException('Third argument "$keys" must be non empty array');
         }
+        if ($bitsCount !== count($keys)) {
+            throw new InvalidArgumentException('Second argument "$bitsCount" must be equal to $keys array size');
+        }
         $this->keys = $keys;
         parent::__construct($mask);
     }
@@ -44,7 +47,7 @@ class AssociativeBitMask extends IndexedBitMask
         if ($index === false) {
             throw new InvalidArgumentException(sprintf('Unknown key "%s"', $key));
         }
-        return $this->getByIndex($index);
+        return $this->getByIndex(intval($index));
     }
 
     /**

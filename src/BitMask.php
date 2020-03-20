@@ -13,9 +13,9 @@ use OutOfRangeException;
  */
 class BitMask implements BitMaskInterface
 {
-    /** @var int $storage */
+    /** @var int|null $storage */
     private $storage;
-    /** @var int $bitsCount */
+    /** @var int|null $bitsCount */
     private $bitsCount;
 
     /**
@@ -88,7 +88,7 @@ class BitMask implements BitMaskInterface
      * @throws NotSingleBitException
      * @throws OutOfRangeException
      */
-    private function checkBit(int $bit)
+    private function checkBit(int $bit): void
     {
         if (!Bits::isSingleBit($bit)) {
             throw new NotSingleBitException((string)$bit);
@@ -123,7 +123,10 @@ class BitMask implements BitMaskInterface
         return $this->isSet($bit);
     }
 
-    private function checkShiftOffset(int $shiftOffset)
+    /**
+     * @param int $shiftOffset
+     */
+    private function checkShiftOffset(int $shiftOffset): void
     {
         if ($shiftOffset < 0 || (!is_null($this->bitsCount) && $shiftOffset >= $this->bitsCount)) {
             throw new OutOfRangeException((string)$shiftOffset);

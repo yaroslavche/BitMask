@@ -17,6 +17,13 @@ class AssociativeBitMaskTest extends TestCase
         new AssociativeBitMask(7, 3, []);
     }
 
+    public function testBitsNotEqualKeys()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Second argument "$bitsCount" must be equal to $keys array size');
+        new AssociativeBitMask(7, 3, ['test']);
+    }
+
     public function testGetByKey()
     {
         $bitmask = new AssociativeBitMask(7, 3, ['readable', 'writable', 'executable']);
@@ -81,5 +88,17 @@ class AssociativeBitMaskTest extends TestCase
     {
         $bitmask = new AssociativeBitMask(7, 3, ['readable', 'writable', 'executable']);
         $this->assertSame(['readable' => true, 'writable' => true, 'executable' => true], $bitmask->jsonSerialize());
+    }
+
+    public function testIssue18()
+    {
+        $bitmask = new AssociativeBitMask(7, 3, ['readable', 'writable', 'executable']);
+        $this->assertTrue($bitmask->isReadable());
+        $this->assertTrue($bitmask->isWritable());
+        $this->assertTrue($bitmask->isExecutable());
+        $bitmask->set(1);
+        $this->assertTrue($bitmask->isReadable());
+        $this->assertFalse($bitmask->isWritable());
+        $this->assertFalse($bitmask->isExecutable());
     }
 }
