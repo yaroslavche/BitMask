@@ -23,9 +23,10 @@ jobs:
               with:
                   php-version: ${{ matrix.php-versions }}
                   coverage: xdebug
-                  tools: phpcs, phpstan, phpunit, infection
+                  tools: composer
             - name: Checks
               run: |
+                  composer install
                   composer phpcs
                   composer phpstan
                   composer phpunit
