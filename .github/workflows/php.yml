@@ -1,0 +1,34 @@
+name: PHP
+
+on:
+    push:
+    pull_request:
+    release:
+    schedule:
+        -   cron: "0 0 1 * *"
+
+jobs:
+    run:
+        runs-on: ${{ matrix.operating-system }}
+        strategy:
+            matrix:
+                operating-system: [ubuntu-latest]
+                php-versions: ['7.4', '8.0']
+        name: PHP ${{ matrix.php-versions }} Test on ${{ matrix.operating-system }}
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v2
+            - name: Install PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: ${{ matrix.php-versions }}
+                  coverage: xdebug
+                  tools: composer
+            - name: Checks
+              run: |
+                  composer install
+                  composer phpcs
+                  composer phpstan
+                  composer phpunit
+                  composer infection
+                  composer coverage

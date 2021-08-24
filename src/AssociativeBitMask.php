@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace BitMask;
 
+use BitMask\Exception\NotSingleBitException;
 use BitMask\Util\Bits;
 use InvalidArgumentException;
 use LogicException;
@@ -13,14 +14,14 @@ use LogicException;
  */
 class AssociativeBitMask extends IndexedBitMask
 {
-    /** @var array $keys */
+    /** @var array<int, string> $keys */
     protected $keys;
 
     /**
      * AssociativeBitMask constructor.
-     * @param int $mask
+     * @param int|null $mask
      * @param int|null $bitsCount
-     * @param array|null $keys
+     * @param array<int, string>|null $keys
      *
      * @see https://www.php.net/manual/en/language.variables.basics.php
      * @todo check keys. Must be valid PHP identifier name ^[a-zA-Z_\x80-\xff][a-zA-Z0-9_\x80-\xff]*$
@@ -76,8 +77,9 @@ class AssociativeBitMask extends IndexedBitMask
     /**
      * @param string $key
      * @param bool $isSet
+     * @throws NotSingleBitException
      */
-    final public function __set(string $key, bool $isSet)
+    final public function __set(string $key, bool $isSet): void
     {
         $state = $this->getByKey($key);
         if ($state === $isSet) {
