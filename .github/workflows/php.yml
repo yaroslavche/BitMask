@@ -10,6 +10,8 @@ on:
 jobs:
     run:
         runs-on: ${{ matrix.operating-system }}
+        env:
+            INFECTION_BADGE_API_KEY: ${{ secrets.INFECTION_BADGE_API_KEY }}
         strategy:
             matrix:
                 operating-system: [ubuntu-latest]
