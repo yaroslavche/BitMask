@@ -13,10 +13,8 @@ use OutOfRangeException;
  */
 class BitMask implements BitMaskInterface
 {
-    /** @var int|null $storage */
-    private $storage;
-    /** @var int|null $bitsCount */
-    private $bitsCount;
+    private ?int $storage = null;
+    private ?int $bitsCount = null;
 
     /**
      * BitMask constructor.
@@ -108,9 +106,6 @@ class BitMask implements BitMaskInterface
     /** @inheritDoc */
     public function unsetBit(int $bit): void
     {
-//        if ($this->storage === null) {
-//            throw new NullStorageException();
-//        }
         $this->checkBit($bit);
         $this->storage ^= $bit;
 //        $this->storage &= ~$bit;

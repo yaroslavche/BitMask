@@ -1,7 +1,6 @@
-[![Build Status](https://travis-ci.org/yaroslavche/BitMask.svg?branch=master)](https://travis-ci.org/yaroslavche/BitMask)
-[![codecov](https://codecov.io/gh/yaroslavche/bitmask/branch/master/graph/badge.svg)](https://codecov.io/gh/yaroslavche/bitmask)
-[![Infection MSI](https://badge.stryker-mutator.io/github.com/yaroslavche/BitMask/master)](https://infection.github.io)
-
+![PHP build](https://github.com/yaroslavche/BitMask/actions/workflows/php.yml/badge.svg)
+[![codecov](https://codecov.io/gh/yaroslavche/bitmask/branch/main/graph/badge.svg)](https://codecov.io/gh/yaroslavche/bitmask)
+[![Infection MSI](https://badge.stryker-mutator.io/github.com/yaroslavche/BitMask/main)](https://infection.github.io)
 # BitMask
 
 PHP library for working with bitmask values
@@ -103,7 +102,7 @@ $ ./vendor/bin/phpunit
 ##### Infection
 ```bash
 $ composer infection
-$ ./vendor/bin/infection --min-msi=50 --min-covered-msi=70
+$ ./vendor/bin/infection --min-msi=100 --min-covered-msi=100
 ```
 #### Benchmarks
 ```bash
@@ -114,7 +113,7 @@ $ ./vendor/bin/phpbench run benchmarks --report=default
 ##### PHPStan
 ```bash
 $ composer phpstan
-$ ./vendor/bin/phpstan analyse src/ -c phpstan.neon --level=7 --no-progress -vvv --memory-limit=1024M
+$ ./vendor/bin/phpstan analyse src/ -c phpstan.neon --level=8 --no-progress -vvv --memory-limit=1024M
 ```
 ##### PHP-CS
 ###### Code style check
@@ -126,11 +125,6 @@ $ ./vendor/bin/phpcs
 ```bash
 $ composer phpcbf
 $ ./vendor/bin/phpcbf
-```
-#### Backward Compatibility
-```bash
-$ composer bccheck
-$ ./vendor/bin/roave-backward-compatibility-check
 ```
 
 ## License
