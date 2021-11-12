@@ -1,16 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
+namespace Yaroslavche\Benchmarks;
+
 use BitMask\Util\Bits as BitUtils;
+use Generator;
 use PhpBench\Benchmark\Metadata\Annotations\Iterations;
 use PhpBench\Benchmark\Metadata\Annotations\ParamProviders;
 use PhpBench\Benchmark\Metadata\Annotations\Revs;
 
-/**
- * Class IsSingleBitBench
- */
 class IsSingleBitBench
 {
-    public function provideMask()
+    public function maskProvider(): Generator
     {
         yield [1];
         yield [1 << 5];
@@ -21,9 +23,9 @@ class IsSingleBitBench
     /**
      * @Revs(100000)
      * @Iterations(5)
-     * @ParamProviders({"provideMask"})
+     * @ParamProviders({"maskProvider"})
      */
-    public function benchIsSingleBit1($mask)
+    public function benchIsSingleBit1(array $mask): void
     {
         $this->isSingleBit1($mask[0]);
     }
@@ -31,9 +33,9 @@ class IsSingleBitBench
     /**
      * @Revs(100000)
      * @Iterations(5)
-     * @ParamProviders({"provideMask"})
+     * @ParamProviders({"maskProvider"})
      */
-    public function benchIsSingleBit2($mask)
+    public function benchIsSingleBit2(array $mask): void
     {
         $this->isSingleBit2($mask[0]);
     }
@@ -41,39 +43,29 @@ class IsSingleBitBench
     /**
      * @Revs(100000)
      * @Iterations(5)
-     * @ParamProviders({"provideMask"})
+     * @ParamProviders({"maskProvider"})
      */
-    public function benchIsSingleBit3($mask)
+    public function benchIsSingleBit3(array $mask): void
     {
         $this->isSingleBit3($mask[0]);
     }
 
-    /**
-     * @param int $mask
-     * @return bool
-     */
-    private function isSingleBit1(int $mask = 0): bool
+    private function isSingleBit1(int $mask): bool
     {
         return count(BitUtils::getSetBits($mask)) === 1;
     }
 
-    /**
-     * @param int $mask
-     * @return bool
-     */
-    private function isSingleBit2(int $mask = 0): bool
+    private function isSingleBit2(int $mask): bool
     {
         return pow(2, BitUtils::getMSB($mask)) === $mask;
     }
 
-    /**
-     * @param int $mask
-     * @return bool
-     */
-    private function isSingleBit3(int $mask = 0): bool
+    private function isSingleBit3(int $mask): bool
     {
         $shift = BitUtils::getMSB($mask) - 1;
-        if ($shift < 0) return false;
+        if ($shift < 0) {
+            return false;
+        }
         return 1 << $shift === $mask;
     }
 }

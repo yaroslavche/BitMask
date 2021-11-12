@@ -1,14 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
+namespace Yaroslavche\Benchmarks;
+
+use Generator;
 use PhpBench\Benchmark\Metadata\Annotations\ParamProviders;
 use PhpBench\Benchmark\Metadata\Annotations\Revs;
 
-/**
- * Class EvenOddBench
- */
 class EvenOddBench
 {
-    public function provideNumber()
+    public function numberProvider(): Generator
     {
         yield [0];
         yield [1];
@@ -18,9 +20,9 @@ class EvenOddBench
 
     /**
      * @Revs(1000000)
-     * @ParamProviders({"provideNumber"})
+     * @ParamProviders({"numberProvider"})
      */
-    public function benchEvenOdd1($number)
+    public function benchEvenOdd1(array $number): void
     {
         $this->isEven1($number[0]);
         $this->isOdd1($number[0]);
@@ -28,30 +30,30 @@ class EvenOddBench
 
     /**
      * @Revs(1000000)
-     * @ParamProviders({"provideNumber"})
+     * @ParamProviders({"numberProvider"})
      */
-    public function benchEvenOdd2($number)
+    public function benchEvenOdd2(array $number): void
     {
         $this->isEven2($number[0]);
         $this->isOdd2($number[0]);
     }
 
-    private function isEven1(int $number = 0): bool
+    private function isEven1(int $number): bool
     {
         return ($number & 1) === 0;
     }
 
-    private function isOdd1(int $number = 0): bool
+    private function isOdd1(int $number): bool
     {
         return ($number & 1) === 1;
     }
 
-    private function isEven2(int $number = 0): bool
+    private function isEven2(int $number): bool
     {
         return ($number % 2) === 0;
     }
 
-    private function isOdd2(int $number = 0): bool
+    private function isOdd2(int $number): bool
     {
         return ($number % 2) === 1;
     }

@@ -1,6 +1,2 @@
 includes:
     - vendor/thecodingmachine/phpstan-strict-rules/phpstan-strict-rules.neon
-parameters:
-    excludes_analyse:
-        - %currentWorkingDirectory%/benchmarks/*.php
-        - %currentWorkingDirectory%/features/*.php

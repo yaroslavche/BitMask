@@ -15,7 +15,7 @@ use LogicException;
 class AssociativeBitMask extends IndexedBitMask
 {
     /** @var array<int, string> $keys */
-    protected $keys;
+    protected array $keys;
 
     /**
      * AssociativeBitMask constructor.

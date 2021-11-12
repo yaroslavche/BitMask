@@ -1,16 +1,17 @@
 <?php
+declare(strict_types=1);
+
+namespace Yaroslavche\Benchmarks;
 
 use BitMask\Util\Bits as BitUtils;
+use Generator;
 use PhpBench\Benchmark\Metadata\Annotations\Iterations;
 use PhpBench\Benchmark\Metadata\Annotations\ParamProviders;
 use PhpBench\Benchmark\Metadata\Annotations\Revs;
 
-/**
- * Class GetSetBitsIndexBench
- */
 class GetSetBitsIndexBench
 {
-    public function provideMask()
+    public function maskProvider(): Generator
     {
         yield [1];
         yield [1 << 5];
@@ -21,9 +22,9 @@ class GetSetBitsIndexBench
     /**
      * @Revs(100000)
      * @Iterations(5)
-     * @ParamProviders({"provideMask"})
+     * @ParamProviders({"maskProvider"})
      */
-    public function benchGetSetBitsIndex1($mask)
+    public function benchGetSetBitsIndex1(array $mask): void
     {
         $this->getSetBitsIndex1($mask[0]);
     }
@@ -31,20 +32,14 @@ class GetSetBitsIndexBench
     /**
      * @Revs(10000)
      * @Iterations(5)
-     * @ParamProviders({"provideMask"})
+     * @ParamProviders({"maskProvider"})
      */
-    public function benchGetSetBitsIndex2($mask)
+    public function benchGetSetBitsIndex2(array $mask): void
     {
         $this->getSetBitsIndex2($mask[0]);
     }
 
-    /**
-     * @param int $mask
-     * @return array
-     * @throws Exception
-     * @ParamProviders({"provideMask"})
-     */
-    private function getSetBitsIndex1(int $mask = 0): array
+    private function getSetBitsIndex1(int $mask): array
     {
         $bitIndexes = [];
         $scan = 1;
@@ -57,11 +52,7 @@ class GetSetBitsIndexBench
         return $bitIndexes;
     }
 
-    /**
-     * @param int $mask
-     * @return array
-     */
-    private function getSetBitsIndex2(int $mask = 0): array
+    private function getSetBitsIndex2(int $mask): array
     {
         $bitIndexes = [];
         foreach (BitUtils::getSetBits($mask) as $index => $bit) {

@@ -1,4 +1,4 @@
-name: PHP
+name: PHP build
 
 on:
     push:
@@ -26,9 +26,7 @@ jobs:
                   tools: composer
             - name: Checks
               run: |
-                  composer install
-                  composer phpcs
-                  composer phpstan
-                  composer phpunit
-                  composer infection
-                  composer coverage
+                  composer ci:pack
+            - name: Upload codecoverage
+              run: |
+                  bash <(curl -s https://codecov.io/bash)
