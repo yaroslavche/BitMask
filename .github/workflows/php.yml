@@ -24,6 +24,9 @@ jobs:
                   php-version: ${{ matrix.php-versions }}
                   coverage: xdebug
                   tools: composer
+            - name: Install package
+              run: |
+                  composer install
             - name: Checks
               run: |
                   composer ci:pack
