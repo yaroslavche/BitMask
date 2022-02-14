@@ -10,8 +10,8 @@
         "summary": "build/infection/summary.log",
         "debug": "build/infection/debug.log",
         "perMutator": "build/infection/perMutator.md",
-        "badge": {
-            "branch": "main"
+        "stryker": {
+            "badge": "main"
         }
     },
     "mutators": {
