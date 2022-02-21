@@ -26,6 +26,7 @@ final class Bits
         return $mostSignificantBit;
     }
 
+    /** @deprecated use getMostSignificantBit instead */
     public static function getMSB(int $mask): int
     {
         return self::getMostSignificantBit($mask);

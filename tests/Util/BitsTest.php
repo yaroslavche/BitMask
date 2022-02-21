@@ -18,15 +18,16 @@ use function PHPUnit\Framework\assertTrue;
 class BitsTest extends TestCase
 {
 
-    public function testGetMSB()
+    public function testGetMostSignificantBit()
     {
-        assertEquals(0, Bits::getMSB(-1));
-        assertEquals(0, Bits::getMSB(0));
-        assertEquals(1, Bits::getMSB(1));
-        assertEquals(4, Bits::getMSB(8));
-        assertEquals(4, Bits::getMSB(15));
+        assertEquals(0, Bits::getMostSignificantBit(0));
+        assertEquals(1, Bits::getMostSignificantBit(1));
+        assertEquals(4, Bits::getMostSignificantBit(8));
+        assertEquals(4, Bits::getMostSignificantBit(15));
         /** @todo check PHP_INT_MAX */
 //        assertEquals(4, Bits::getMSB(PHP_INT_MAX));
+        /** check deprecated */
+        assertEquals(0, Bits::getMSB(0));
     }
 
     public function testGetSetBits()
