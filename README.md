@@ -22,7 +22,7 @@ if ($mask & READ) {
 But you can try other way with this package:
 ```php
 use BitMask\BitMask;
-use BitMask\Util\Bits as BitsUtil;
+use BitMask\Util\Bits;
 
 $bitmask = new BitMask();
 $bitmask->set(0b111); // 7, 1 << 0 | 1 << 1 | 1 << 2
@@ -34,52 +34,57 @@ $boolIsSetBit = $bitmask->isSetBitByShiftOffset(2); // true
 $boolIsSetMask = $bitmask->isSet(6); // bool true
 
 // get some info about bits
-$integerMostSignificantBit = BitsUtil::getMSB($bitmask->get()); // int 3
-$arraySetBits = BitsUtil::getSetBits($bitmask->get()); // array:3 [1, 2, 4]
-$arraySetBitsIndexes = BitsUtil::getSetBitsIndexes($bitmask->get()); // array:3 [0, 1, 2]
-$string = BitsUtil::toString($bitmask->get()); // string "111"
+$integerMostSignificantBit = Bits::getMostSignificantBit($bitmask->get()); // int 3
+$arraySetBits = Bits::getSetBits($bitmask->get()); // array:3 [1, 2, 4]
+$arraySetBitsIndexes = Bits::getSetBitsIndexes($bitmask->get()); // array:3 [0, 1, 2]
+$string = Bits::toString($bitmask->get()); // string "111"
 
 // some helpers
-$integerBit = BitsUtil::indexToBit(16); // int 65536
-$integerIndex = BitsUtil::bitToIndex(65536); // int 16
-$boolIsSingleBit = BitsUtil::isSingleBit(8); // true
+$integerBit = Bits::indexToBit(16); // int 65536
+$integerIndex = Bits::bitToIndex(65536); // int 16
+$boolIsSingleBit = Bits::isSingleBit(8); // true
 
 // change mask 
 $bitmask->unsetBit(4);
 $bitmask->unsetBitByShiftOffset(2);
 $bitmask->setBit(8);
 
-BitsUtil::getSetBits($bitmask->get()); // array:3 [1, 2, 8]
+Bits::getSetBits($bitmask->get()); // array:3 [1, 2, 8]
 ```
 
-Also you can see some examples [here](/src/BitMaskInterface.php)
+Some examples can be found in [BitMaskInterface](/src/BitMaskInterface.php) and in [tests](/tests)
 
 Exists `IndexedBitMask` and `AssociativeBitMask` helper classes:
 ```php
 use BitMask\IndexedBitMask;
 use BitMask\AssociativeBitMask;
 
-$indexed = new IndexedBitMask(1 << 1 | 1 << 2);
-// Indexes is RTL, starts from 0. Equals to left shift offset
+// Indexed are extended BitMask with one extra method: getByIndex
+// For instance, mask 0b110 would have following "index:value": 0:false, 1:true, 2:true
+// Indexes are RTL, starts from 0. Equals to mask left shift offset.
+$indexed = new IndexedBitMask(1 << 1 | 1 << 2); // 0b110
 $indexed->getByIndex(2); // true
 $indexed->getByIndex(0); // false
 
-$bitmask = new AssociativeBitMask(5, 3, ['readable', 'writable', 'executable']);
-$bitmask->getByKey('readable');
+// Associative are extended Indexed. In addition to the mask you must also specify the number of bits and the array of key strings.
+// Each key will have a bitmask property with the same name and a method named 'is{Key}'.
+$bitmask = new AssociativeBitMask(5, 3, ['readable', 'writable', 'executable']); // 
+$bitmask->getByKey('readable'); // bool(true)
 /** __call */
-$boolReadable = $bitmask->isReadable(); // bool true
-$boolWritable = $bitmask->isWritable(); // bool false
-$boolExecutable = $bitmask->isExecutable(); // bool true
-$result = $bitmask->isUnknownKey(); // null
+$boolReadable = $bitmask->isReadable(); // bool(true)
+$boolWritable = $bitmask->isWritable(); // bool(true)
+$boolExecutable = $bitmask->isExecutable(); // bool(true)
+$result = $bitmask->isUnknownKey(); // BitMask\Exception\UnknownKeyException
 /** __get */
 $boolReadable = $bitmask->readable; // bool true
 $boolWritable = $bitmask->writable; // bool false
 $boolExecutable = $bitmask->executable; // bool true
-$result = $bitmask->unknownKey; // null
+$result = $bitmask->unknownKey; // BitMask\Exception\UnknownKeyException
 /** __set */
 $bitmask->readable = false;
 $bitmask->writable = true;
 $bitmask->executable = false;
+$bitmask->unknownKey = true; // BitMask\Exception\UnknownKeyException
 ``` 
 
 ## Installing

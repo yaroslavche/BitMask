@@ -4,22 +4,15 @@ declare(strict_types=1);
 namespace BitMask;
 
 use BitMask\Exception\NotSingleBitException;
+use BitMask\Exception\OutOfRangeException;
 use BitMask\Util\Bits;
-use OutOfRangeException;
 
-/**
- * Class BitMask
- * @package BitMask
- */
 class BitMask implements BitMaskInterface
 {
     private ?int $storage = null;
     private ?int $bitsCount = null;
 
-    /**
-     * BitMask constructor.
-     * @inheritDoc
-     */
+    /** @inheritDoc */
     public function __construct(?int $mask = null, ?int $bitsCount = null)
     {
         if (!is_null($bitsCount)) {
@@ -30,26 +23,17 @@ class BitMask implements BitMaskInterface
         }
     }
 
-    /** @return string */
     public function __toString(): string
     {
         return (string)$this->storage;
     }
 
-    /**
-     * @param int $mask
-     * @return bool
-     */
     public function __invoke(int $mask): bool
     {
         return $this->isSet($mask);
     }
 
-    /**
-     * @param int|null $mask
-     * @return BitMask
-     */
-    public static function init(?int $mask = null): self
+    public static function init(?int $mask = null): BitMaskInterface
     {
         return new static($mask);
     }
@@ -82,7 +66,6 @@ class BitMask implements BitMaskInterface
     }
 
     /**
-     * @param int $bit
      * @throws NotSingleBitException
      * @throws OutOfRangeException
      */
@@ -118,12 +101,9 @@ class BitMask implements BitMaskInterface
         return $this->isSet($bit);
     }
 
-    /**
-     * @param int $shiftOffset
-     */
     private function checkShiftOffset(int $shiftOffset): void
     {
-        if ($shiftOffset < 0 || (!is_null($this->bitsCount) && $shiftOffset >= $this->bitsCount)) {
+        if ($shiftOffset < 0 || (null !== $this->bitsCount && $this->bitsCount <= $shiftOffset)) {
             throw new OutOfRangeException((string)$shiftOffset);
         }
     }

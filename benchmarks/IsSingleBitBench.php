@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Yaroslavche\Benchmarks;
 
-use BitMask\Util\Bits as BitUtils;
+use BitMask\Util\Bits;
 use Generator;
 use PhpBench\Benchmark\Metadata\Annotations\Iterations;
 use PhpBench\Benchmark\Metadata\Annotations\ParamProviders;
@@ -52,17 +52,17 @@ class IsSingleBitBench
 
     private function isSingleBit1(int $mask): bool
     {
-        return count(BitUtils::getSetBits($mask)) === 1;
+        return count(Bits::getSetBits($mask)) === 1;
     }
 
     private function isSingleBit2(int $mask): bool
     {
-        return pow(2, BitUtils::getMSB($mask)) === $mask;
+        return pow(2, Bits::getMostSignificantBit($mask)) === $mask;
     }
 
     private function isSingleBit3(int $mask): bool
     {
-        $shift = BitUtils::getMSB($mask) - 1;
+        $shift = Bits::getMostSignificantBit($mask) - 1;
         if ($shift < 0) {
             return false;
         }

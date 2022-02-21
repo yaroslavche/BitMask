@@ -6,6 +6,6 @@ namespace BitMask\Exception;
 
 use Exception;
 
-final class NotSingleBitException extends Exception
+final class MagicCallException extends Exception
 {
 }
