@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace BitMask;
 
 use BitMask\Exception\NotSingleBitException;
-use OutOfRangeException;
+use BitMask\Exception\OutOfRangeException;
 
 /**
  * Interface BitMaskInterface
@@ -13,8 +13,6 @@ use OutOfRangeException;
 interface BitMaskInterface
 {
     /**
-     * BitMaskInterface constructor.
-     *
      * @param int|null $mask
      * @param int|null $bitsCount If not null - restricts boundaries
      */
