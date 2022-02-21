@@ -103,7 +103,7 @@ class BitMask implements BitMaskInterface
 
     private function checkShiftOffset(int $shiftOffset): void
     {
-        if ($shiftOffset < 0 || (null !== $this->bitsCount && $this->bitsCount >= $shiftOffset)) {
+        if ($shiftOffset < 0 || (null !== $this->bitsCount && $this->bitsCount <= $shiftOffset)) {
             throw new OutOfRangeException((string)$shiftOffset);
         }
     }
