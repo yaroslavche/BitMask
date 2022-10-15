@@ -1,0 +1,79 @@
+<?php // phpcs:disable PSR1.Files.SideEffects.FoundWithSymbols
+
+declare(strict_types=1);
+
+namespace BitMask;
+
+use BitMask\Exception\UnknownEnumException;
+use BitMask\Exception\UnsupportedPhpVersionException;
+use UnitEnum;
+
+use const PHP_VERSION_ID;
+
+PHP_VERSION_ID >= 80100 || throw new UnsupportedPhpVersionException('Requires PHP 8.1 interface UnitEnum');
+class EnumBitMask
+{
+    private int $bitmask = 0;
+    /** @var UnitEnum[] $keys */
+    private array $keys = [];
+
+    /**
+     * @param class-string $maskEnum
+     * @throws UnknownEnumException
+     */
+    public function __construct(
+        private readonly string $maskEnum,
+        UnitEnum ...$bits,
+    ) {
+        if (!class_exists($this->maskEnum) || !is_subclass_of($this->maskEnum, UnitEnum::class)) {
+            throw new UnknownEnumException('BitMask enum must be instance of UnitEnum');
+        }
+        $this->keys = $this->maskEnum::cases();
+        $this->set(...$bits);
+    }
+
+    public function get(): int
+    {
+        return $this->bitmask;
+    }
+
+    /** @throws UnknownEnumException */
+    public function set(UnitEnum ...$bits): void
+    {
+        foreach ($bits as $bit) {
+            if (!$this->isSet($bit)) {
+                $this->bitmask += 1 << (int)array_search($bit, $this->keys);
+            }
+        }
+    }
+
+    /** @throws UnknownEnumException */
+    public function unset(UnitEnum ...$bits): void
+    {
+        foreach ($bits as $bit) {
+            if ($this->isSet($bit)) {
+                $this->bitmask -= 1 << (int)array_search($bit, $this->keys);
+            }
+        }
+    }
+
+    /** @throws UnknownEnumException */
+    public function isSet(UnitEnum ...$bits): bool
+    {
+        foreach ($bits as $bit) {
+            $this->checkEnumCase($bit);
+            $mask = 1 << (int)array_search($bit, $this->keys);
+            if (($this->bitmask & $mask) !== $mask) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /** @throws UnknownEnumException */
+    private function checkEnumCase(UnitEnum $case): void
+    {
+        $case instanceof $this->maskEnum ||
+        throw new UnknownEnumException(sprintf('Expected %s enum case, %s provided', $this->maskEnum, $case::class));
+    }
+}

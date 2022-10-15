@@ -1,2 +1,6 @@
 includes:
     - vendor/thecodingmachine/phpstan-strict-rules/phpstan-strict-rules.neon
+parameters:
+    excludePaths:
+        analyseAndScan:
+            - src/EnumBitMask.php
