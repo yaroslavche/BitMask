@@ -1,6 +1,8 @@
 includes:
     - vendor/thecodingmachine/phpstan-strict-rules/phpstan-strict-rules.neon
+# support for CI 7.4 and 8.0
 parameters:
     excludePaths:
         analyseAndScan:
             - src/EnumBitMask.php
+            - tests/EnumBitMaskTest.php

@@ -25,7 +25,7 @@ class EnumBitMask
         private readonly string $maskEnum,
         UnitEnum ...$bits,
     ) {
-        if (!class_exists($this->maskEnum) || !is_subclass_of($this->maskEnum, UnitEnum::class)) {
+        if (!is_subclass_of($this->maskEnum, UnitEnum::class)) {
             throw new UnknownEnumException('BitMask enum must be instance of UnitEnum');
         }
         $this->keys = $this->maskEnum::cases();
@@ -42,7 +42,7 @@ class EnumBitMask
     {
         foreach ($bits as $bit) {
             if (!$this->isSet($bit)) {
-                $this->bitmask += 1 << (int)array_search($bit, $this->keys);
+                $this->bitmask += 1 << intval(array_search($bit, $this->keys));
             }
         }
     }
@@ -52,7 +52,7 @@ class EnumBitMask
     {
         foreach ($bits as $bit) {
             if ($this->isSet($bit)) {
-                $this->bitmask -= 1 << (int)array_search($bit, $this->keys);
+                $this->bitmask -= 1 << intval(array_search($bit, $this->keys));
             }
         }
     }
@@ -62,7 +62,7 @@ class EnumBitMask
     {
         foreach ($bits as $bit) {
             $this->checkEnumCase($bit);
-            $mask = 1 << (int)array_search($bit, $this->keys);
+            $mask = 1 << intval(array_search($bit, $this->keys));
             if (($this->bitmask & $mask) !== $mask) {
                 return false;
             }
