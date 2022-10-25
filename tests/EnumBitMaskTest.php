@@ -6,30 +6,13 @@ namespace BitMask\Tests;
 
 use BitMask\EnumBitMask;
 use BitMask\Exception\UnknownEnumException;
+use BitMask\Tests\fixtures\Enum\Permissions;
+use BitMask\Tests\fixtures\Enum\Unknown;
 use PHPUnit\Framework\TestCase;
-
 use function PHPUnit\Framework\assertFalse;
 use function PHPUnit\Framework\assertSame;
 use function PHPUnit\Framework\assertTrue;
-
 use const PHP_VERSION_ID;
-
-if (PHP_VERSION_ID < 80100) {
-    return;
-}
-
-enum Permissions
-{
-    case Create;
-    case Read;
-    case Update;
-    case Delete;
-}
-
-enum Unknown
-{
-    case Case;
-}
 
 final class EnumBitMaskTest extends TestCase
 {
