@@ -11,25 +11,12 @@ final class Bits
 {
 
     /**
-     * get most significant bit position (right -> left)
-     * @example 10001 -> 5, 0010 -> 2, 00100010 -> 6
-     * @todo research and use (if needed) https://www.geeksforgeeks.org/find-significant-set-bit-number/
+     * get most significant bit position (right -> left, index)
+     * @example 10001 -> 4, 0010 -> 1, 00100010 -> 5
      */
     public static function getMostSignificantBit(int $mask): int
     {
-        $scan = 1;
-        $mostSignificantBit = 0;
-        while ($mask >= $scan) {
-            $mostSignificantBit++;
-            $scan <<= 1;
-        }
-        return $mostSignificantBit;
-    }
-
-    /** @deprecated use getMostSignificantBit instead */
-    public static function getMSB(int $mask): int
-    {
-        return self::getMostSignificantBit($mask);
+        return (int)log($mask, 2);
     }
 
     /**
@@ -78,8 +65,8 @@ final class Bits
 
     /**
      * index to single bit
-     * @example 0 => 0b1 (1), 1 => 0b10 (2), 2 => 0b100 (4), ...
      * @throws InvalidIndexException
+     * @example 0 => 0b1 (1), 1 => 0b10 (2), 2 => 0b100 (4), ...
      * @see benchmarks/IndexToBitBench.php
      * ./vendor/bin/phpbench run benchmarks/IndexToBitBench.php --report=default
      */

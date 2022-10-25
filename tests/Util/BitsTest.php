@@ -18,31 +18,28 @@ use function PHPUnit\Framework\assertTrue;
 class BitsTest extends TestCase
 {
 
-    public function testGetMostSignificantBit()
+    public function testGetMostSignificantBit(): void
     {
         assertEquals(0, Bits::getMostSignificantBit(0));
-        assertEquals(1, Bits::getMostSignificantBit(1));
-        assertEquals(4, Bits::getMostSignificantBit(8));
-        assertEquals(4, Bits::getMostSignificantBit(15));
-        /** @todo check PHP_INT_MAX */
-//        assertEquals(4, Bits::getMSB(PHP_INT_MAX));
-        /** check deprecated */
-        assertEquals(0, Bits::getMSB(0));
+        assertEquals(0, Bits::getMostSignificantBit(1));
+        assertEquals(3, Bits::getMostSignificantBit(8));
+        assertEquals(3, Bits::getMostSignificantBit(15));
+        assertEquals(63, Bits::getMostSignificantBit(PHP_INT_MAX));
     }
 
-    public function testGetSetBits()
+    public function testGetSetBits(): void
     {
         assertEquals([], Bits::getSetBits(0));
         assertEquals([1, 2, 4], Bits::getSetBits(7));
     }
 
-    public function testIsSingleBit()
+    public function testIsSingleBit(): void
     {
         assertTrue(Bits::isSingleBit(8));
         assertFalse(Bits::isSingleBit(7));
     }
 
-    public function testBitToIndex()
+    public function testBitToIndex(): void
     {
         // single bit
         assertEquals(3, Bits::bitToIndex(8));
@@ -55,7 +52,7 @@ class BitsTest extends TestCase
         }
     }
 
-    public function testIndexToBit()
+    public function testIndexToBit(): void
     {
         // valid index
         assertEquals(8, Bits::indexToBit(3));
@@ -68,23 +65,23 @@ class BitsTest extends TestCase
         }
     }
 
-    public function testToString()
+    public function testToString(): void
     {
         assertEquals('111', Bits::toString(7));
     }
 
-    public function testGetSetBitsIndexes()
+    public function testGetSetBitsIndexes(): void
     {
         assertEquals([0, 1, 2], Bits::getSetBitsIndexes(7));
     }
 
-    public function testIsEvenNumber()
+    public function testIsEvenNumber(): void
     {
         assertTrue(Bits::isEvenNumber(2));
         assertFalse(Bits::isEvenNumber(1));
     }
 
-    public function testIsOddNumber()
+    public function testIsOddNumber(): void
     {
         assertTrue(Bits::isOddNumber(3));
         assertFalse(Bits::isOddNumber(4));

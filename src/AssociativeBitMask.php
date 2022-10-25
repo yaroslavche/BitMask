@@ -33,7 +33,7 @@ class AssociativeBitMask extends IndexedBitMask
             throw new KeysSizeMustBeEqualBitsCountException('Second argument "$bitsCount" must be equal to $keys array size');
         }
         $this->keys = $keys;
-        parent::__construct($mask);
+        parent::__construct($mask, $bitsCount);
     }
 
     /** @throws UnknownKeyException */
@@ -53,7 +53,7 @@ class AssociativeBitMask extends IndexedBitMask
      */
     final public function __call(string $method, array $args): bool
     {
-        if (!method_exists($this, $method) && strpos($method, 'is') === 0) {
+        if (!method_exists($this, $method) && str_starts_with($method, 'is')) {
             $key = lcfirst(substr($method, 2));
             return $this->getByKey($key);
         }

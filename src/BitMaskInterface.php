@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace BitMask;
@@ -6,10 +7,6 @@ namespace BitMask;
 use BitMask\Exception\NotSingleBitException;
 use BitMask\Exception\OutOfRangeException;
 
-/**
- * Interface BitMaskInterface
- * @package BitMask
- */
 interface BitMaskInterface
 {
     /**

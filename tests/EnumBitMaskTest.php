@@ -12,17 +12,9 @@ use PHPUnit\Framework\TestCase;
 use function PHPUnit\Framework\assertFalse;
 use function PHPUnit\Framework\assertSame;
 use function PHPUnit\Framework\assertTrue;
-use const PHP_VERSION_ID;
 
 final class EnumBitMaskTest extends TestCase
 {
-    protected function setUp(): void
-    {
-        if (PHP_VERSION_ID < 80100) {
-            $this->markTestSkipped('PHP ^8.1 only');
-        }
-    }
-
     public function testNotAnEnum(): void
     {
         $this->expectException(UnknownEnumException::class);

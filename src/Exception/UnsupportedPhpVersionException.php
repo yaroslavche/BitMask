@@ -6,6 +6,6 @@ namespace BitMask\Exception;
 
 use Exception;
 
-final class UnsupportedPhpVersionException extends Exception
+final class UnsupportedPhpVersionException extends Exception implements BitMaskExceptionInterface
 {
 }

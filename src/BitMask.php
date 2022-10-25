@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace BitMask;
@@ -9,15 +10,11 @@ use BitMask\Util\Bits;
 
 class BitMask implements BitMaskInterface
 {
-    private ?int $storage = null;
-    private ?int $bitsCount = null;
-
     /** @inheritDoc */
-    public function __construct(?int $mask = null, ?int $bitsCount = null)
-    {
-        if (!is_null($bitsCount)) {
-            $this->bitsCount = $bitsCount;
-        }
+    public function __construct(
+        private ?int $mask = null,
+        private readonly ?int $bitsCount = null
+    ) {
         if (!is_null($mask)) {
             $this->set($mask);
         }
@@ -25,7 +22,7 @@ class BitMask implements BitMaskInterface
 
     public function __toString(): string
     {
-        return (string)$this->storage;
+        return (string)$this->mask;
     }
 
     public function __invoke(int $mask): bool
@@ -41,7 +38,7 @@ class BitMask implements BitMaskInterface
     /** @inheritDoc */
     public function get(): ?int
     {
-        return $this->storage;
+        return $this->mask;
     }
 
     /** @inheritDoc */
@@ -50,19 +47,19 @@ class BitMask implements BitMaskInterface
         if ($mask < 0 || (!is_null($this->bitsCount) && $mask >= $this->bitsCount ** 2)) {
             throw new OutOfRangeException((string)$mask);
         }
-        $this->storage = $mask;
+        $this->mask = $mask;
     }
 
     /** @inheritDoc */
     public function unset(): void
     {
-        $this->storage = null;
+        $this->mask = null;
     }
 
     /** @inheritDoc */
     public function isSet(int $mask): bool
     {
-        return ($this->storage & $mask) === $mask;
+        return ($this->mask & $mask) === $mask;
     }
 
     /**
@@ -83,15 +80,15 @@ class BitMask implements BitMaskInterface
     public function setBit(int $bit): void
     {
         $this->checkBit($bit);
-        $this->storage |= $bit;
+        $this->mask |= $bit;
     }
 
     /** @inheritDoc */
     public function unsetBit(int $bit): void
     {
         $this->checkBit($bit);
-        $this->storage ^= $bit;
-//        $this->storage &= ~$bit;
+        $this->mask ^= $bit;
+//        $this->mask &= ~$bit;
     }
 
     /** @inheritDoc */

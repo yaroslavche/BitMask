@@ -1,16 +1,12 @@
-<?php // phpcs:disable PSR1.Files.SideEffects.FoundWithSymbols
+<?php
 
 declare(strict_types=1);
 
 namespace BitMask;
 
 use BitMask\Exception\UnknownEnumException;
-use BitMask\Exception\UnsupportedPhpVersionException;
 use UnitEnum;
 
-use const PHP_VERSION_ID;
-
-PHP_VERSION_ID >= 80100 || throw new UnsupportedPhpVersionException('Requires PHP 8.1 interface UnitEnum');
 class EnumBitMask
 {
     private int $bitmask = 0;
@@ -26,7 +22,7 @@ class EnumBitMask
         UnitEnum ...$bits,
     ) {
         if (!is_subclass_of($this->maskEnum, UnitEnum::class)) {
-            throw new UnknownEnumException('BitMask enum must be instance of UnitEnum');
+            throw new UnknownEnumException('BitMask enum must be subclass of UnitEnum');
         }
         $this->keys = $this->maskEnum::cases();
         $this->set(...$bits);

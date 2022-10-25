@@ -6,6 +6,6 @@ namespace BitMask\Exception;
 
 use Exception;
 
-final class KeysSizeMustBeEqualBitsCountException extends Exception
+final class KeysSizeMustBeEqualBitsCountException extends Exception implements BitMaskExceptionInterface
 {
 }

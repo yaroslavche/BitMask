@@ -6,6 +6,6 @@ namespace BitMask\Exception;
 
 use Exception;
 
-final class UnknownEnumException extends Exception
+final class UnknownEnumException extends Exception implements BitMaskExceptionInterface
 {
 }

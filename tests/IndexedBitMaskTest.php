@@ -17,19 +17,19 @@ use function PHPUnit\Framework\assertTrue;
 
 class IndexedBitMaskTest extends TestCase
 {
-    public function testIndexedBitMask()
+    public function testIndexedBitMask(): void
     {
         $bitmask = new IndexedBitMask();
         assertInstanceOf(IndexedBitMask::class, $bitmask);
     }
 
-    public function testGet()
+    public function testGet(): void
     {
         $bitmask = new IndexedBitMask();
         assertEquals(0, $bitmask->get());
     }
 
-    public function testGetByIndex()
+    public function testGetByIndex(): void
     {
         $bitmask = new IndexedBitMask(5, 3);
         assertTrue($bitmask->getByIndex(0));
@@ -47,7 +47,7 @@ class IndexedBitMaskTest extends TestCase
         }
     }
 
-    public function testSet()
+    public function testSet(): void
     {
         $bitmask = new IndexedBitMask();
         $bitmask->set(7);
@@ -56,14 +56,14 @@ class IndexedBitMaskTest extends TestCase
         assertEquals(0, $bitmask->get());
     }
 
-    public function testUnset()
+    public function testUnset(): void
     {
         $bitmask = new IndexedBitMask(7);
         $bitmask->unset();
         assertEquals(0, $bitmask->get());
     }
 
-    public function testIsSet()
+    public function testIsSet(): void
     {
         $bitmask = new IndexedBitMask(7);
         assertTrue($bitmask->isSet(7));
@@ -71,14 +71,14 @@ class IndexedBitMaskTest extends TestCase
         assertFalse($bitmask->isSet(7));
     }
 
-    public function testIsSetBit()
+    public function testIsSetBit(): void
     {
         $bitmask = new IndexedBitMask(7);
         assertFalse($bitmask->isSetBit(8));
         assertTrue($bitmask->isSetBit(4));
     }
 
-    public function testSetBit()
+    public function testSetBit(): void
     {
         $bitmask = new IndexedBitMask();
         $bitmask->setBit(8);
@@ -88,7 +88,7 @@ class IndexedBitMaskTest extends TestCase
         assertEquals(8, $bitmask->get());
     }
 
-    public function testUnsetBit()
+    public function testUnsetBit(): void
     {
         $bitmask = new IndexedBitMask();
         $bitmask->setBit(8);
