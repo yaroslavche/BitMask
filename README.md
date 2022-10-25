@@ -1,6 +1,7 @@
 [![PHP build](https://github.com/yaroslavche/BitMask/actions/workflows/php.yml/badge.svg)](https://github.com/yaroslavche/BitMask/actions/workflows/php.yml)
 [![codecov](https://codecov.io/gh/yaroslavche/bitmask/branch/main/graph/badge.svg)](https://codecov.io/gh/yaroslavche/bitmask)
 [![Infection MSI](https://badge.stryker-mutator.io/github.com/yaroslavche/BitMask/main)](https://infection.github.io)
+[![PHP](http://poser.pugx.org/yaroslavche/bitmask/require/php)](https://packagist.org/packages/yaroslavche/bitmask)
 # BitMask
 
 PHP library for working with bitmask values
@@ -86,6 +87,33 @@ $bitmask->writable = true;
 $bitmask->executable = false;
 $bitmask->unknownKey = true; // BitMask\Exception\UnknownKeyException
 ``` 
+
+With PHP ^8.1 `EnumBitMask` can be used:
+
+```php
+enum Permissions {
+    case Read;
+    case Write;
+    case Execute;
+}
+
+use BitMask\EnumBitMask;
+
+// First argument is required and expects FQCN of the enum
+// Second argument is a variadic UnitEnum, and acts like setter of the bits
+$bitmask = new EnumBitMask(Permissions::class, Permissions::Read, Permissions::Execute);
+// previous statement is equals to following lines:
+// $bitmask = new EnumBitMask(Permissions::class); 
+// $bitmask->set(Permissions::Read, Permissions::Execute); // set, isSet and unset also have variadic args
+
+$bitmask->isSet(Permissions::Read); // true
+$bitmask->isSet(Permissions::Write); // false
+$bitmask->isSet(Permissions::Execute); // true
+$bitmask->set(Permissions::Write);
+$bitmask->isSet(Permissions::Write, Permissions::Read); // true
+$bitmask->unset(Permissions::Write);
+$bitmask->isSet(Permissions::Write); // false
+```
 
 ## Installing
 

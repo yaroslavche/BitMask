@@ -1,2 +1,2 @@
-includes:
-    - vendor/thecodingmachine/phpstan-strict-rules/phpstan-strict-rules.neon
+parameters:
+    level: 9

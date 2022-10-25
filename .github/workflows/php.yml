@@ -15,23 +15,34 @@ jobs:
         strategy:
             matrix:
                 operating-system: [ubuntu-latest]
-                php-versions: ['7.4', '8.0', '8.1']
-        name: PHP ${{ matrix.php-versions }} Test on ${{ matrix.operating-system }}
+                php-version: ['7.4', '8.0', '8.1', '8.2']
+        name: PHP ${{ matrix.php-version }}
         steps:
             - name: Checkout
               uses: actions/checkout@v2
             - name: Install PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: ${{ matrix.php-versions }}
+                  php-version: ${{ matrix.php-version }}
                   coverage: xdebug
                   tools: composer
             - name: Install package
               run: |
                   composer install
-            - name: Checks
+            - name: Phpstan rules for PHP ${{ matrix.php-version }}
+              if: ${{ matrix.php-version == '7.4' || matrix.php-version == '8.0' }}
+              run: cp phpstan_below_81.neon phpstan.neon
+            - name: Main checks
               run: |
-                  composer ci:pack
+                  composer phpcs
+                  composer phpstan
+                  composer phpunit
+            - name: Infection and coverage
+              if: ${{ matrix.php-version == '8.1' || matrix.php-version == '8.2' }}
+              run: |
+                  composer infection
+                  composer coverage
+                  composer phpunit
             - name: Upload codecoverage
               run: |
                   bash <(curl -s https://codecov.io/bash)
