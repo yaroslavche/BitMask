@@ -42,7 +42,4 @@ jobs:
               run: |
                   composer infection
                   composer coverage
-                  composer phpunit
-            - name: Upload codecoverage
-              run: |
                   bash <(curl -s https://codecov.io/bash)
