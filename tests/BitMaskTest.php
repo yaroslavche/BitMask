@@ -12,7 +12,6 @@ use PHPUnit\Framework\TestCase;
 use function PHPUnit\Framework\assertEquals;
 use function PHPUnit\Framework\assertFalse;
 use function PHPUnit\Framework\assertInstanceOf;
-use function PHPUnit\Framework\assertNull;
 use function PHPUnit\Framework\assertSame;
 use function PHPUnit\Framework\assertTrue;
 
@@ -26,14 +25,15 @@ class BitMaskTest extends TestCase
     {
         $bitmask = new BitMask();
         assertInstanceOf(BitMask::class, $bitmask);
-        assertNull($bitmask->get());
+        assertSame(0, $bitmask->get());
         $this->expectException(OutOfRangeException::class);
         new BitMask(-2); // BitMask.php:19 [M] MethodCallRemoval
     }
 
     public function testSet(): void
     {
-        $bitmask = new BitMask(null, 2);
+        $bitmask = new BitMask(0, 2);
+        $bitmask->set(0);
         $bitmask->set(self::READ);
         assertEquals(self::READ, $bitmask->get());
         $this->expectException(OutOfRangeException::class);
@@ -45,7 +45,7 @@ class BitMaskTest extends TestCase
     {
         $bitmask = new BitMask(self::READ | self::EXECUTE);
         $bitmask->unset();
-        assertNull($bitmask->get());
+        assertSame(0, $bitmask->get());
     }
 
     public function testIsSet(): void
@@ -63,13 +63,13 @@ class BitMaskTest extends TestCase
     public function testIsSetBit(): void
     {
         $bitmask = new BitMask(self::READ | self::WRITE | self::EXECUTE, 3);
-        assertTrue($bitmask->isSetBit(self::READ));
-        assertTrue($bitmask->isSetBit(self::WRITE));
-        assertTrue($bitmask->isSetBit(self::EXECUTE));
+        assertTrue($bitmask->isSetBits(self::READ));
+        assertTrue($bitmask->isSetBits(self::WRITE));
+        assertTrue($bitmask->isSetBits(self::EXECUTE));
         $bitmask->unset();
-        assertFalse($bitmask->isSetBit(self::READ));
-        assertFalse($bitmask->isSetBit(self::WRITE));
-        assertFalse($bitmask->isSetBit(self::EXECUTE));
+        assertFalse($bitmask->isSetBits(self::READ));
+        assertFalse($bitmask->isSetBits(self::WRITE));
+        assertFalse($bitmask->isSetBits(self::EXECUTE));
     }
 
     public function testIsSetBitNotSingleBit(): void
@@ -77,24 +77,24 @@ class BitMaskTest extends TestCase
         $bitmask = new BitMask();
         $this->expectException(NotSingleBitException::class);
         $this->expectExceptionMessage((string)(self::READ | self::WRITE));
-        $bitmask->isSetBit(self::READ | self::WRITE);
+        $bitmask->isSetBits(self::READ | self::WRITE);
     }
 
     public function testIsSetBitOutOfRange(): void
     {
-        $bitmask = new BitMask(null, 2);
+        $bitmask = new BitMask(0, 1);
         $this->expectException(OutOfRangeException::class);
         $this->expectExceptionMessage((string)self::EXECUTE);
-        $bitmask->isSetBit(self::EXECUTE);
+        $bitmask->isSetBits(self::EXECUTE);
     }
 
     public function testSetBit(): void
     {
         $bitmask = new BitMask();
-        $bitmask->setBit(self::READ);
-        assertTrue($bitmask->isSetBit(self::READ));
+        $bitmask->setBits(self::READ);
+        assertTrue($bitmask->isSetBits(self::READ));
         assertSame(self::READ, $bitmask->get());
-        $bitmask->setBit(self::WRITE);
+        $bitmask->setBits(self::WRITE);
         assertSame(self::READ | self::WRITE, $bitmask->get());
     }
 
@@ -103,26 +103,26 @@ class BitMaskTest extends TestCase
         $bitmask = new BitMask();
         $this->expectException(NotSingleBitException::class);
         $this->expectExceptionMessage((string)(self::READ | self::WRITE));
-        $bitmask->setBit(self::READ | self::WRITE);
+        $bitmask->setBits(self::READ | self::WRITE);
     }
 
     public function testSetBitOutOfRange(): void
     {
-        $bitmask = new BitMask(null, 2);
+        $bitmask = new BitMask(0, 1);
         $this->expectException(OutOfRangeException::class);
         $this->expectExceptionMessage((string)self::EXECUTE);
-        $bitmask->setBit(self::EXECUTE);
+        $bitmask->setBits(self::EXECUTE);
     }
 
     public function testUnsetBit(): void
     {
         $bitmask = new BitMask(self::READ | self::WRITE);
-        $bitmask->unsetBit(self::READ);
-        assertFalse($bitmask->isSetBit(self::READ));
-        assertTrue($bitmask->isSetBit(self::WRITE));
-        $bitmask->unsetBit(self::WRITE);
-        assertFalse($bitmask->isSetBit(self::READ));
-        assertFalse($bitmask->isSetBit(self::WRITE));
+        $bitmask->unsetBits(self::READ);
+        assertFalse($bitmask->isSetBits(self::READ));
+        assertTrue($bitmask->isSetBits(self::WRITE));
+        $bitmask->unsetBits(self::WRITE);
+        assertFalse($bitmask->isSetBits(self::READ));
+        assertFalse($bitmask->isSetBits(self::WRITE));
     }
 
     public function testUnsetBitNotSingleBit(): void
@@ -130,7 +130,7 @@ class BitMaskTest extends TestCase
         $bitmask = new BitMask(self::EXECUTE);
         $this->expectException(NotSingleBitException::class);
         $this->expectExceptionMessage((string)(self::READ | self::WRITE));
-        $bitmask->unsetBit(self::READ | self::WRITE);
+        $bitmask->unsetBits(self::READ | self::WRITE);
     }
 
     public function testUnsetBitOutOfRange(): void
@@ -138,7 +138,7 @@ class BitMaskTest extends TestCase
         $bitmask = new BitMask(self::WRITE, 2);
         $this->expectException(OutOfRangeException::class);
         $this->expectExceptionMessage((string)self::EXECUTE);
-        $bitmask->unsetBit(self::EXECUTE);
+        $bitmask->unsetBits(self::EXECUTE);
     }
 
     public function testToString(): void
@@ -149,31 +149,15 @@ class BitMaskTest extends TestCase
         assertSame('9', (string)$bitmask);
     }
 
-    public function testInvoke(): void
-    {
-        $bitmask = new BitMask(7);
-        assertTrue($bitmask(1));
-        assertFalse($bitmask(8));
-        $bitmask->set(9);
-        assertTrue($bitmask(8));
-        assertFalse($bitmask(4));
-    }
-
-    public function testInit(): void
-    {
-        $bitmask = BitMask::init(7);
-        assertInstanceOf(BitMask::class, $bitmask);
-    }
-
     public function testSetBitByShiftOffset(): void
     {
-        $bitmask = new BitMask(null, 3);
+        $bitmask = new BitMask(0, 3);
         $bitmask->setBitByShiftOffset(0);
-        assertTrue($bitmask->isSetBit(self::READ));
+        assertTrue($bitmask->isSetBits(self::READ));
         $bitmask->setBitByShiftOffset(1);
-        assertTrue($bitmask->isSetBit(self::WRITE));
+        assertTrue($bitmask->isSetBits(self::WRITE));
         $bitmask->setBitByShiftOffset(2);
-        assertTrue($bitmask->isSetBit(self::EXECUTE));
+        assertTrue($bitmask->isSetBits(self::EXECUTE));
         assertSame(self::READ | self::WRITE | self::EXECUTE, $bitmask->get());
     }
 
@@ -181,11 +165,11 @@ class BitMaskTest extends TestCase
     {
         $bitmask = new BitMask(self::READ | self::WRITE | self::EXECUTE);
         $bitmask->unsetBitByShiftOffset(0);
-        assertFalse($bitmask->isSetBit(self::READ));
+        assertFalse($bitmask->isSetBits(self::READ));
         $bitmask->unsetBitByShiftOffset(1);
-        assertFalse($bitmask->isSetBit(self::WRITE));
+        assertFalse($bitmask->isSetBits(self::WRITE));
         $bitmask->unsetBitByShiftOffset(2);
-        assertFalse($bitmask->isSetBit(self::EXECUTE));
+        assertFalse($bitmask->isSetBits(self::EXECUTE));
         assertSame(0, $bitmask->get());
     }
 
@@ -199,21 +183,22 @@ class BitMaskTest extends TestCase
 
     public function testShiftOffsetOutOfRange(): void
     {
-        $bitmask = new BitMask(self::WRITE, 2);
+        assertSame(true, true);
+        $bitmask = new BitMask(self::READ, 2);
         try {
-            $bitmask->setBitByShiftOffset(2);
+            $bitmask->setBitByShiftOffset(3);
         } catch (OutOfRangeException $exception) {
-            assertSame('2', $exception->getMessage());
+            assertSame('8', $exception->getMessage());
         }
         try {
-            $bitmask->unsetBitByShiftOffset(2);
+            $bitmask->unsetBitByShiftOffset(3);
         } catch (OutOfRangeException $exception) {
-            assertSame('2', $exception->getMessage());
+            assertSame('8', $exception->getMessage());
         }
         try {
-            $bitmask->isSetBitByShiftOffset(2);
+            $bitmask->isSetBitByShiftOffset(3);
         } catch (OutOfRangeException $exception) {
-            assertSame('2', $exception->getMessage());
+            assertSame('8', $exception->getMessage());
         }
     }
 }

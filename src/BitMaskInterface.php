@@ -10,21 +10,10 @@ use BitMask\Exception\OutOfRangeException;
 interface BitMaskInterface
 {
     /**
-     * @param int|null $mask
-     * @param int|null $bitsCount If not null - restricts boundaries
-     */
-    public function __construct(?int $mask = null, ?int $bitsCount = null);
-
-    /**
-     * Get BitMask integer value.
-     *
-     * $mask = new BitMask(1 << 0 | 1 << 1 | 1 << 2);
+     * $mask = new BitMask(0b111);
      * $mask->get(); => (int) 7
-     *
-     * @return int|null
-     * @noinspection PhpMethodNamingConventionInspection
      */
-    public function get(): ?int;
+    public function get(): int;
 
     /**
      * Set BitMask integer value.
@@ -32,8 +21,6 @@ interface BitMaskInterface
      * $mask = new BitMask();
      * $mask->set(5);
      * $mask->get(); => (int) 5
-     *
-     * @param int $mask
      * @noinspection PhpMethodNamingConventionInspection
      */
     public function set(int $mask): void;
@@ -43,7 +30,7 @@ interface BitMaskInterface
      *
      * $mask = new BitMask(5);
      * $mask->unset();
-     * $mask->get(); => null
+     * $mask->get(); => 0
      */
     public function unset(): void;
 
@@ -53,9 +40,6 @@ interface BitMaskInterface
      * $mask = new BitMask(1 << 1);
      * $mask->isSet(1); => false
      * $mask->isSet(2); => true
-     *
-     * @param int $mask
-     * @return bool
      */
     public function isSet(int $mask): bool;
 
@@ -68,10 +52,9 @@ interface BitMaskInterface
      * $mask->get(); => 5
      * $mask->setBit(3) => NotSingleBitException
      *
-     * @param int $bit
      * @throws NotSingleBitException
      */
-    public function setBit(int $bit): void;
+    public function setBits(int ...$bits): void;
 
     /**
      * Unset $bit in BitMask integer value.
@@ -81,10 +64,9 @@ interface BitMaskInterface
      * $mask->get(); => 5
      * $mask->unsetBit(5) => NotSingleBitException
      *
-     * @param int $bit
      * @throws NotSingleBitException
      */
-    public function unsetBit(int $bit): void;
+    public function unsetBits(int ...$bits): void;
 
     /**
      * Check if $bit is set in BitMask integer value.
@@ -95,11 +77,9 @@ interface BitMaskInterface
      * $mask->isSetBit(4); => true
      * $mask->unsetBit(5); => NotSingleBitException
      *
-     * @param int $bit
-     * @return bool
      * @throws NotSingleBitException
      */
-    public function isSetBit(int $bit): bool;
+    public function isSetBits(int ...$bits): bool;
 
     /**
      * Set bit in shift offset of BitMask integer value.
@@ -114,7 +94,6 @@ interface BitMaskInterface
      * $mask->setBitByOffset(-1) => OutOfRangeException *
      * * Or possible map in inverse direction with $inverseMask << abs($shiftOffset), but seems weird and not needed
      *
-     * @param int $shiftOffset
      * @throws OutOfRangeException
      */
     public function setBitByShiftOffset(int $shiftOffset): void;
@@ -131,7 +110,6 @@ interface BitMaskInterface
      * $mask->get(); => 0
      * $mask->unsetBitByOffset(-1) => OutOfRangeException *
      *
-     * @param int $shiftOffset
      * @throws OutOfRangeException
      */
     public function unsetBitByShiftOffset(int $shiftOffset): void;
@@ -145,8 +123,6 @@ interface BitMaskInterface
      * $mask->isSetBitByOffset(2); => false
      * $mask->isSetBitByOffset(-1) => OutOfRangeException *
      *
-     * @param int $shiftOffset
-     * @return bool
      * @throws OutOfRangeException
      */
     public function isSetBitByShiftOffset(int $shiftOffset): bool;

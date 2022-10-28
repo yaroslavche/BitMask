@@ -5,9 +5,9 @@ namespace Yaroslavche\Benchmarks;
 
 use BitMask\Util\Bits as BitUtils;
 use Generator;
-use PhpBench\Benchmark\Metadata\Annotations\Iterations;
-use PhpBench\Benchmark\Metadata\Annotations\ParamProviders;
-use PhpBench\Benchmark\Metadata\Annotations\Revs;
+use PhpBench\Attributes\Iterations;
+use PhpBench\Attributes\ParamProviders;
+use PhpBench\Attributes\Revs;
 
 class GetSetBitsIndexBench
 {
@@ -19,21 +19,19 @@ class GetSetBitsIndexBench
         yield [1 << 32];
     }
 
-    /**
-     * @Revs(100000)
-     * @Iterations(5)
-     * @ParamProviders({"maskProvider"})
-     */
+    /** @param int[] $mask */
+    #[Revs(100000)]
+    #[Iterations(5)]
+    #[ParamProviders('maskProvider')]
     public function benchGetSetBitsIndex1(array $mask): void
     {
         $this->getSetBitsIndex1($mask[0]);
     }
 
-    /**
-     * @Revs(10000)
-     * @Iterations(5)
-     * @ParamProviders({"maskProvider"})
-     */
+    /** @param int[] $mask */
+    #[Revs(100000)]
+    #[Iterations(5)]
+    #[ParamProviders('maskProvider')]
     public function benchGetSetBitsIndex2(array $mask): void
     {
         $this->getSetBitsIndex2($mask[0]);
@@ -56,7 +54,7 @@ class GetSetBitsIndexBench
     {
         $bitIndexes = [];
         foreach (BitUtils::getSetBits($mask) as $index => $bit) {
-            $bitIndexes[$index] = (int)log($bit, 2);
+            $bitIndexes[$index] = BitUtils::getMostSignificantBit($bit);
         }
         return $bitIndexes;
     }

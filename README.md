@@ -21,6 +21,7 @@ if ($mask & READ) {
 ```
 
 But you can try other way with this package:
+
 ```php
 use BitMask\BitMask;
 use BitMask\Util\Bits;
@@ -30,7 +31,7 @@ $bitmask->set(0b111); // 7, 1 << 0 | 1 << 1 | 1 << 2
 
 // get value and check if single bit or mask is set 
 $integerMask = $bitmask->get(); // int 7
-$boolIsSetBit = $bitmask->isSetBit(4); // bool true
+$boolIsSetBit = $bitmask->isSetBits(4); // bool true
 $boolIsSetBit = $bitmask->isSetBitByShiftOffset(2); // true
 $boolIsSetMask = $bitmask->isSet(6); // bool true
 
@@ -46,49 +47,17 @@ $integerIndex = Bits::bitToIndex(65536); // int 16
 $boolIsSingleBit = Bits::isSingleBit(8); // true
 
 // change mask 
-$bitmask->unsetBit(4);
+$bitmask->unsetBits(4);
 $bitmask->unsetBitByShiftOffset(2);
-$bitmask->setBit(8);
+$bitmask->setBits(8);
 
 Bits::getSetBits($bitmask->get()); // array:3 [1, 2, 8]
 ```
 
 Some examples can be found in [BitMaskInterface](/src/BitMaskInterface.php) and in [tests](/tests)
 
-Exists `IndexedBitMask` and `AssociativeBitMask` helper classes:
-```php
-use BitMask\IndexedBitMask;
-use BitMask\AssociativeBitMask;
 
-// Indexed are extended BitMask with one extra method: getByIndex
-// For instance, mask 0b110 would have following "index:value": 0:false, 1:true, 2:true
-// Indexes are RTL, starts from 0. Equals to mask left shift offset.
-$indexed = new IndexedBitMask(1 << 1 | 1 << 2); // 0b110
-$indexed->getByIndex(2); // true
-$indexed->getByIndex(0); // false
-
-// Associative are extended Indexed. In addition to the mask you must also specify the number of bits and the array of key strings.
-// Each key will have a bitmask property with the same name and a method named 'is{Key}'.
-$bitmask = new AssociativeBitMask(5, 3, ['readable', 'writable', 'executable']); // 
-$bitmask->getByKey('readable'); // bool(true)
-/** __call */
-$boolReadable = $bitmask->isReadable(); // bool(true)
-$boolWritable = $bitmask->isWritable(); // bool(true)
-$boolExecutable = $bitmask->isExecutable(); // bool(true)
-$result = $bitmask->isUnknownKey(); // BitMask\Exception\UnknownKeyException
-/** __get */
-$boolReadable = $bitmask->readable; // bool true
-$boolWritable = $bitmask->writable; // bool false
-$boolExecutable = $bitmask->executable; // bool true
-$result = $bitmask->unknownKey; // BitMask\Exception\UnknownKeyException
-/** __set */
-$bitmask->readable = false;
-$bitmask->writable = true;
-$bitmask->executable = false;
-$bitmask->unknownKey = true; // BitMask\Exception\UnknownKeyException
-``` 
-
-With PHP ^8.1 `EnumBitMask` can be used:
+`EnumBitMask` is extended BitMask
 
 ```php
 enum Permissions {
@@ -99,20 +68,14 @@ enum Permissions {
 
 use BitMask\EnumBitMask;
 
-// First argument is required and expects FQCN of the enum
-// Second argument is a variadic UnitEnum, and acts like setter of the bits
-$bitmask = new EnumBitMask(Permissions::class, Permissions::Read, Permissions::Execute);
-// previous statement is equals to following lines:
-// $bitmask = new EnumBitMask(Permissions::class); 
-// $bitmask->set(Permissions::Read, Permissions::Execute); // set, isSet and unset also have variadic args
-
-$bitmask->isSet(Permissions::Read); // true
-$bitmask->isSet(Permissions::Write); // false
-$bitmask->isSet(Permissions::Execute); // true
-$bitmask->set(Permissions::Write);
-$bitmask->isSet(Permissions::Write, Permissions::Read); // true
-$bitmask->unset(Permissions::Write);
-$bitmask->isSet(Permissions::Write); // false
+$bitmask = EnumBitMask::fromEnum(Permissions::class)->setEnumBits(Permissions::Read, Permissions::Execute);
+$bitmask->isSetEnumBits(Permissions::Read); // true
+$bitmask->isSetEnumBits(Permissions::Write); // false
+$bitmask->isSetEnumBits(Permissions::Execute); // true
+$bitmask->setEnumBits(Permissions::Write);
+$bitmask->isSetEnumBits(Permissions::Write, Permissions::Read); // true
+$bitmask->unsetEnumBits(Permissions::Write);
+$bitmask->isSetEnumBits(Permissions::Write); // false
 ```
 
 ## Installing

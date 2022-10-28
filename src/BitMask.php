@@ -10,14 +10,12 @@ use BitMask\Util\Bits;
 
 class BitMask implements BitMaskInterface
 {
-    /** @inheritDoc */
     public function __construct(
-        private ?int $mask = null,
-        private readonly ?int $bitsCount = null
+        protected int $mask = 0,
+        private ?int $mostSignificantBit = null,
     ) {
-        if (!is_null($mask)) {
-            $this->set($mask);
-        }
+        $this->mostSignificantBit ??= Bits::getMostSignificantBit(PHP_INT_MAX);
+        $this->set($mask);
     }
 
     public function __toString(): string
@@ -25,18 +23,8 @@ class BitMask implements BitMaskInterface
         return (string)$this->mask;
     }
 
-    public function __invoke(int $mask): bool
-    {
-        return $this->isSet($mask);
-    }
-
-    public static function init(?int $mask = null): BitMaskInterface
-    {
-        return new static($mask);
-    }
-
     /** @inheritDoc */
-    public function get(): ?int
+    public function get(): int
     {
         return $this->mask;
     }
@@ -44,7 +32,7 @@ class BitMask implements BitMaskInterface
     /** @inheritDoc */
     public function set(int $mask): void
     {
-        if ($mask < 0 || (!is_null($this->bitsCount) && $mask >= $this->bitsCount ** 2)) {
+        if ($mask < 0 || ($mask >= $this->mostSignificantBit ** 2)) {
             throw new OutOfRangeException((string)$mask);
         }
         $this->mask = $mask;
@@ -53,7 +41,7 @@ class BitMask implements BitMaskInterface
     /** @inheritDoc */
     public function unset(): void
     {
-        $this->mask = null;
+        $this->mask = 0;
     }
 
     /** @inheritDoc */
@@ -71,61 +59,49 @@ class BitMask implements BitMaskInterface
         if (!Bits::isSingleBit($bit)) {
             throw new NotSingleBitException((string)$bit);
         }
-        if (!is_null($this->bitsCount) && $bit >= $this->bitsCount ** 2) {
+        if ($bit >= $this->mostSignificantBit ** 2) {
+//            var_dump($bit, $this->mostSignificantBit, $this->mostSignificantBit ** 2);
             throw new OutOfRangeException((string)$bit);
         }
     }
 
     /** @inheritDoc */
-    public function setBit(int $bit): void
+    public function setBits(int ...$bits): void
     {
-        $this->checkBit($bit);
-        $this->mask |= $bit;
+        array_walk($bits, fn(int $bit) => $this->checkBit($bit));
+        array_walk($bits, fn(int $bit) => $this->mask |= $bit);
     }
 
     /** @inheritDoc */
-    public function unsetBit(int $bit): void
+    public function unsetBits(int ...$bits): void
     {
-        $this->checkBit($bit);
-        $this->mask ^= $bit;
+        array_walk($bits, fn(int $bit) => $this->checkBit($bit));
+        array_walk($bits, fn(int $bit) => $this->mask ^= $bit);
 //        $this->mask &= ~$bit;
     }
 
     /** @inheritDoc */
-    public function isSetBit(int $bit): bool
+    public function isSetBits(int ...$bits): bool
     {
-        $this->checkBit($bit);
-        return $this->isSet($bit);
-    }
-
-    private function checkShiftOffset(int $shiftOffset): void
-    {
-        if ($shiftOffset < 0 || (null !== $this->bitsCount && $this->bitsCount <= $shiftOffset)) {
-            throw new OutOfRangeException((string)$shiftOffset);
-        }
+        array_walk($bits, fn(int $bit) => $this->checkBit($bit));
+        return !in_array(false, array_map(fn(int $bit) => $this->isSet($bit), $bits), true);
     }
 
     /** @inheritDoc */
     public function setBitByShiftOffset(int $shiftOffset): void
     {
-        $this->checkShiftOffset($shiftOffset);
-        $bit = 1 << $shiftOffset;
-        $this->setBit($bit);
+        $this->setBits(1 << $shiftOffset);
     }
 
     /** @inheritDoc */
     public function unsetBitByShiftOffset(int $shiftOffset): void
     {
-        $this->checkShiftOffset($shiftOffset);
-        $bit = 1 << $shiftOffset;
-        $this->unsetBit($bit);
+        $this->unsetBits(1 << $shiftOffset);
     }
 
     /** @inheritDoc */
     public function isSetBitByShiftOffset(int $shiftOffset): bool
     {
-        $this->checkShiftOffset($shiftOffset);
-        $bit = 1 << $shiftOffset;
-        return $this->isSetBit($bit);
+        return $this->isSetBits(1 << $shiftOffset);
     }
 }

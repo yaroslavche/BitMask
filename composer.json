@@ -1,6 +1,6 @@
 {
   "name": "yaroslavche/bitmask",
-  "description": "BitMask, IndexedBitMask, AssociativeBitMask, EnumBitMask",
+  "description": "BitMask, EnumBitMask",
   "license": "MIT",
   "keywords": [
     "bit",

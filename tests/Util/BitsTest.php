@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace BitMask\Tests\Util;
 
-use BitMask\Exception\InvalidIndexException;
 use BitMask\Exception\NotSingleBitException;
+use BitMask\Exception\OutOfRangeException;
 use BitMask\Util\Bits;
 use PHPUnit\Framework\TestCase;
 
@@ -31,6 +31,9 @@ class BitsTest extends TestCase
     {
         assertEquals([], Bits::getSetBits(0));
         assertEquals([1, 2, 4], Bits::getSetBits(7));
+        assertEquals([2, 16], Bits::getSetBits(0b10010));
+        assertEquals([1], Bits::getSetBits(1)); // Util/Bits.php:31 [M] GreaterThanOrEqualTo
+        assertEquals([2], Bits::getSetBits(2)); // Util/Bits.php:32 [M] BitwiseAnd
     }
 
     public function testIsSingleBit(): void
@@ -60,8 +63,8 @@ class BitsTest extends TestCase
         // invalid index
         try {
             Bits::indexToBit(-1);
-        } catch (InvalidIndexException $exception) {
-            assertSame('Index (zero based) must be greater than or equal to zero', $exception->getMessage());
+        } catch (OutOfRangeException $exception) {
+            assertSame('-1', $exception->getMessage());
         }
     }
 
