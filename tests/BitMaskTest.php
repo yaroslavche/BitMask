@@ -32,8 +32,7 @@ class BitMaskTest extends TestCase
 
     public function testSet(): void
     {
-        $bitmask = new BitMask(0, 2);
-        $bitmask->set(0);
+        $bitmask = new BitMask(0, 1);
         $bitmask->set(self::READ);
         assertEquals(self::READ, $bitmask->get());
         $this->expectException(OutOfRangeException::class);

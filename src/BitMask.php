@@ -32,7 +32,7 @@ class BitMask implements BitMaskInterface
     /** @inheritDoc */
     public function set(int $mask): void
     {
-        if ($mask < 0 || ($mask >= $this->mostSignificantBit ** 2)) {
+        if ($mask < 0 || $mask >= ($this->mostSignificantBit + 1) ** 2) {
             throw new OutOfRangeException((string)$mask);
         }
         $this->mask = $mask;

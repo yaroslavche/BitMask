@@ -48,7 +48,7 @@ final class EnumBitMaskTest extends TestCase
     public function testSetOutOfRange(): void
     {
         $this->expectException(OutOfRangeException::class);
-        new EnumBitMask(Permissions::class, 9);
+        new EnumBitMask(Permissions::class, 16);
     }
 
     public function testIsSet(): void
