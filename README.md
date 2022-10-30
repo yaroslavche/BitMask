@@ -13,8 +13,8 @@ define('READ', 1 << 0);
 define('WRITE', 1 << 1);
 define('EXECUTE', 1 << 2);
 $mask = READ | WRITE | EXECUTE;
-// read: 1 write: 2 execute: 4 mask: 7
 echo sprintf('read: %d write: %d execute: %d mask: %d', READ, WRITE, EXECUTE, $mask);
+// read: 1 write: 2 execute: 4 mask: 7
 if ($mask & READ) {
     // $mask have a READ
 }
@@ -26,17 +26,19 @@ But you can try other way with this package:
 use BitMask\BitMask;
 use BitMask\Util\Bits;
 
-$bitmask = new BitMask();
+// first argument - is a mask, bounded with second argument (if it's set)
+// second - allowed most significant bit (default depends on PHP_INT_MAX) 
+$bitmask = new BitMask(0, 2); // no bits set, but only three bits allowed: 1, 2, 4
 $bitmask->set(0b111); // 7, 1 << 0 | 1 << 1 | 1 << 2
 
 // get value and check if single bit or mask is set 
 $integerMask = $bitmask->get(); // int 7
-$boolIsSetBit = $bitmask->isSetBits(4); // bool true
-$boolIsSetBit = $bitmask->isSetBitByShiftOffset(2); // true
-$boolIsSetMask = $bitmask->isSet(6); // bool true
+$boolIsSetBit = $bitmask->isSetBits(1, 2, 4); // bool true, variadic arguments
+$boolIsSetBit = $bitmask->isSetBitByShiftOffset(2); // bool true, for single MSB
+$boolIsSetMask = $bitmask->isSet(6); // bool true, single mask
 
 // get some info about bits
-$integerMostSignificantBit = Bits::getMostSignificantBit($bitmask->get()); // int 3
+$integerMostSignificantBit = Bits::getMostSignificantBit($bitmask->get()); // int 7
 $arraySetBits = Bits::getSetBits($bitmask->get()); // array:3 [1, 2, 4]
 $arraySetBitsIndexes = Bits::getSetBitsIndexes($bitmask->get()); // array:3 [0, 1, 2]
 $string = Bits::toString($bitmask->get()); // string "111"
@@ -47,11 +49,11 @@ $integerIndex = Bits::bitToIndex(65536); // int 16
 $boolIsSingleBit = Bits::isSingleBit(8); // true
 
 // change mask 
-$bitmask->unsetBits(4);
-$bitmask->unsetBitByShiftOffset(2);
-$bitmask->setBits(8);
+$bitmask->unsetBits(4); // or $bitmask->unsetBitByShiftOffset(2);
+$bitmask->setBits(1, 2, 4);
+Bits::getSetBits($bitmask->get()); // array:3 [1, 2, 4]
 
-Bits::getSetBits($bitmask->get()); // array:3 [1, 2, 8]
+$bitmask->setBits(8); // throws OutOfRangeException
 ```
 
 Some examples can be found in [BitMaskInterface](/src/BitMaskInterface.php) and in [tests](/tests)
@@ -68,14 +70,13 @@ enum Permissions {
 
 use BitMask\EnumBitMask;
 
-$bitmask = EnumBitMask::fromEnum(Permissions::class)->setEnumBits(Permissions::Read, Permissions::Execute);
+$bitmask = new EnumBitMask(Permissions::class);
+$bitmask->setEnumBits(Permissions::Read, Permissions::Execute);
 $bitmask->isSetEnumBits(Permissions::Read); // true
 $bitmask->isSetEnumBits(Permissions::Write); // false
-$bitmask->isSetEnumBits(Permissions::Execute); // true
 $bitmask->setEnumBits(Permissions::Write);
-$bitmask->isSetEnumBits(Permissions::Write, Permissions::Read); // true
+$bitmask->isSetEnumBits(Permissions::Read, Permissions::Write, Permissions::Execute); // true
 $bitmask->unsetEnumBits(Permissions::Write);
-$bitmask->isSetEnumBits(Permissions::Write); // false
 ```
 
 ## Installing
@@ -109,7 +110,7 @@ $ ./vendor/bin/phpbench run benchmarks --report=default
 ##### PHPStan
 ```bash
 $ composer phpstan
-$ ./vendor/bin/phpstan analyse src/ -c phpstan.neon --level=8 --no-progress -vvv --memory-limit=1024M
+$ ./vendor/bin/phpstan analyse src/ -c phpstan.neon --level=9 --no-progress -vvv --memory-limit=1024M
 ```
 ##### PHP-CS
 ###### Code style check

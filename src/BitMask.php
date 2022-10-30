@@ -12,9 +12,8 @@ class BitMask implements BitMaskInterface
 {
     public function __construct(
         protected int $mask = 0,
-        private ?int $mostSignificantBit = null,
+        private readonly ?int $mostSignificantBit = null,
     ) {
-        $this->mostSignificantBit ??= Bits::getMostSignificantBit(PHP_INT_MAX);
         $this->set($mask);
     }
 
@@ -32,9 +31,7 @@ class BitMask implements BitMaskInterface
     /** @inheritDoc */
     public function set(int $mask): void
     {
-        if ($mask < 0 || $mask >= ($this->mostSignificantBit + 1) ** 2) {
-            throw new OutOfRangeException((string)$mask);
-        }
+        $this->checkMask($mask);
         $this->mask = $mask;
     }
 
@@ -50,21 +47,6 @@ class BitMask implements BitMaskInterface
         return ($this->mask & $mask) === $mask;
     }
 
-    /**
-     * @throws NotSingleBitException
-     * @throws OutOfRangeException
-     */
-    private function checkBit(int $bit): void
-    {
-        if (!Bits::isSingleBit($bit)) {
-            throw new NotSingleBitException((string)$bit);
-        }
-        if ($bit >= $this->mostSignificantBit ** 2) {
-//            var_dump($bit, $this->mostSignificantBit, $this->mostSignificantBit ** 2);
-            throw new OutOfRangeException((string)$bit);
-        }
-    }
-
     /** @inheritDoc */
     public function setBits(int ...$bits): void
     {
@@ -77,7 +59,7 @@ class BitMask implements BitMaskInterface
     {
         array_walk($bits, fn(int $bit) => $this->checkBit($bit));
         array_walk($bits, fn(int $bit) => $this->mask ^= $bit);
-//        $this->mask &= ~$bit;
+        // $this->mask &= ~$bit;
     }
 
     /** @inheritDoc */
@@ -103,5 +85,25 @@ class BitMask implements BitMaskInterface
     public function isSetBitByShiftOffset(int $shiftOffset): bool
     {
         return $this->isSetBits(1 << $shiftOffset);
+    }
+
+    /** @throws OutOfRangeException */
+    private function checkMask(int $mask): void
+    {
+        if ($mask < 0 || $this->mostSignificantBit && $mask >= Bits::indexToBit($this->mostSignificantBit + 1)) {
+            throw new OutOfRangeException((string)$mask);
+        }
+    }
+
+    /**
+     * @throws NotSingleBitException
+     * @throws OutOfRangeException
+     */
+    private function checkBit(int $bit): void
+    {
+        $this->checkMask($bit);
+        if (!Bits::isSingleBit($bit)) {
+            throw new NotSingleBitException((string)$bit);
+        }
     }
 }

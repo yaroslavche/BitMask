@@ -27,7 +27,16 @@ class BitMaskTest extends TestCase
         assertInstanceOf(BitMask::class, $bitmask);
         assertSame(0, $bitmask->get());
         $this->expectException(OutOfRangeException::class);
-        new BitMask(-2); // BitMask.php:19 [M] MethodCallRemoval
+        new BitMask(-2);
+    }
+
+    public function testBitMaskConstructOutOfRange(): void
+    {
+        $bitmask = new BitMask(15, 3);
+        assertInstanceOf(BitMask::class, $bitmask);
+        assertSame(15, $bitmask->get());
+        $this->expectException(OutOfRangeException::class);
+        new BitMask(16, 3);
     }
 
     public function testSet(): void
@@ -134,7 +143,7 @@ class BitMaskTest extends TestCase
 
     public function testUnsetBitOutOfRange(): void
     {
-        $bitmask = new BitMask(self::WRITE, 2);
+        $bitmask = new BitMask(self::WRITE, 1);
         $this->expectException(OutOfRangeException::class);
         $this->expectExceptionMessage((string)self::EXECUTE);
         $bitmask->unsetBits(self::EXECUTE);
