@@ -26,8 +26,6 @@ But you can try other way with this package:
 use BitMask\BitMask;
 use BitMask\Util\Bits;
 
-// first argument - is a mask, bounded with second argument (if it's set)
-// second - allowed most significant bit (default depends on PHP_INT_MAX) 
 $bitmask = new BitMask(0, 2); // no bits set, but only three bits allowed: 1, 2, 4
 $bitmask->set(0b111); // 7, 1 << 0 | 1 << 1 | 1 << 2
 
@@ -50,14 +48,12 @@ $boolIsSingleBit = Bits::isSingleBit(8); // true
 
 // change mask 
 $bitmask->unsetBits(4); // or $bitmask->unsetBitByShiftOffset(2);
-$bitmask->setBits(1, 2, 4);
-Bits::getSetBits($bitmask->get()); // array:3 [1, 2, 4]
+Bits::getSetBits($bitmask->get()); // array:3 [1, 2]
 
-$bitmask->setBits(8); // throws OutOfRangeException
+$bitmask->setBits(0b1000); // throws OutOfRangeException
 ```
 
 Some examples can be found in [BitMaskInterface](/src/BitMaskInterface.php) and in [tests](/tests)
-
 
 `EnumBitMask` is extended BitMask
 
