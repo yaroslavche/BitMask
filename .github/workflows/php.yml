@@ -15,7 +15,7 @@ jobs:
         strategy:
             matrix:
                 operating-system: [ubuntu-latest]
-                php-version: ['7.4', '8.0', '8.1', '8.2']
+                php-version: ['8.1', '8.2']
         name: PHP ${{ matrix.php-version }}
         steps:
             - name: Checkout
@@ -29,17 +29,7 @@ jobs:
             - name: Install package
               run: |
                   composer install
-            - name: Phpstan rules for PHP ${{ matrix.php-version }}
-              if: ${{ matrix.php-version == '7.4' || matrix.php-version == '8.0' }}
-              run: cp phpstan_below_81.neon phpstan.neon
-            - name: Main checks
+            - name: CI pack
               run: |
-                  composer phpcs
-                  composer phpstan
-                  composer phpunit
-            - name: Infection and coverage
-              if: ${{ matrix.php-version == '8.1' || matrix.php-version == '8.2' }}
-              run: |
-                  composer infection
-                  composer coverage
+                  composer ci:pack
                   bash <(curl -s https://codecov.io/bash)

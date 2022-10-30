@@ -6,9 +6,9 @@ namespace Yaroslavche\Benchmarks;
 
 use BitMask\Util\Bits;
 use Generator;
-use PhpBench\Benchmark\Metadata\Annotations\Iterations;
-use PhpBench\Benchmark\Metadata\Annotations\ParamProviders;
-use PhpBench\Benchmark\Metadata\Annotations\Revs;
+use PhpBench\Attributes\Iterations;
+use PhpBench\Attributes\ParamProviders;
+use PhpBench\Attributes\Revs;
 
 class IsSingleBitBench
 {
@@ -20,31 +20,28 @@ class IsSingleBitBench
         yield [1 << 32];
     }
 
-    /**
-     * @Revs(100000)
-     * @Iterations(5)
-     * @ParamProviders({"maskProvider"})
-     */
+    /** @param int[] $mask */
+    #[Revs(100000)]
+    #[Iterations(5)]
+    #[ParamProviders('maskProvider')]
     public function benchIsSingleBit1(array $mask): void
     {
         $this->isSingleBit1($mask[0]);
     }
 
-    /**
-     * @Revs(100000)
-     * @Iterations(5)
-     * @ParamProviders({"maskProvider"})
-     */
+    /** @param int[] $mask */
+    #[Revs(100000)]
+    #[Iterations(5)]
+    #[ParamProviders('maskProvider')]
     public function benchIsSingleBit2(array $mask): void
     {
         $this->isSingleBit2($mask[0]);
     }
 
-    /**
-     * @Revs(100000)
-     * @Iterations(5)
-     * @ParamProviders({"maskProvider"})
-     */
+    /** @param int[] $mask */
+    #[Revs(100000)]
+    #[Iterations(5)]
+    #[ParamProviders('maskProvider')]
     public function benchIsSingleBit3(array $mask): void
     {
         $this->isSingleBit3($mask[0]);
@@ -62,10 +59,6 @@ class IsSingleBitBench
 
     private function isSingleBit3(int $mask): bool
     {
-        $shift = Bits::getMostSignificantBit($mask) - 1;
-        if ($shift < 0) {
-            return false;
-        }
-        return 1 << $shift === $mask;
+        return 1 << Bits::getMostSignificantBit($mask) === $mask;
     }
 }

@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Yaroslavche\Benchmarks;
 
 use Generator;
-use PhpBench\Benchmark\Metadata\Annotations\ParamProviders;
-use PhpBench\Benchmark\Metadata\Annotations\Revs;
+use PhpBench\Attributes\ParamProviders;
+use PhpBench\Attributes\Revs;
 
 class EvenOddBench
 {
@@ -18,20 +18,18 @@ class EvenOddBench
         yield [PHP_INT_MAX];
     }
 
-    /**
-     * @Revs(1000000)
-     * @ParamProviders({"numberProvider"})
-     */
+    /** @param int[] $number */
+    #[Revs(1000000)]
+    #[ParamProviders('numberProvider')]
     public function benchEvenOdd1(array $number): void
     {
         $this->isEven1($number[0]);
         $this->isOdd1($number[0]);
     }
 
-    /**
-     * @Revs(1000000)
-     * @ParamProviders({"numberProvider"})
-     */
+    /** @param int[] $number */
+    #[Revs(1000000)]
+    #[ParamProviders('numberProvider')]
     public function benchEvenOdd2(array $number): void
     {
         $this->isEven2($number[0]);

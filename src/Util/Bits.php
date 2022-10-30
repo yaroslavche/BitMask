@@ -4,32 +4,18 @@ declare(strict_types=1);
 
 namespace BitMask\Util;
 
-use BitMask\Exception\InvalidIndexException;
 use BitMask\Exception\NotSingleBitException;
+use BitMask\Exception\OutOfRangeException;
 
 final class Bits
 {
-
     /**
-     * get most significant bit position (right -> left)
-     * @example 10001 -> 5, 0010 -> 2, 00100010 -> 6
-     * @todo research and use (if needed) https://www.geeksforgeeks.org/find-significant-set-bit-number/
+     * get most significant bit position (right -> left, index)
+     * @example 10001 -> 4, 0010 -> 1, 00100010 -> 5
      */
     public static function getMostSignificantBit(int $mask): int
     {
-        $scan = 1;
-        $mostSignificantBit = 0;
-        while ($mask >= $scan) {
-            $mostSignificantBit++;
-            $scan <<= 1;
-        }
-        return $mostSignificantBit;
-    }
-
-    /** @deprecated use getMostSignificantBit instead */
-    public static function getMSB(int $mask): int
-    {
-        return self::getMostSignificantBit($mask);
+        return (int)log($mask, 2);
     }
 
     /**
@@ -55,13 +41,10 @@ final class Bits
      * @example 1000 => true, 010100 => false, 0000100 => true
      * @see benchmarks/IsSingleBitBench.php
      * ./vendor/bin/phpbench run benchmarks/IsSingleBitBench.php --report=default
-     *
-     * @todo research maybe getMSB must return shift offset and then isSingleBit3 might be faster
-     * return 1 << BitUtils::getMSB($mask) === $mask;
      */
     public static function isSingleBit(int $mask): bool
     {
-        return count(self::getSetBits($mask)) === 1;
+        return 1 << Bits::getMostSignificantBit($mask) === $mask;
     }
 
     /**
@@ -73,20 +56,21 @@ final class Bits
         if (!self::isSingleBit($mask)) {
             throw new NotSingleBitException('Argument must be a single bit');
         }
-        return (int)log($mask, 2);
+        return self::getMostSignificantBit($mask);
     }
 
     /**
      * index to single bit
      * @example 0 => 0b1 (1), 1 => 0b10 (2), 2 => 0b100 (4), ...
-     * @throws InvalidIndexException
      * @see benchmarks/IndexToBitBench.php
      * ./vendor/bin/phpbench run benchmarks/IndexToBitBench.php --report=default
+     *
+     * @throws OutOfRangeException
      */
     public static function indexToBit(int $index): int
     {
         if ($index < 0) {
-            throw new InvalidIndexException('Index (zero based) must be greater than or equal to zero');
+            throw new OutOfRangeException((string)$index);
         }
         return 1 << $index;
     }
@@ -105,7 +89,7 @@ final class Bits
     {
         $bitIndexes = [];
         foreach (self::getSetBits($mask) as $index => $bit) {
-            $bitIndexes[$index] = intval(log($bit, 2));
+            $bitIndexes[$index] = self::getMostSignificantBit($bit);
         }
         return $bitIndexes;
     }

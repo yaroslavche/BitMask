@@ -5,14 +5,12 @@ declare(strict_types=1);
 namespace Yaroslavche\Benchmarks;
 
 use Generator;
-use PhpBench\Benchmark\Metadata\Annotations\BeforeMethods;
-use PhpBench\Benchmark\Metadata\Annotations\Iterations;
-use PhpBench\Benchmark\Metadata\Annotations\ParamProviders;
-use PhpBench\Benchmark\Metadata\Annotations\Revs;
+use PhpBench\Attributes\BeforeMethods;
+use PhpBench\Attributes\Iterations;
+use PhpBench\Attributes\ParamProviders;
+use PhpBench\Attributes\Revs;
 
-/**
- * @BeforeMethods({"init"})
- */
+#[BeforeMethods('init')]
 class UnsetBitBench
 {
     private int $storage;
@@ -29,24 +27,22 @@ class UnsetBitBench
         yield [PHP_INT_MAX];
     }
 
-    /**
-     * @Revs(300000)
-     * @Iterations(1)
-     * @ParamProviders({"bitProvider"})
-     */
+    /** @param int[] $bit */
+    #[Revs(300000)]
+    #[Iterations(1)]
+    #[ParamProviders('bitProvider')]
     public function benchUnsetBit1(array $bit): void
     {
-        $this->unsetBit1($bit[0], false);
+        $this->unsetBit1($bit[0]);
     }
 
-    /**
-     * @Revs(300000)
-     * @Iterations(1)
-     * @ParamProviders({"bitProvider"})
-     */
+    /** @param int[] $bit */
+    #[Revs(300000)]
+    #[Iterations(1)]
+    #[ParamProviders('bitProvider')]
     public function benchUnsetBit2(array $bit): void
     {
-        $this->unsetBit2($bit[0], false);
+        $this->unsetBit2($bit[0]);
     }
 
     private function unsetBit1(int $bit): void

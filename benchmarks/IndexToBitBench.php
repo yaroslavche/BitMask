@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Yaroslavche\Benchmarks;
 
 use Generator;
-use PhpBench\Benchmark\Metadata\Annotations\Iterations;
-use PhpBench\Benchmark\Metadata\Annotations\ParamProviders;
-use PhpBench\Benchmark\Metadata\Annotations\Revs;
+use PhpBench\Attributes\Iterations;
+use PhpBench\Attributes\ParamProviders;
+use PhpBench\Attributes\Revs;
 
 class IndexToBitBench
 {
@@ -18,21 +18,19 @@ class IndexToBitBench
         yield [10000];
     }
 
-    /**
-     * @Revs(100000)
-     * @Iterations(5)
-     * @ParamProviders({"indexProvider"})
-     */
+    /** @param int[] $index */
+    #[Revs(100000)]
+    #[Iterations(5)]
+    #[ParamProviders('indexProvider')]
     public function benchIndexToBit1(array $index): void
     {
         $this->indexToBit1($index[0]);
     }
 
-    /**
-     * @Revs(100000)
-     * @Iterations(5)
-     * @ParamProviders({"indexProvider"})
-     */
+    /** @param int[] $index */
+    #[Revs(100000)]
+    #[Iterations(5)]
+    #[ParamProviders('indexProvider')]
     public function benchIndexToBit2(array $index): void
     {
         $this->indexToBit2($index[0]);
