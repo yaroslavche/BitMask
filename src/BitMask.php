@@ -11,10 +11,10 @@ use BitMask\Util\Bits;
 class BitMask implements BitMaskInterface
 {
     public function __construct(
-        protected int $mask = 0,
+        private int $mask = 0,
         private readonly ?int $mostSignificantBit = null,
     ) {
-        $this->set($mask);
+        $this->checkMask($this->mask);
     }
 
     public function __toString(): string
@@ -22,69 +22,31 @@ class BitMask implements BitMaskInterface
         return (string)$this->mask;
     }
 
-    /** @inheritDoc */
     public function get(): int
     {
         return $this->mask;
     }
 
-    /** @inheritDoc */
-    public function set(int $mask): void
-    {
-        $this->checkMask($mask);
-        $this->mask = $mask;
-    }
-
-    /** @inheritDoc */
-    public function unset(): void
-    {
-        $this->mask = 0;
-    }
-
-    /** @inheritDoc */
-    public function isSet(int $mask): bool
-    {
-        return ($this->mask & $mask) === $mask;
-    }
-
-    /** @inheritDoc */
-    public function setBits(int ...$bits): void
+    /** @throws NotSingleBitException */
+    public function set(int ...$bits): void
     {
         array_walk($bits, fn(int $bit) => $this->checkBit($bit));
         array_walk($bits, fn(int $bit) => $this->mask |= $bit);
     }
 
-    /** @inheritDoc */
-    public function unsetBits(int ...$bits): void
+    /** @throws NotSingleBitException */
+    public function remove(int ...$bits): void
     {
         array_walk($bits, fn(int $bit) => $this->checkBit($bit));
         array_walk($bits, fn(int $bit) => $this->mask ^= $bit);
         // $this->mask &= ~$bit;
     }
 
-    /** @inheritDoc */
-    public function isSetBits(int ...$bits): bool
+    /** @throws NotSingleBitException */
+    public function has(int ...$bits): bool
     {
         array_walk($bits, fn(int $bit) => $this->checkBit($bit));
-        return !in_array(false, array_map(fn(int $bit) => $this->isSet($bit), $bits), true);
-    }
-
-    /** @inheritDoc */
-    public function setBitByShiftOffset(int $shiftOffset): void
-    {
-        $this->setBits(1 << $shiftOffset);
-    }
-
-    /** @inheritDoc */
-    public function unsetBitByShiftOffset(int $shiftOffset): void
-    {
-        $this->unsetBits(1 << $shiftOffset);
-    }
-
-    /** @inheritDoc */
-    public function isSetBitByShiftOffset(int $shiftOffset): bool
-    {
-        return $this->isSetBits(1 << $shiftOffset);
+        return !in_array(false, array_map(fn(int $bit) => ($this->mask & $bit) == $bit, $bits), true);
     }
 
     /** @throws OutOfRangeException */

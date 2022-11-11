@@ -4,14 +4,16 @@ declare(strict_types=1);
 
 namespace BitMask;
 
+use BitMask\Exception\NotSingleBitException;
 use BitMask\Exception\UnknownEnumException;
 use BitMask\Util\Bits;
 use UnitEnum;
 
-final class EnumBitMask extends BitMask implements BitMaskInterface
+final class EnumBitMask implements BitMaskInterface
 {
     /** @var array<string, int> $map case => bit */
     private array $map = [];
+    private BitMask $mask;
 
     /**
      * @param class-string $enum
@@ -19,7 +21,7 @@ final class EnumBitMask extends BitMask implements BitMaskInterface
      */
     public function __construct(
         private readonly string $enum,
-        protected int $mask = 0,
+        int $mask = 0,
     ) {
         if (!is_subclass_of($this->enum, UnitEnum::class)) {
             throw new UnknownEnumException('EnumBitMask enum must be subclass of UnitEnum');
@@ -27,32 +29,37 @@ final class EnumBitMask extends BitMask implements BitMaskInterface
         foreach ($this->enum::cases() as $index => $case) {
             $this->map[strval($case->name)] = Bits::indexToBit($index);
         }
-        parent::__construct($this->mask, count($this->enum::cases()) - 1);
+        $this->mask = new BitMask($mask, count($this->enum::cases()) - 1);
     }
 
-    /** @throws UnknownEnumException */
-    public function setEnumBits(UnitEnum ...$bits): void
+    public function get(): int
     {
-        $this->isSetEnumBits(...$bits);
-        $this->setBits(...$this->enumBitsToBits(...$bits));
+        return $this->mask->get();
     }
 
-    /** @throws UnknownEnumException */
-    public function unsetEnumBits(UnitEnum ...$bits): void
+    /** @throws UnknownEnumException|NotSingleBitException */
+    public function set(UnitEnum ...$bits): void
     {
-        $this->isSetEnumBits(...$bits);
-        $this->unsetBits(...$this->enumBitsToBits(...$bits));
+        $this->has(...$bits);
+        $this->mask->set(...$this->enumBitsToBits(...$bits));
     }
 
-    /** @throws UnknownEnumException */
-    public function isSetEnumBits(UnitEnum ...$bits): bool
+    /** @throws UnknownEnumException|NotSingleBitException */
+    public function remove(UnitEnum ...$bits): void
+    {
+        $this->has(...$bits);
+        $this->mask->remove(...$this->enumBitsToBits(...$bits));
+    }
+
+    /** @throws UnknownEnumException|NotSingleBitException */
+    public function has(UnitEnum ...$bits): bool
     {
         array_walk(
             $bits,
             fn(UnitEnum $bit) => $bit instanceof $this->enum ||
             throw new UnknownEnumException(sprintf('Expected %s enum, %s provided', $this->enum, $bit::class))
         );
-        return $this->isSetBits(...$this->enumBitsToBits(...$bits));
+        return $this->mask->has(...$this->enumBitsToBits(...$bits));
     }
 
     /** @return int[] */

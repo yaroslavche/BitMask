@@ -72,7 +72,7 @@ final class Bits
         if ($index < 0) {
             throw new OutOfRangeException((string)$index);
         }
-        return 1 << $index;
+        return intval(abs(1 << $index));
     }
 
     public static function toString(int $mask): string

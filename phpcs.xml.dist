@@ -8,15 +8,8 @@
     <arg name="colors"/>
     <arg name="extensions" value="php"/>
 
-    <rule ref="PSR2"/>
+    <rule ref="PSR12"/>
 
     <file>src/</file>
-
-    <rule ref="Generic.Files.LineLength">
-        <properties>
-            <property name="lineLimit" value="300"/>
-            <property name="absoluteLineLimit" value="500"/>
-        </properties>
-    </rule>
 
 </ruleset>

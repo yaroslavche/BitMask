@@ -26,17 +26,14 @@ But you can try other way with this package:
 use BitMask\BitMask;
 use BitMask\Util\Bits;
 
-$bitmask = new BitMask(0, 2); // no bits set, but only three bits allowed: 1, 2, 4
-$bitmask->set(0b111); // 7, 1 << 0 | 1 << 1 | 1 << 2
+$bitmask = new BitMask();
+$bitmask->set(READ, WRITE, EXECUTE);
 
-// get value and check if single bit or mask is set 
 $integerMask = $bitmask->get(); // int 7
-$boolIsSetBit = $bitmask->isSetBits(1, 2, 4); // bool true, variadic arguments
-$boolIsSetBit = $bitmask->isSetBitByShiftOffset(2); // bool true, for single MSB
-$boolIsSetMask = $bitmask->isSet(6); // bool true, single mask
+$boolIsSetBit = $bitmask->has(READ, WRITE, EXECUTE); // bool true
 
 // get some info about bits
-$integerMostSignificantBit = Bits::getMostSignificantBit($bitmask->get()); // int 7
+$integerMostSignificantBit = Bits::getMostSignificantBit($bitmask->get()); // int 2
 $arraySetBits = Bits::getSetBits($bitmask->get()); // array:3 [1, 2, 4]
 $arraySetBitsIndexes = Bits::getSetBitsIndexes($bitmask->get()); // array:3 [0, 1, 2]
 $string = Bits::toString($bitmask->get()); // string "111"
@@ -47,7 +44,7 @@ $integerIndex = Bits::bitToIndex(65536); // int 16
 $boolIsSingleBit = Bits::isSingleBit(8); // true
 
 // change mask 
-$bitmask->unsetBits(4); // or $bitmask->unsetBitByShiftOffset(2);
+$bitmask->remove(EXECUTE);
 Bits::getSetBits($bitmask->get()); // array:3 [1, 2]
 
 $bitmask->setBits(0b1000); // throws OutOfRangeException
