@@ -14,11 +14,8 @@ define('WRITE', 1 << 1);
 define('EXECUTE', 1 << 2);
 
 $mask = READ | WRITE | EXECUTE;
-echo sprintf('mask: %d', $mask);
-// mask: 7
-if ($mask & READ) {
-    // $mask has a single bit READ
-}
+echo sprintf('mask: %d', $mask); // mask: 7
+if ($mask & READ) {} // if $mask has a single bit READ
 $mask ^= EXECUTE; // remove a single bit from the $mask
 $mask |= EXECUTE; // set a single bit to the $mask
 ```
@@ -29,11 +26,8 @@ But you can try other way with this package:
 use BitMask\BitMask;
 
 $bitmask = new BitMask(READ | WRITE | EXECUTE);
-echo sprintf('mask: %d', $bitmask->get());
-// mask: 7
-if ($bitmask->has(READ)) {
-    // $bitmask has a single bit READ
-}
+echo sprintf('mask: %d', $bitmask->get()); // mask: 7
+if ($bitmask->has(READ)) {} // if $bitmask has a single bit READ
 $bitmask->remove(EXECUTE); // remove a single bit from the $bitmask
 $bitmask->set(EXECUTE); // set a single bit to the $bitmask
 ```
@@ -51,11 +45,8 @@ enum Permissions
 }
 
 $bitmask = new EnumBitMask(Permissions::class, 0b111);
-echo sprintf('mask: %d', $bitmask->get());
-// mask: 7
-if ($bitmask->has(Permissions::READ)) {
-    // $bitmask has a single bit READ
-}
+echo sprintf('mask: %d', $bitmask->get()); // mask: 7
+if ($bitmask->has(Permissions::READ)) {} // if $bitmask has a single bit READ
 $bitmask->remove(Permissions::EXECUTE); // remove a single bit from the $bitmask
 $bitmask->set(Permissions::EXECUTE); // set a single bit to the $bitmask
 ```
