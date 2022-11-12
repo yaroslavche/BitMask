@@ -8,7 +8,7 @@ use BitMask\Exception\NotSingleBitException;
 use BitMask\Exception\OutOfRangeException;
 use BitMask\Util\Bits;
 
-class BitMask implements BitMaskInterface
+final class BitMask implements BitMaskInterface
 {
     public function __construct(
         private int $mask = 0,
