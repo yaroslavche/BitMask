@@ -28,33 +28,33 @@ class BitMask implements BitMaskInterface
         return $this->mask;
     }
 
-    /** @inheritDoc */
+    /** @deprecated set would have variadic int args and expects only single bits */
     public function set(int $mask): void
     {
         $this->checkMask($mask);
         $this->mask = $mask;
     }
 
-    /** @inheritDoc */
+    /** @deprecated would be dropped */
     public function unset(): void
     {
         $this->mask = 0;
     }
 
-    /** @inheritDoc */
+    /** @deprecated would be dropped */
     public function isSet(int $mask): bool
     {
         return ($this->mask & $mask) === $mask;
     }
 
-    /** @inheritDoc */
+    /** @deprecated use set instead */
     public function setBits(int ...$bits): void
     {
         array_walk($bits, fn(int $bit) => $this->checkBit($bit));
         array_walk($bits, fn(int $bit) => $this->mask |= $bit);
     }
 
-    /** @inheritDoc */
+    /** @deprecated use remove instead */
     public function unsetBits(int ...$bits): void
     {
         array_walk($bits, fn(int $bit) => $this->checkBit($bit));
@@ -62,26 +62,26 @@ class BitMask implements BitMaskInterface
         // $this->mask &= ~$bit;
     }
 
-    /** @inheritDoc */
+    /** @deprecated use has instead */
     public function isSetBits(int ...$bits): bool
     {
         array_walk($bits, fn(int $bit) => $this->checkBit($bit));
         return !in_array(false, array_map(fn(int $bit) => $this->isSet($bit), $bits), true);
     }
 
-    /** @inheritDoc */
+    /** @deprecated would be dropped */
     public function setBitByShiftOffset(int $shiftOffset): void
     {
         $this->setBits(1 << $shiftOffset);
     }
 
-    /** @inheritDoc */
+    /** @deprecated would be dropped */
     public function unsetBitByShiftOffset(int $shiftOffset): void
     {
         $this->unsetBits(1 << $shiftOffset);
     }
 
-    /** @inheritDoc */
+    /** @deprecated would be dropped */
     public function isSetBitByShiftOffset(int $shiftOffset): bool
     {
         return $this->isSetBits(1 << $shiftOffset);

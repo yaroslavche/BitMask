@@ -30,21 +30,30 @@ final class EnumBitMask extends BitMask implements BitMaskInterface
         parent::__construct($this->mask, count($this->enum::cases()) - 1);
     }
 
-    /** @throws UnknownEnumException */
+    /**
+     * @deprecated use set instead
+     * @throws UnknownEnumException
+     */
     public function setEnumBits(UnitEnum ...$bits): void
     {
         $this->isSetEnumBits(...$bits);
         $this->setBits(...$this->enumBitsToBits(...$bits));
     }
 
-    /** @throws UnknownEnumException */
+    /**
+     * @deprecated use remove instead
+     * @throws UnknownEnumException
+     */
     public function unsetEnumBits(UnitEnum ...$bits): void
     {
         $this->isSetEnumBits(...$bits);
         $this->unsetBits(...$this->enumBitsToBits(...$bits));
     }
 
-    /** @throws UnknownEnumException */
+    /**
+     * @deprecated use has instead
+     * @throws UnknownEnumException
+     */
     public function isSetEnumBits(UnitEnum ...$bits): bool
     {
         array_walk(

@@ -16,6 +16,7 @@ interface BitMaskInterface
     public function get(): int;
 
     /**
+     * @deprecated would be dropped from interface
      * $mask = new BitMask();
      * $mask->set(5);
      * $mask->get(); => (int) 5
@@ -24,6 +25,7 @@ interface BitMaskInterface
     public function set(int $mask): void;
 
     /**
+     * @deprecated would be dropped from interface
      * $mask = new BitMask(5);
      * $mask->unset();
      * $mask->get(); => 0
@@ -31,6 +33,7 @@ interface BitMaskInterface
     public function unset(): void;
 
     /**
+     * @deprecated would be dropped from interface
      * $mask = new BitMask(1 << 1);
      * $mask->isSet(1); => false
      * $mask->isSet(2); => true
@@ -38,6 +41,7 @@ interface BitMaskInterface
     public function isSet(int $mask): bool;
 
     /**
+     * @deprecated would be dropped from interface
      * $mask = new BitMask();
      * $mask->setBits(1, 4);
      * $mask->get(); => 5
@@ -48,6 +52,7 @@ interface BitMaskInterface
     public function setBits(int ...$bits): void;
 
     /**
+     * @deprecated would be dropped from interface
      * $mask = new BitMask(7);
      * $mask->unsetBits(2);
      * $mask->get(); => 5
@@ -58,6 +63,7 @@ interface BitMaskInterface
     public function unsetBits(int ...$bits): void;
 
     /**
+     * @deprecated would be dropped from interface
      * $mask = new BitMask(5);
      * $mask->isSetBits(1, 4); => true
      * $mask->isSetBits(2); => false
@@ -68,6 +74,7 @@ interface BitMaskInterface
     public function isSetBits(int ...$bits): bool;
 
     /**
+     * @deprecated would be dropped from interface
      * $mask = new BitMask();
      * $mask->setBitByOffset(0);
      * $mask->get(); => 1
@@ -82,6 +89,7 @@ interface BitMaskInterface
     public function setBitByShiftOffset(int $shiftOffset): void;
 
     /**
+     * @deprecated would be dropped from interface
      * $mask = new BitMask(5);
      * $mask->unsetBitByOffset(0);
      * $mask->get(); => 4
@@ -96,6 +104,7 @@ interface BitMaskInterface
     public function unsetBitByShiftOffset(int $shiftOffset): void;
 
     /**
+     * @deprecated would be dropped from interface
      * $mask = new BitMask(2);
      * $mask->isSetBitByOffset(0); => false
      * $mask->isSetBitByOffset(1); => true
