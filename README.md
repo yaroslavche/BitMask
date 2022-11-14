@@ -25,11 +25,12 @@ But you can try other way with this package:
 ```php
 use BitMask\BitMask;
 
+// two arguments: integer mask (default: 0) and most significant bit for boundaries (default: null) 
 $bitmask = new BitMask(READ | WRITE | EXECUTE);
 echo sprintf('mask: %d', $bitmask->get()); // mask: 7
-if ($bitmask->has(READ)) {} // if $bitmask has a single bit READ
-$bitmask->remove(EXECUTE); // remove a single bit from the $bitmask
-$bitmask->set(EXECUTE); // set a single bit to the $bitmask
+if ($bitmask->has(READ)) {}
+$bitmask->remove(EXECUTE);
+$bitmask->set(EXECUTE);
 ```
 
 Exists [EnumBitMask](/src/EnumBitMask.php), which allows the same using PHP enum:
@@ -44,11 +45,14 @@ enum Permissions
     case EXECUTE;
 }
 
+// two arguments: required enum class-string and integer mask (default: 0)
 $bitmask = new EnumBitMask(Permissions::class, 0b111);
 echo sprintf('mask: %d', $bitmask->get()); // mask: 7
-if ($bitmask->has(Permissions::READ)) {} // if $bitmask has a single bit READ
-$bitmask->remove(Permissions::EXECUTE); // remove a single bit from the $bitmask
-$bitmask->set(Permissions::EXECUTE); // set a single bit to the $bitmask
+if ($bitmask->has(Permissions::READ)) {}
+$bitmask->remove(Permissions::EXECUTE);
+$bitmask->set(Permissions::EXECUTE);
+
+$bitmask->set(Unknown::Case); // throws an exception, only Permissions cases available
 ```
 
 Exists [Bits](/src/Util/Bits.php) helper with static methods:
