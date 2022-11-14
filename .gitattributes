@@ -1,0 +1,14 @@
+.github/ export-ignore
+benchmarks/ export-ignore
+tests/ export-ignore
+.gitattributes export-ignore
+.gitignore export-ignore
+codecov.yml export-ignore
+infection.json export-ignore
+phpbench.json export-ignore
+phpcs.xml.dist export-ignore
+phpstan.neon export-ignore
+phpunit.xml.dist export-ignore
+
+# auto detect text files and perform LF normalization
+* text=auto
