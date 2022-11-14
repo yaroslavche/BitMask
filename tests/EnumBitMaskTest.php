@@ -28,7 +28,7 @@ final class EnumBitMaskTest extends TestCase
     {
         $bitmask = new EnumBitMask(Permissions::class);
         $this->expectException(UnknownEnumException::class);
-        $bitmask->setEnumBits(Unknown::Case);
+        $bitmask->set(Unknown::Case);
     }
 
     public function testConstructWithDefaultMask(): void
@@ -42,7 +42,7 @@ final class EnumBitMaskTest extends TestCase
         $enumBitmask = new EnumBitMask(Permissions::class, 8);
         assertSame(8, $enumBitmask->get());
         $this->expectException(UnknownEnumException::class);
-        $enumBitmask->isSetEnumBits(Unknown::Case);
+        $enumBitmask->has(Unknown::Case);
     }
 
     public function testSetOutOfRange(): void
@@ -55,48 +55,48 @@ final class EnumBitMaskTest extends TestCase
     public function testIsSet(): void
     {
         $enumBitmask = new EnumBitMask(Permissions::class, 3);
-        assertTrue($enumBitmask->isSetEnumBits(Permissions::Create));
-        assertTrue($enumBitmask->isSetEnumBits(Permissions::Read));
-        assertFalse($enumBitmask->isSetEnumBits(Permissions::Update));
-        assertFalse($enumBitmask->isSetEnumBits(Permissions::Delete));
+        assertTrue($enumBitmask->has(Permissions::Create));
+        assertTrue($enumBitmask->has(Permissions::Read));
+        assertFalse($enumBitmask->has(Permissions::Update));
+        assertFalse($enumBitmask->has(Permissions::Delete));
         $this->expectException(UnknownEnumException::class);
-        $enumBitmask->isSetEnumBits(Unknown::Case);
+        $enumBitmask->has(Unknown::Case);
     }
 
     public function testSetUnset(): void
     {
         $enumBitmask = new EnumBitMask(Permissions::class, 3);
-        $enumBitmask->unsetEnumBits(Permissions::Create, Permissions::Read);
-        assertFalse($enumBitmask->isSetEnumBits(Permissions::Create));
-        assertFalse($enumBitmask->isSetEnumBits(Permissions::Read));
-        assertFalse($enumBitmask->isSetEnumBits(Permissions::Read, Permissions::Update));
+        $enumBitmask->remove(Permissions::Create, Permissions::Read);
+        assertFalse($enumBitmask->has(Permissions::Create));
+        assertFalse($enumBitmask->has(Permissions::Read));
+        assertFalse($enumBitmask->has(Permissions::Read, Permissions::Update));
         assertSame(0, $enumBitmask->get());
-        $enumBitmask->setEnumBits(Permissions::Update, Permissions::Delete);
-        assertTrue($enumBitmask->isSetEnumBits(Permissions::Update));
-        assertTrue($enumBitmask->isSetEnumBits(Permissions::Delete));
-        assertTrue($enumBitmask->isSetEnumBits(Permissions::Update, Permissions::Delete));
+        $enumBitmask->set(Permissions::Update, Permissions::Delete);
+        assertTrue($enumBitmask->has(Permissions::Update));
+        assertTrue($enumBitmask->has(Permissions::Delete));
+        assertTrue($enumBitmask->has(Permissions::Update, Permissions::Delete));
         assertSame(12, $enumBitmask->get());
         $this->expectException(UnknownEnumException::class);
-        $enumBitmask->unsetEnumBits(Unknown::Case);
+        $enumBitmask->remove(Unknown::Case);
     }
 
     public function testBackedEnum(): void
     {
         // backed string
         $backedStringEnumBitmask = new EnumBitMask(BackedString::class, 3);
-        assertTrue($backedStringEnumBitmask->isSetEnumBits(BackedString::Create, BackedString::Read));
-        assertFalse($backedStringEnumBitmask->isSetEnumBits(BackedString::Update, BackedString::Delete));
-        $backedStringEnumBitmask->unsetEnumBits(BackedString::Create, BackedString::Read);
-        $backedStringEnumBitmask->setEnumBits(BackedString::Update, BackedString::Delete);
-        assertFalse($backedStringEnumBitmask->isSetEnumBits(BackedString::Create, BackedString::Read));
-        assertTrue($backedStringEnumBitmask->isSetEnumBits(BackedString::Update, BackedString::Delete));
+        assertTrue($backedStringEnumBitmask->has(BackedString::Create, BackedString::Read));
+        assertFalse($backedStringEnumBitmask->has(BackedString::Update, BackedString::Delete));
+        $backedStringEnumBitmask->remove(BackedString::Create, BackedString::Read);
+        $backedStringEnumBitmask->set(BackedString::Update, BackedString::Delete);
+        assertFalse($backedStringEnumBitmask->has(BackedString::Create, BackedString::Read));
+        assertTrue($backedStringEnumBitmask->has(BackedString::Update, BackedString::Delete));
         // backed int
         $backedIntEnumBitmask = new EnumBitMask(BackedInt::class, 3);
-        assertTrue($backedIntEnumBitmask->isSetEnumBits(BackedInt::Create, BackedInt::Read));
-        assertFalse($backedIntEnumBitmask->isSetEnumBits(BackedInt::Update, BackedInt::Delete));
-        $backedIntEnumBitmask->unsetEnumBits(BackedInt::Create, BackedInt::Read);
-        $backedIntEnumBitmask->setEnumBits(BackedInt::Update, BackedInt::Delete);
-        assertFalse($backedIntEnumBitmask->isSetEnumBits(BackedInt::Create, BackedInt::Read));
-        assertTrue($backedIntEnumBitmask->isSetEnumBits(BackedInt::Update, BackedInt::Delete));
+        assertTrue($backedIntEnumBitmask->has(BackedInt::Create, BackedInt::Read));
+        assertFalse($backedIntEnumBitmask->has(BackedInt::Update, BackedInt::Delete));
+        $backedIntEnumBitmask->remove(BackedInt::Create, BackedInt::Read);
+        $backedIntEnumBitmask->set(BackedInt::Update, BackedInt::Delete);
+        assertFalse($backedIntEnumBitmask->has(BackedInt::Create, BackedInt::Read));
+        assertTrue($backedIntEnumBitmask->has(BackedInt::Update, BackedInt::Delete));
     }
 }

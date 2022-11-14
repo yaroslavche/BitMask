@@ -12,67 +12,60 @@ Usually enough for checking bits:
 define('READ', 1 << 0);
 define('WRITE', 1 << 1);
 define('EXECUTE', 1 << 2);
+
 $mask = READ | WRITE | EXECUTE;
-echo sprintf('read: %d write: %d execute: %d mask: %d', READ, WRITE, EXECUTE, $mask);
-// read: 1 write: 2 execute: 4 mask: 7
-if ($mask & READ) {
-    // $mask have a READ
-}
+echo sprintf('mask: %d', $mask); // mask: 7
+if ($mask & READ) {} // if $mask has a single bit READ
+$mask ^= EXECUTE; // remove a single bit from the $mask
+$mask |= EXECUTE; // set a single bit to the $mask
 ```
 
 But you can try other way with this package:
 
 ```php
 use BitMask\BitMask;
-use BitMask\Util\Bits;
 
-$bitmask = new BitMask(0, 2); // no bits set, but only three bits allowed: 1, 2, 4
-$bitmask->set(0b111); // 7, 1 << 0 | 1 << 1 | 1 << 2
+// two arguments: integer mask (default: 0) and most significant bit for boundaries (default: null) 
+$bitmask = new BitMask(READ | WRITE | EXECUTE);
+echo sprintf('mask: %d', $bitmask->get()); // mask: 7
+if ($bitmask->has(READ)) {}
+$bitmask->remove(EXECUTE);
+$bitmask->set(EXECUTE);
+```
 
-// get value and check if single bit or mask is set 
-$integerMask = $bitmask->get(); // int 7
-$boolIsSetBit = $bitmask->isSetBits(1, 2, 4); // bool true, variadic arguments
-$boolIsSetBit = $bitmask->isSetBitByShiftOffset(2); // bool true, for single MSB
-$boolIsSetMask = $bitmask->isSet(6); // bool true, single mask
+Exists [EnumBitMask](/src/EnumBitMask.php), which allows the same using PHP enum:
 
-// get some info about bits
-$integerMostSignificantBit = Bits::getMostSignificantBit($bitmask->get()); // int 7
-$arraySetBits = Bits::getSetBits($bitmask->get()); // array:3 [1, 2, 4]
-$arraySetBitsIndexes = Bits::getSetBitsIndexes($bitmask->get()); // array:3 [0, 1, 2]
-$string = Bits::toString($bitmask->get()); // string "111"
+```php
+use BitMask\EnumBitMask;
 
-// some helpers
+enum Permissions
+{
+    case READ;
+    case WRITE;
+    case EXECUTE;
+}
+
+// two arguments: required enum class-string and integer mask (default: 0)
+$bitmask = new EnumBitMask(Permissions::class, 0b111);
+echo sprintf('mask: %d', $bitmask->get()); // mask: 7
+if ($bitmask->has(Permissions::READ)) {}
+$bitmask->remove(Permissions::EXECUTE);
+$bitmask->set(Permissions::EXECUTE);
+
+$bitmask->set(Unknown::Case); // throws an exception, only Permissions cases available
+```
+
+Exists [Bits](/src/Util/Bits.php) helper with static methods:
+
+```php
+$mask = 7; // 1 << 0 | 1 << 1 | 1 << 2
+$integerMostSignificantBit = Bits::getMostSignificantBit($mask); // int 2
+$arraySetBits = Bits::getSetBits($mask); // array:3 [1, 2, 4]
+$arraySetBitsIndexes = Bits::getSetBitsIndexes($mask); // array:3 [0, 1, 2]
+$string = Bits::toString($mask); // string "111"
 $integerBit = Bits::indexToBit(16); // int 65536
 $integerIndex = Bits::bitToIndex(65536); // int 16
 $boolIsSingleBit = Bits::isSingleBit(8); // true
-
-// change mask 
-$bitmask->unsetBits(4); // or $bitmask->unsetBitByShiftOffset(2);
-Bits::getSetBits($bitmask->get()); // array:3 [1, 2]
-
-$bitmask->setBits(0b1000); // throws OutOfRangeException
-```
-
-Some examples can be found in [BitMaskInterface](/src/BitMaskInterface.php) and in [tests](/tests)
-
-`EnumBitMask` is extended BitMask
-
-```php
-enum Permissions {
-    case Read;
-    case Write;
-    case Execute;
-}
-
-use BitMask\EnumBitMask;
-
-$bitmask = new EnumBitMask(Permissions::class);
-$bitmask->setEnumBits(Permissions::Read, Permissions::Execute);
-$bitmask->isSetEnumBits(Permissions::Read); // true
-$bitmask->isSetEnumBits(Permissions::Write); // false
-$bitmask->setEnumBits(Permissions::Write);
-$bitmask->isSetEnumBits(Permissions::Read, Permissions::Write, Permissions::Execute); // true
-$bitmask->unsetEnumBits(Permissions::Write);
 ```
 
 ## Installing
