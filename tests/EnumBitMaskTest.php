@@ -12,6 +12,7 @@ use BitMask\Tests\fixtures\Enum\BackedString;
 use BitMask\Tests\fixtures\Enum\Permissions;
 use BitMask\Tests\fixtures\Enum\Unknown;
 use PHPUnit\Framework\TestCase;
+
 use function PHPUnit\Framework\assertFalse;
 use function PHPUnit\Framework\assertSame;
 use function PHPUnit\Framework\assertTrue;
