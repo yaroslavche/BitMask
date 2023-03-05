@@ -4,4 +4,4 @@ vendor/
 infection.log
 composer.lock
 build
-.phpunit.result.cache
+.phpunit.cache
