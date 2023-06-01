@@ -57,7 +57,7 @@ final class EnumBitMask implements BitMaskInterface
         array_walk(
             $bits,
             fn(UnitEnum $bit) =>
-                $bit instanceof $this->enum ||
+                $bit instanceof $this->enum ?:
                 throw new UnknownEnumException(sprintf('Expected %s enum, %s provided', $this->enum, $bit::class))
         );
         return $this->bitmask->has(...$this->enumToInt(...$bits));
