@@ -11,7 +11,7 @@
         "debug": "build/infection/debug.log",
         "perMutator": "build/infection/perMutator.md",
         "stryker": {
-            "badge": "main"
+            "report": "main"
         }
     },
     "mutators": {

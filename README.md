@@ -1,6 +1,6 @@
 [![PHP build](https://github.com/yaroslavche/BitMask/actions/workflows/php.yml/badge.svg)](https://github.com/yaroslavche/BitMask/actions/workflows/php.yml)
 [![codecov](https://codecov.io/gh/yaroslavche/bitmask/branch/main/graph/badge.svg)](https://codecov.io/gh/yaroslavche/bitmask)
-[![Infection MSI](https://badge.stryker-mutator.io/github.com/yaroslavche/BitMask/main)](https://infection.github.io)
+[![Infection MSI](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Fyaroslavche%2FBitMask%2Fmain)](https://dashboard.stryker-mutator.io/reports/github.com/yaroslavche/BitMask/main)
 [![PHP](http://poser.pugx.org/yaroslavche/bitmask/require/php)](https://packagist.org/packages/yaroslavche/bitmask)
 # BitMask
 
@@ -58,10 +58,12 @@ $bitmask->set(Unknown::Case); // throws an exception, only Permissions cases ava
 Exists [Bits](/src/Util/Bits.php) helper with static methods:
 
 ```php
+use BitMask\Util\Bits;
+
 $mask = 7; // 1 << 0 | 1 << 1 | 1 << 2
 $integerMostSignificantBit = Bits::getMostSignificantBit($mask); // int 2
-$arraySetBits = Bits::getSetBits($mask); // array:3 [1, 2, 4]
 $arraySetBitsIndexes = Bits::getSetBitsIndexes($mask); // array:3 [0, 1, 2]
+$arraySetBits = Bits::getSetBits($mask); // array:3 [1, 2, 4]
 $string = Bits::toString($mask); // string "111"
 $integerBit = Bits::indexToBit(16); // int 65536
 $integerIndex = Bits::bitToIndex(65536); // int 16
