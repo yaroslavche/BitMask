@@ -45,7 +45,7 @@ class BitMaskTest extends TestCase
         $bitmask->set(self::READ);
         assertEquals(self::READ, $bitmask->get());
         $this->expectException(OutOfRangeException::class);
-        $this->expectExceptionMessage((string)self::EXECUTE);
+        $this->expectExceptionMessage((string) self::EXECUTE);
         $bitmask->set(self::EXECUTE);
     }
 
@@ -65,7 +65,7 @@ class BitMaskTest extends TestCase
     {
         $bitmask = new BitMask();
         $this->expectException(NotSingleBitException::class);
-        $this->expectExceptionMessage((string)(self::READ | self::WRITE));
+        $this->expectExceptionMessage((string) (self::READ | self::WRITE));
         $bitmask->has(self::READ | self::WRITE);
     }
 
@@ -73,7 +73,7 @@ class BitMaskTest extends TestCase
     {
         $bitmask = new BitMask(0, 1);
         $this->expectException(OutOfRangeException::class);
-        $this->expectExceptionMessage((string)self::EXECUTE);
+        $this->expectExceptionMessage((string) self::EXECUTE);
         $bitmask->has(self::EXECUTE);
     }
 
@@ -91,7 +91,7 @@ class BitMaskTest extends TestCase
     {
         $bitmask = new BitMask();
         $this->expectException(NotSingleBitException::class);
-        $this->expectExceptionMessage((string)(self::READ | self::WRITE));
+        $this->expectExceptionMessage((string) (self::READ | self::WRITE));
         $bitmask->set(self::READ | self::WRITE);
     }
 
@@ -99,7 +99,7 @@ class BitMaskTest extends TestCase
     {
         $bitmask = new BitMask(0, 1);
         $this->expectException(OutOfRangeException::class);
-        $this->expectExceptionMessage((string)self::EXECUTE);
+        $this->expectExceptionMessage((string) self::EXECUTE);
         $bitmask->set(self::EXECUTE);
     }
 
@@ -118,7 +118,7 @@ class BitMaskTest extends TestCase
     {
         $bitmask = new BitMask(self::EXECUTE);
         $this->expectException(NotSingleBitException::class);
-        $this->expectExceptionMessage((string)(self::READ | self::WRITE));
+        $this->expectExceptionMessage((string) (self::READ | self::WRITE));
         $bitmask->remove(self::READ | self::WRITE);
     }
 
@@ -126,15 +126,15 @@ class BitMaskTest extends TestCase
     {
         $bitmask = new BitMask(self::WRITE, 1);
         $this->expectException(OutOfRangeException::class);
-        $this->expectExceptionMessage((string)self::EXECUTE);
+        $this->expectExceptionMessage((string) self::EXECUTE);
         $bitmask->remove(self::EXECUTE);
     }
 
     public function testToString(): void
     {
         $bitmask = new BitMask(7);
-        assertSame('7', (string)$bitmask);
+        assertSame('7', (string) $bitmask);
         $bitmask->set(8);
-        assertSame('15', (string)$bitmask);
+        assertSame('15', (string) $bitmask);
     }
 }

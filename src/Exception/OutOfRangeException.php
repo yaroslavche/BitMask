@@ -6,6 +6,4 @@ namespace BitMask\Exception;
 
 use OutOfRangeException as SplOutOfRangeException;
 
-final class OutOfRangeException extends SplOutOfRangeException implements BitMaskExceptionInterface
-{
-}
+final class OutOfRangeException extends SplOutOfRangeException implements BitMaskExceptionInterface {}

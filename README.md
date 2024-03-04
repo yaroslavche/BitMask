@@ -106,13 +106,14 @@ $ ./vendor/bin/phpstan analyse src/ -c phpstan.neon --level=9 --no-progress -vvv
 ##### PHP-CS
 ###### Code style check
 ```bash
-$ composer phpcs
-$ ./vendor/bin/phpcs
+$ composer phpcs-check
+$ ./vendor/bin/php-cs-fixer check --diff
+
 ```
 ###### Code style fix
 ```bash
-$ composer phpcbf
-$ ./vendor/bin/phpcbf
+$ composer phpcs-fix
+$ ./vendor/bin/php-cs-fixer fix
 ```
 
 ## License

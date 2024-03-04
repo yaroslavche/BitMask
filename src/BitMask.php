@@ -19,7 +19,7 @@ final class BitMask implements BitMaskInterface
 
     public function __toString(): string
     {
-        return (string)$this->mask;
+        return (string) $this->mask;
     }
 
     public function get(): int
@@ -52,8 +52,11 @@ final class BitMask implements BitMaskInterface
     /** @throws OutOfRangeException */
     private function checkMask(int $mask): void
     {
-        if ($mask < 0 || $this->mostSignificantBit && $mask >= Bits::indexToBit($this->mostSignificantBit + 1)) {
-            throw new OutOfRangeException((string)$mask);
+        if (
+            $mask < 0 ||
+            null !== $this->mostSignificantBit && $mask >= Bits::indexToBit($this->mostSignificantBit + 1)
+        ) {
+            throw new OutOfRangeException((string) $mask);
         }
     }
 
@@ -65,7 +68,7 @@ final class BitMask implements BitMaskInterface
     {
         $this->checkMask($bit);
         if (!Bits::isSingleBit($bit)) {
-            throw new NotSingleBitException((string)$bit);
+            throw new NotSingleBitException((string) $bit);
         }
     }
 }

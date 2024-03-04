@@ -15,7 +15,7 @@ final class Bits
      */
     public static function getMostSignificantBit(int $mask): int
     {
-        return (int)log($mask, 2);
+        return (int) log($mask, 2);
     }
 
     /**
@@ -50,6 +50,7 @@ final class Bits
     /**
      * single bit to index (left > right)
      * @throws NotSingleBitException
+     * @psalm-suppress PossiblyUnusedMethod
      */
     public static function bitToIndex(int $mask): int
     {
@@ -70,11 +71,12 @@ final class Bits
     public static function indexToBit(int $index): int
     {
         if ($index < 0) {
-            throw new OutOfRangeException((string)$index);
+            throw new OutOfRangeException((string) $index);
         }
         return intval(abs(1 << $index));
     }
 
+    /** @psalm-suppress PossiblyUnusedMethod */
     public static function toString(int $mask): string
     {
         return decbin($mask);
@@ -84,6 +86,7 @@ final class Bits
      * @return int[]
      * @see benchmarks/GetSetBitsIndexBench.php
      * ./vendor/bin/phpbench run benchmarks/GetSetBitsIndexBench.php --report=default
+     * @psalm-suppress PossiblyUnusedMethod
      */
     public static function getSetBitsIndexes(int $mask): array
     {
@@ -98,6 +101,7 @@ final class Bits
      * Bitwise-based check if given number is even
      * @see benchmarks/EvenOddBench.php
      * ./vendor/bin/phpbench run benchmarks/EvenOddBench.php --report=default
+     * @psalm-suppress PossiblyUnusedMethod
      */
     public static function isEvenNumber(int $number): bool
     {
@@ -108,6 +112,7 @@ final class Bits
      * Bitwise-based check if given number is odd
      * @see benchmarks/EvenOddBench.php
      * ./vendor/bin/phpbench run benchmarks/EvenOddBench.php --report=default
+     * @psalm-suppress PossiblyUnusedMethod
      */
     public static function isOddNumber(int $number): bool
     {

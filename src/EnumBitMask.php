@@ -9,6 +9,7 @@ use BitMask\Exception\UnknownEnumException;
 use BitMask\Util\Bits;
 use UnitEnum;
 
+/** @psalm-suppress UnusedClass */
 final class EnumBitMask implements BitMaskInterface
 {
     private BitMask $bitmask;
@@ -60,6 +61,7 @@ final class EnumBitMask implements BitMaskInterface
                 $bit instanceof $this->enum ?:
                 throw new UnknownEnumException(sprintf('Expected %s enum, %s provided', $this->enum, $bit::class))
         );
+        /** @psalm-var UnitEnum[] $bits */
         return $this->bitmask->has(...$this->enumToInt(...$bits));
     }
 
