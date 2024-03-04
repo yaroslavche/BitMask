@@ -17,7 +17,6 @@ use function PHPUnit\Framework\assertTrue;
 
 class BitsTest extends TestCase
 {
-
     public function testGetMostSignificantBit(): void
     {
         assertEquals(0, Bits::getMostSignificantBit(0));

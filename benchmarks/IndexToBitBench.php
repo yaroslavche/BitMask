@@ -38,7 +38,7 @@ class IndexToBitBench
 
     private function indexToBit1(int $index): int
     {
-        return (int)pow(2, $index);
+        return (int) pow(2, $index);
     }
 
     private function indexToBit2(int $index): int

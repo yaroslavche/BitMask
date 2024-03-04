@@ -6,6 +6,4 @@ namespace BitMask\Exception;
 
 use Exception;
 
-final class NotSingleBitException extends Exception implements BitMaskExceptionInterface
-{
-}
+final class NotSingleBitException extends Exception implements BitMaskExceptionInterface {}
