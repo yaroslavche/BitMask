@@ -49,7 +49,12 @@ final class EnumBitMask implements BitMaskInterface
     public function remove(UnitEnum ...$bits): void
     {
         $this->has(...$bits);
-        $this->bitmask->remove(...$this->enumToInt(...$bits));
+        foreach ($bits as $bit) {
+            if (!$this->bitmask->has(...$this->enumToInt($bit))) {
+                continue;
+            }
+            $this->bitmask->remove(...$this->enumToInt($bit));
+        }
     }
 
     /** @throws UnknownEnumException|NotSingleBitException */
