@@ -100,4 +100,44 @@ final class EnumBitMaskTest extends TestCase
         assertFalse($backedIntEnumBitmask->has(BackedInt::Create, BackedInt::Read));
         assertTrue($backedIntEnumBitmask->has(BackedInt::Update, BackedInt::Delete));
     }
+
+    public function testCreateFactory(): void
+    {
+        $enumBitmask = EnumBitMask::create(Permissions::class);
+        assertSame(0, $enumBitmask->get());
+
+        $enumBitmask = EnumBitMask::create(Permissions::class, Permissions::Create);
+        assertSame(1, $enumBitmask->get());
+
+        $enumBitmask = EnumBitMask::create(Permissions::class, Permissions::Delete);
+        assertSame(8, $enumBitmask->get());
+
+        $enumBitmask = EnumBitMask::create(Permissions::class, Permissions::Delete, Permissions::Create);
+        assertSame(9, $enumBitmask->get());
+
+        $enumBitmask = EnumBitMask::create(Permissions::class, Permissions::Create, Permissions::Delete);
+        assertSame(9, $enumBitmask->get());
+
+
+        $this->expectException(UnknownEnumException::class);
+        EnumBitMask::create(Permissions::class, Unknown::Case);
+    }
+
+    public function testNoneFactory(): void
+    {
+        $enumBitmask = EnumBitMask::none(Permissions::class);
+        assertSame(0, $enumBitmask->get());
+    }
+
+    public function testAllFactory(): void
+    {
+        $enumBitmask = EnumBitMask::all(Permissions::class);
+        assertSame(15, $enumBitmask->get());
+    }
+
+    public function testWithoutFactory(): void
+    {
+        $enumBitmask = EnumBitMask::without(Permissions::class, Permissions::Delete);
+        assertSame(7, $enumBitmask->get());
+    }
 }
