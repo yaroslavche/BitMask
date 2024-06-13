@@ -137,4 +137,14 @@ class BitMaskTest extends TestCase
         $bitmask->set(8);
         assertSame('15', (string) $bitmask);
     }
+
+    public function testRemoveTwice(): void
+    {
+        $bitmask = new BitMask(self::READ | self::WRITE | self::EXECUTE);
+        $bitmask->remove(self::READ);
+        assertFalse($bitmask->has(self::READ));
+        $bitmask->remove(self::READ);
+        assertFalse($bitmask->has(self::READ));
+        assertSame(self::WRITE | self::EXECUTE, $bitmask->get());
+    }
 }

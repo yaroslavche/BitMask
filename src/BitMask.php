@@ -37,9 +37,12 @@ final class BitMask implements BitMaskInterface
     /** @throws NotSingleBitException */
     public function remove(int ...$bits): void
     {
-        array_walk($bits, fn(int $bit) => $this->checkBit($bit));
-        array_walk($bits, fn(int $bit) => $this->mask ^= $bit);
-        // $this->mask &= ~$bit;
+        foreach ($bits as $bit) {
+            if ($this->has($bit)) {
+                $this->mask ^= $bit;
+                // $this->mask &= ~$bit;
+            }
+        }
     }
 
     /** @throws NotSingleBitException */

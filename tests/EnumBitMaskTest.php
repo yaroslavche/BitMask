@@ -80,6 +80,40 @@ final class EnumBitMaskTest extends TestCase
         $this->expectException(UnknownEnumException::class);
         $enumBitmask->remove(Unknown::Case);
     }
+    public function testSetTwice(): void
+    {
+        $enumBitmask = new EnumBitMask(Permissions::class, 3);
+        assertTrue($enumBitmask->has(Permissions::Create));
+        $enumBitmask->set(Permissions::Create);
+        assertSame(3, $enumBitmask->get());
+        assertTrue($enumBitmask->has(Permissions::Create));
+        $enumBitmask->set(Permissions::Create, Permissions::Read);
+        assertTrue($enumBitmask->has(Permissions::Create));
+        assertTrue($enumBitmask->has(Permissions::Read));
+        assertSame(3, $enumBitmask->get());
+        $enumBitmask->set(Permissions::Update);
+        assertTrue($enumBitmask->has(Permissions::Update));
+        assertSame(7, $enumBitmask->get());
+    }
+
+    public function testRemoveTwice(): void
+    {
+        $enumBitmask = new EnumBitMask(Permissions::class, 3);
+        assertTrue($enumBitmask->has(Permissions::Create));
+        $enumBitmask->remove(Permissions::Create);
+        assertSame(2, $enumBitmask->get());
+        $enumBitmask->remove(Permissions::Create);
+        assertSame(2, $enumBitmask->get());
+        $enumBitmask->remove(Permissions::Create, Permissions::Read);
+        assertSame(0, $enumBitmask->get());
+
+        $enumBitmask->set(...Permissions::cases());
+        foreach (Permissions::cases() as $case) {
+            $enumBitmask->remove($case);
+            $enumBitmask->remove($case);
+        }
+        assertSame(0, $enumBitmask->get());
+    }
 
     public function testBackedEnum(): void
     {
