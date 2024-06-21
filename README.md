@@ -55,6 +55,21 @@ $bitmask->set(Permissions::EXECUTE);
 $bitmask->set(Unknown::Case); // throws an exception, only Permissions cases available
 ```
 
+`EnumBitMask` have a factory methods:
+```php
+# Create a bit mask using one or multiple enum cases
+$bitmask = EnumBitMask::create(Permissions::class, Permissions::EXECUTE);
+
+# Create a bit mask using all enum cases
+$bitmask = EnumBitMask::all(Permissions::class);
+
+# Create a bit mask with no flags on (equivalent to create with no additional flags)
+$bitmask = EnumBitMask::none(Permissions::class);
+
+# Create a bit mask without specific flags
+$bitmask = EnumBitMask::without(Permissions::class, Permissions::EXECUTE);
+```
+
 Exists [Bits](/src/Util/Bits.php) helper with static methods:
 
 ```php
@@ -102,6 +117,12 @@ $ ./vendor/bin/phpbench run benchmarks --report=default
 ```bash
 $ composer phpstan
 $ ./vendor/bin/phpstan analyse src/ -c phpstan.neon --level=9 --no-progress -vvv --memory-limit=1024M
+```
+
+##### Psalm
+```bash
+$ composer psalm
+$ ./vendor/bin/psalm
 ```
 ##### PHP-CS
 ###### Code style check

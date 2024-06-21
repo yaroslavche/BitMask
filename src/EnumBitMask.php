@@ -29,7 +29,7 @@ final class EnumBitMask implements BitMaskInterface
             throw new UnknownEnumException('EnumBitMask enum must be subclass of UnitEnum');
         }
         foreach ($this->enum::cases() as $index => $case) {
-            $this->map[strval($case->name)] = Bits::indexToBit($index);
+            $this->map[$case->name] = Bits::indexToBit($index);
         }
         $this->bitmask = new BitMask($mask, count($this->enum::cases()) - 1);
     }
@@ -38,12 +38,11 @@ final class EnumBitMask implements BitMaskInterface
      * Create an instance with given flags on
      *
      * @param class-string $enum
-     * @throws NotSingleBitException
-     * @throws UnknownEnumException
+     * @throws UnknownEnumException|NotSingleBitException
      */
     public static function create(string $enum, UnitEnum ...$bits): self
     {
-        return (new static($enum))->set(...$bits);
+        return (new EnumBitMask($enum))->set(...$bits);
     }
 
     /**
@@ -51,8 +50,7 @@ final class EnumBitMask implements BitMaskInterface
      *
      * @psalm-suppress MixedMethodCall, MixedArgument
      * @param class-string $enum
-     * @throws NotSingleBitException
-     * @throws UnknownEnumException
+     * @throws UnknownEnumException|NotSingleBitException
      */
     public static function all(string $enum): self
     {
@@ -64,8 +62,7 @@ final class EnumBitMask implements BitMaskInterface
      *
      * @psalm-suppress PossiblyUnusedMethod
      * @param class-string $enum
-     * @throws NotSingleBitException
-     * @throws UnknownEnumException
+     * @throws UnknownEnumException|NotSingleBitException
      */
     public static function none(string $enum): self
     {
@@ -77,8 +74,7 @@ final class EnumBitMask implements BitMaskInterface
      *
      * @psalm-suppress PossiblyUnusedMethod
      * @param class-string $enum
-     * @throws NotSingleBitException
-     * @throws UnknownEnumException
+     * @throws UnknownEnumException|NotSingleBitException
      */
     public static function without(string $enum, UnitEnum ...$bits): self
     {
