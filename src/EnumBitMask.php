@@ -13,6 +13,7 @@ use UnitEnum;
 final class EnumBitMask implements BitMaskInterface
 {
     private BitMask $bitmask;
+
     /** @var array<string, int> $map case => bit */
     private array $map = [];
 
@@ -28,9 +29,56 @@ final class EnumBitMask implements BitMaskInterface
             throw new UnknownEnumException('EnumBitMask enum must be subclass of UnitEnum');
         }
         foreach ($this->enum::cases() as $index => $case) {
-            $this->map[strval($case->name)] = Bits::indexToBit($index);
+            $this->map[$case->name] = Bits::indexToBit($index);
         }
         $this->bitmask = new BitMask($mask, count($this->enum::cases()) - 1);
+    }
+
+    /**
+     * Create an instance with given flags on
+     *
+     * @param class-string $enum
+     * @throws UnknownEnumException|NotSingleBitException
+     */
+    public static function create(string $enum, UnitEnum ...$bits): self
+    {
+        return (new EnumBitMask($enum))->set(...$bits);
+    }
+
+    /**
+     * Create an instance with all flags on
+     *
+     * @psalm-suppress MixedMethodCall, MixedArgument
+     * @param class-string $enum
+     * @throws UnknownEnumException|NotSingleBitException
+     */
+    public static function all(string $enum): self
+    {
+        return self::create($enum, ...$enum::cases());
+    }
+
+    /**
+     * Create an instance with no flags on
+     *
+     * @psalm-suppress PossiblyUnusedMethod
+     * @param class-string $enum
+     * @throws UnknownEnumException|NotSingleBitException
+     */
+    public static function none(string $enum): self
+    {
+        return self::create($enum);
+    }
+
+    /**
+     * Create an instance without given flags on
+     *
+     * @psalm-suppress PossiblyUnusedMethod
+     * @param class-string $enum
+     * @throws UnknownEnumException|NotSingleBitException
+     */
+    public static function without(string $enum, UnitEnum ...$bits): self
+    {
+        return self::all($enum)->remove(...$bits);
     }
 
     public function get(): int
@@ -39,20 +87,27 @@ final class EnumBitMask implements BitMaskInterface
     }
 
     /** @throws UnknownEnumException|NotSingleBitException */
-    public function set(UnitEnum ...$bits): void
+    public function set(UnitEnum ...$bits): self
     {
         $this->has(...$bits);
         $this->bitmask->set(...$this->enumToInt(...$bits));
+
+        return $this;
     }
 
     /** @throws UnknownEnumException|NotSingleBitException */
-    public function remove(UnitEnum ...$bits): void
+    public function remove(UnitEnum ...$bits): self
     {
         $this->has(...$bits);
         $this->bitmask->remove(...$this->enumToInt(...$bits));
+
+        return $this;
     }
 
-    /** @throws UnknownEnumException|NotSingleBitException */
+    /**
+     * @psalm-suppress PossiblyUnusedReturnValue
+     * @throws UnknownEnumException|NotSingleBitException
+     */
     public function has(UnitEnum ...$bits): bool
     {
         array_walk(
