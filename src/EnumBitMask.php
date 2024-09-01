@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace BitMask;
 
+use BackedEnum;
+use BitMask\Exception\InvalidEnumException;
 use BitMask\Exception\NotSingleBitException;
 use BitMask\Exception\UnknownEnumException;
 use BitMask\Util\Bits;
@@ -19,16 +21,27 @@ final class EnumBitMask implements BitMaskInterface
 
     /**
      * @param class-string $enum
+     * @throws InvalidEnumException
      * @throws UnknownEnumException
      */
     public function __construct(
         private readonly string $enum,
         int $mask = 0,
+        bool $isIntBacked = false,
     ) {
         if (!is_subclass_of($this->enum, UnitEnum::class)) {
             throw new UnknownEnumException('EnumBitMask enum must be subclass of UnitEnum');
         }
         foreach ($this->enum::cases() as $index => $case) {
+            if ($isIntBacked) {
+                if (!is_subclass_of($this->enum, BackedEnum::class)) {
+                    throw new InvalidEnumException('Enum must be a backed enum');
+                }
+                /** @phpstan-var BackedEnum $case */
+                if (!is_int($case->value)) {
+                    throw new InvalidEnumException('Enum must be an int-backed enum with integer values');
+                }
+            }
             $this->map[$case->name] = Bits::indexToBit($index);
         }
         $this->bitmask = new BitMask($mask, count($this->enum::cases()) - 1);
@@ -38,7 +51,7 @@ final class EnumBitMask implements BitMaskInterface
      * Create an instance with given flags on
      *
      * @param class-string $enum
-     * @throws UnknownEnumException|NotSingleBitException
+     * @throws UnknownEnumException|NotSingleBitException|InvalidEnumException
      */
     public static function create(string $enum, UnitEnum ...$bits): self
     {
@@ -50,7 +63,7 @@ final class EnumBitMask implements BitMaskInterface
      *
      * @psalm-suppress MixedMethodCall, MixedArgument
      * @param class-string $enum
-     * @throws UnknownEnumException|NotSingleBitException
+     * @throws UnknownEnumException|NotSingleBitException|InvalidEnumException
      */
     public static function all(string $enum): self
     {
@@ -62,7 +75,7 @@ final class EnumBitMask implements BitMaskInterface
      *
      * @psalm-suppress PossiblyUnusedMethod
      * @param class-string $enum
-     * @throws UnknownEnumException|NotSingleBitException
+     * @throws UnknownEnumException|NotSingleBitException|InvalidEnumException
      */
     public static function none(string $enum): self
     {
@@ -74,7 +87,7 @@ final class EnumBitMask implements BitMaskInterface
      *
      * @psalm-suppress PossiblyUnusedMethod
      * @param class-string $enum
-     * @throws UnknownEnumException|NotSingleBitException
+     * @throws UnknownEnumException|NotSingleBitException|InvalidEnumException
      */
     public static function without(string $enum, UnitEnum ...$bits): self
     {

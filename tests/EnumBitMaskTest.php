@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace BitMask\Tests;
 
 use BitMask\EnumBitMask;
+use BitMask\Exception\InvalidEnumException;
 use BitMask\Exception\OutOfRangeException;
 use BitMask\Exception\UnknownEnumException;
 use BitMask\Tests\fixtures\Enum\BackedInt;
@@ -173,5 +174,26 @@ final class EnumBitMaskTest extends TestCase
     {
         $enumBitmask = EnumBitMask::without(Permissions::class, Permissions::Delete);
         assertSame(7, $enumBitmask->get());
+    }
+
+    public function testIsIntBackedEnumInvalidEnum(): void
+    {
+        // UnitEnum
+        $this->expectException(InvalidEnumException::class);
+        new EnumBitMask(Permissions::class, 3, isIntBacked: true);
+    }
+
+    public function testIsIntBackedEnum(): void
+    {
+        // backed int
+        $backedIntEnumBitmask = new EnumBitMask(BackedInt::class, 3, isIntBacked: true);
+        assertTrue($backedIntEnumBitmask->has(BackedInt::Create, BackedInt::Read));
+        assertFalse($backedIntEnumBitmask->has(BackedInt::Update, BackedInt::Delete));
+
+        // backed string
+        $this->expectException(InvalidEnumException::class);
+        $backedStringEnumBitmask = new EnumBitMask(BackedString::class, 3, isIntBacked: true);
+        assertTrue($backedStringEnumBitmask->has(BackedString::Create, BackedString::Read));
+        assertFalse($backedStringEnumBitmask->has(BackedString::Update, BackedString::Delete));
     }
 }
