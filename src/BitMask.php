@@ -39,8 +39,7 @@ final class BitMask implements BitMaskInterface
     {
         foreach ($bits as $bit) {
             if ($this->has($bit)) {
-                $this->mask ^= $bit;
-                // $this->mask &= ~$bit;
+                $this->mask &= ~$bit;
             }
         }
     }
