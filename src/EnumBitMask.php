@@ -11,7 +11,6 @@ use BitMask\Exception\UnknownEnumException;
 use BitMask\Util\Bits;
 use UnitEnum;
 
-/** @psalm-suppress UnusedClass */
 final class EnumBitMask implements BitMaskInterface
 {
     private BitMask $bitmask;
@@ -27,24 +26,36 @@ final class EnumBitMask implements BitMaskInterface
     public function __construct(
         private readonly string $enum,
         int $mask = 0,
-        bool $isIntBacked = false,
     ) {
         if (!is_subclass_of($this->enum, UnitEnum::class)) {
             throw new UnknownEnumException('EnumBitMask enum must be subclass of UnitEnum');
         }
-        foreach ($this->enum::cases() as $index => $case) {
-            if ($isIntBacked) {
-                if (!is_subclass_of($this->enum, BackedEnum::class)) {
-                    throw new InvalidEnumException('Enum must be a backed enum');
-                }
-                /** @phpstan-var BackedEnum $case */
-                if (!is_int($case->value)) {
+
+        $reflection = new \ReflectionEnum($this->enum);
+        /** @var null|\ReflectionNamedType $backingType */
+        $backingType = $reflection->getBackingType();
+        $backingTypeName = $backingType?->getName();
+        if ($reflection->isBacked() && $backingTypeName === 'int') {
+            /** @var \ReflectionEnumBackedCase $case */
+            foreach ($reflection->getCases() as $case) {
+                $value = $case->getBackingValue();
+                if (!is_int($value)) {
                     throw new InvalidEnumException('Enum must be an int-backed enum with integer values');
                 }
+
+                if (!Bits::isSingleBit($value)) {
+                    throw new InvalidEnumException(sprintf('Enum case "%s" value is not a single bit', $case->name));
+                }
+
+                $this->map[$case->name] = $value;
             }
-            $this->map[$case->name] = Bits::indexToBit($index);
+        } else {
+            foreach ($this->enum::cases() as $index => $case) {
+                $this->map[$case->name] = Bits::indexToBit($index);
+            }
         }
-        $this->bitmask = new BitMask($mask, count($this->enum::cases()) - 1);
+
+        $this->bitmask = new BitMask($mask, count($this->map) > 0 ? Bits::getMostSignificantBit(max($this->map)) : null);
     }
 
     /**
@@ -55,7 +66,7 @@ final class EnumBitMask implements BitMaskInterface
      */
     public static function create(string $enum, UnitEnum ...$bits): self
     {
-        return (new EnumBitMask($enum))->set(...$bits);
+        return (new self($enum))->set(...$bits);
     }
 
     /**
@@ -79,7 +90,7 @@ final class EnumBitMask implements BitMaskInterface
      */
     public static function none(string $enum): self
     {
-        return self::create($enum);
+        return new self($enum);
     }
 
     /**
@@ -94,6 +105,7 @@ final class EnumBitMask implements BitMaskInterface
         return self::all($enum)->remove(...$bits);
     }
 
+    #[\Override]
     public function get(): int
     {
         return $this->bitmask->get();

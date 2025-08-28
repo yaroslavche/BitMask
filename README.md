@@ -34,25 +34,44 @@ $bitmask->set(EXECUTE);
 ```
 
 Exists [EnumBitMask](/src/EnumBitMask.php), which allows the same using PHP enum:
+The `EnumBitMask` allows you to work with bitmasks using PHP enums. It automatically detects if an enum is `int`-backed and uses the case's value. For `int`-backed enums, each case **must represent a single bit value** (e.g., 1, 2, 4, 8, etc.). Otherwise, an `InvalidEnumException` will be thrown.
 
 ```php
 use BitMask\EnumBitMask;
 
 enum Permissions
 {
-    case READ;
-    case WRITE;
-    case EXECUTE;
+    case READ; // Mapped to 1
+    case WRITE; // Mapped to 2
+    case EXECUTE; // Mapped to 4
 }
 
-// two arguments: required enum class-string and integer mask (default: 0)
+// Automatically maps UnitEnum based on their position
 $bitmask = new EnumBitMask(Permissions::class, 0b111);
 echo sprintf('mask: %d', $bitmask->get()); // mask: 7
 if ($bitmask->has(Permissions::READ)) {}
 $bitmask->remove(Permissions::EXECUTE);
 $bitmask->set(Permissions::EXECUTE);
 
-$bitmask->set(Unknown::Case); // throws an exception, only Permissions cases available
+// Works with int-backed enums
+enum Flags: int
+{
+    case User = 1;      // 0b001
+    case Admin = 8;     // 0b1000
+    case Guest = 32;    // 0b100000
+}
+
+$flagmask = new EnumBitMask(Flags::class, Flags::User | Flags::Admin);
+echo sprintf('mask: %d', $flagmask->get()); // mask: 9
+$flagmask->set(Flags::Guest);
+
+// Throws an InvalidEnumException if a value is not a single bit
+enum BadFlags: int
+{
+    case Bad = 3; // 0b11 - not a single bit
+}
+
+new EnumBitMask(BadFlags::class, 3); // Throws InvalidEnumException
 ```
 
 `EnumBitMask` have a factory methods:

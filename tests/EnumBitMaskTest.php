@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace BitMask\Tests;
 
 use BitMask\EnumBitMask;
-use BitMask\Exception\InvalidEnumException;
 use BitMask\Exception\OutOfRangeException;
 use BitMask\Exception\UnknownEnumException;
-use BitMask\Tests\fixtures\Enum\BackedInt;
 use BitMask\Tests\fixtures\Enum\BackedString;
+use BitMask\Tests\fixtures\Enum\EmptyEnum;
 use BitMask\Tests\fixtures\Enum\Permissions;
+use BitMask\Tests\fixtures\Enum\RandomBackedInt;
 use BitMask\Tests\fixtures\Enum\Unknown;
 use PHPUnit\Framework\TestCase;
 
@@ -116,9 +116,8 @@ final class EnumBitMaskTest extends TestCase
         assertSame(0, $enumBitmask->get());
     }
 
-    public function testBackedEnum(): void
+    public function testBackedStringEnum(): void
     {
-        // backed string
         $backedStringEnumBitmask = new EnumBitMask(BackedString::class, 3);
         assertTrue($backedStringEnumBitmask->has(BackedString::Create, BackedString::Read));
         assertFalse($backedStringEnumBitmask->has(BackedString::Update, BackedString::Delete));
@@ -126,14 +125,6 @@ final class EnumBitMaskTest extends TestCase
         $backedStringEnumBitmask->set(BackedString::Update, BackedString::Delete);
         assertFalse($backedStringEnumBitmask->has(BackedString::Create, BackedString::Read));
         assertTrue($backedStringEnumBitmask->has(BackedString::Update, BackedString::Delete));
-        // backed int
-        $backedIntEnumBitmask = new EnumBitMask(BackedInt::class, 3);
-        assertTrue($backedIntEnumBitmask->has(BackedInt::Create, BackedInt::Read));
-        assertFalse($backedIntEnumBitmask->has(BackedInt::Update, BackedInt::Delete));
-        $backedIntEnumBitmask->remove(BackedInt::Create, BackedInt::Read);
-        $backedIntEnumBitmask->set(BackedInt::Update, BackedInt::Delete);
-        assertFalse($backedIntEnumBitmask->has(BackedInt::Create, BackedInt::Read));
-        assertTrue($backedIntEnumBitmask->has(BackedInt::Update, BackedInt::Delete));
     }
 
     public function testCreateFactory(): void
@@ -176,24 +167,36 @@ final class EnumBitMaskTest extends TestCase
         assertSame(7, $enumBitmask->get());
     }
 
-    public function testIsIntBackedEnumInvalidEnum(): void
+    public function testIsIntBackedEnumRandom(): void
     {
-        // UnitEnum
-        $this->expectException(InvalidEnumException::class);
-        new EnumBitMask(Permissions::class, 3, isIntBacked: true);
+        // random backed int
+        $backedIntEnumBitmask = new EnumBitMask(RandomBackedInt::class, 17);
+        assertTrue($backedIntEnumBitmask->has(RandomBackedInt::Bit1, RandomBackedInt::Bit3));
+        assertFalse($backedIntEnumBitmask->has(RandomBackedInt::Bit2));
     }
 
-    public function testIsIntBackedEnum(): void
+    public function testIsIntBackedEnumRandom2(): void
     {
-        // backed int
-        $backedIntEnumBitmask = new EnumBitMask(BackedInt::class, 3, isIntBacked: true);
-        assertTrue($backedIntEnumBitmask->has(BackedInt::Create, BackedInt::Read));
-        assertFalse($backedIntEnumBitmask->has(BackedInt::Update, BackedInt::Delete));
+        // random backed int
+        $enumBitmask = new EnumBitMask(RandomBackedInt::class);
+        $enumBitmask->set(RandomBackedInt::Bit3, RandomBackedInt::Bit4);
+        assertTrue($enumBitmask->has(RandomBackedInt::Bit3, RandomBackedInt::Bit4));
+    }
 
-        // backed string
-        $this->expectException(InvalidEnumException::class);
-        $backedStringEnumBitmask = new EnumBitMask(BackedString::class, 3, isIntBacked: true);
-        assertTrue($backedStringEnumBitmask->has(BackedString::Create, BackedString::Read));
-        assertFalse($backedStringEnumBitmask->has(BackedString::Update, BackedString::Delete));
+    public function testWithNormalUnitEnum(): void
+    {
+        $bitmask = new EnumBitMask(Permissions::class, 1);
+        $this->assertInstanceOf(EnumBitMask::class, $bitmask);
+        $this->assertTrue($bitmask->has(Permissions::Create));
+        $this->assertFalse($bitmask->has(Permissions::Delete));
+        $bitmask->set(Permissions::Delete);
+        $this->assertTrue($bitmask->has(Permissions::Delete));
+    }
+
+    public function testWithEmptyEnum(): void
+    {
+        $bitmask = new EnumBitMask(EmptyEnum::class);
+        $this->assertInstanceOf(EnumBitMask::class, $bitmask);
+        $this->assertSame(0, $bitmask->get());
     }
 }
