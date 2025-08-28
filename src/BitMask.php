@@ -22,6 +22,7 @@ final class BitMask implements BitMaskInterface
         return (string) $this->mask;
     }
 
+    #[\Override]
     public function get(): int
     {
         return $this->mask;

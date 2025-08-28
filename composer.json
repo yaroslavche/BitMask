@@ -19,9 +19,9 @@
     "phpstan/phpstan": "*",
     "thecodingmachine/phpstan-strict-rules": "*",
     "infection/infection": "*",
-    "vimeo/psalm": "^5.22",
-    "psalm/plugin-phpunit": "^0.18.4",
-    "friendsofphp/php-cs-fixer": "^3.51"
+    "vimeo/psalm": "*",
+    "psalm/plugin-phpunit": "*",
+    "friendsofphp/php-cs-fixer": "*"
   },
   "authors": [
     {
