@@ -11,6 +11,8 @@ final class Bits
 {
     /**
      * get most significant bit position (right -> left, index)
+     * @see benchmarks/MostSignificantBitBench.php
+     * ./vendor/bin/phpbench run benchmarks/MostSignificantBitBench.php --report=default
      * @example 10001 -> 4, 0010 -> 1, 00100010 -> 5
      */
     public static function getMostSignificantBit(int $mask): int
@@ -20,18 +22,18 @@ final class Bits
 
     /**
      * get array of set bits
-     * @example 10010 => [2, 16], 111 => [1, 2, 4]
      * @return int[]
+     * @example 10010 => [2, 16], 111 => [1, 2, 4]
+     * @psalm-suppress PossiblyUnusedMethod
      */
     public static function getSetBits(int $mask): array
     {
         $bits = [];
-        $scan = 1;
-        while ($mask >= $scan) {
-            if ($mask & $scan) {
-                $bits[] = $scan;
-            }
-            $scan <<= 1;
+        $tempMask = $mask;
+        while ($tempMask > 0) {
+            $lsb = $tempMask & (~$tempMask + 1);
+            $bits[] = $lsb;
+            $tempMask ^= $lsb;
         }
         return $bits;
     }
@@ -44,7 +46,7 @@ final class Bits
      */
     public static function isSingleBit(int $mask): bool
     {
-        return 1 << Bits::getMostSignificantBit($mask) === $mask;
+        return $mask !== 0 && ($mask & ($mask - 1)) === 0;
     }
 
     /**
@@ -62,18 +64,17 @@ final class Bits
 
     /**
      * index to single bit
-     * @example 0 => 0b1 (1), 1 => 0b10 (2), 2 => 0b100 (4), ...
+     * @throws OutOfRangeException
      * @see benchmarks/IndexToBitBench.php
      * ./vendor/bin/phpbench run benchmarks/IndexToBitBench.php --report=default
-     *
-     * @throws OutOfRangeException
+     * @example 0 => 0b1 (1), 1 => 0b10 (2), 2 => 0b100 (4), ...
      */
     public static function indexToBit(int $index): int
     {
         if ($index < 0) {
             throw new OutOfRangeException((string) $index);
         }
-        return intval(abs(1 << $index));
+        return 1 << $index;
     }
 
     /** @psalm-suppress PossiblyUnusedMethod */
@@ -91,8 +92,13 @@ final class Bits
     public static function getSetBitsIndexes(int $mask): array
     {
         $bitIndexes = [];
-        foreach (self::getSetBits($mask) as $index => $bit) {
-            $bitIndexes[$index] = self::getMostSignificantBit($bit);
+        $i = 0;
+        while ($mask > 0) {
+            if (($mask & 1) !== 0) {
+                $bitIndexes[] = $i;
+            }
+            $mask >>= 1;
+            $i++;
         }
         return $bitIndexes;
     }

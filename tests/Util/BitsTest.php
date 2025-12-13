@@ -19,6 +19,8 @@ class BitsTest extends TestCase
 {
     public function testGetMostSignificantBit(): void
     {
+        assertEquals(0, Bits::getMostSignificantBit(PHP_INT_MIN));
+        assertEquals(0, Bits::getMostSignificantBit(-1));
         assertEquals(0, Bits::getMostSignificantBit(0));
         assertEquals(0, Bits::getMostSignificantBit(1));
         assertEquals(3, Bits::getMostSignificantBit(8));
@@ -31,21 +33,20 @@ class BitsTest extends TestCase
         assertEquals([], Bits::getSetBits(0));
         assertEquals([1, 2, 4], Bits::getSetBits(7));
         assertEquals([2, 16], Bits::getSetBits(0b10010));
-        assertEquals([1], Bits::getSetBits(1)); // Util/Bits.php:31 [M] GreaterThanOrEqualTo
-        assertEquals([2], Bits::getSetBits(2)); // Util/Bits.php:32 [M] BitwiseAnd
+        assertEquals([1], Bits::getSetBits(1));
+        assertEquals([2], Bits::getSetBits(2));
     }
 
     public function testIsSingleBit(): void
     {
+        assertFalse(Bits::isSingleBit(0));
         assertTrue(Bits::isSingleBit(8));
         assertFalse(Bits::isSingleBit(7));
     }
 
     public function testBitToIndex(): void
     {
-        // single bit
         assertEquals(3, Bits::bitToIndex(8));
-        // not single bit
         try {
             $result = Bits::bitToIndex(7);
             assertNull($result);
@@ -56,10 +57,11 @@ class BitsTest extends TestCase
 
     public function testIndexToBit(): void
     {
-        // valid index
         assertEquals(8, Bits::indexToBit(3));
-        assertEquals(1, Bits::indexToBit(0)); // Bits.php:103 [M] LessThan
-        // invalid index
+        assertEquals(1, Bits::indexToBit(0));
+        $validMaxIndex = PHP_INT_SIZE * 8 - 1;
+        $expectedMaxBit = 1 << $validMaxIndex;
+        assertEquals($expectedMaxBit, Bits::indexToBit($validMaxIndex));
         try {
             Bits::indexToBit(-1);
         } catch (OutOfRangeException $exception) {
@@ -74,6 +76,7 @@ class BitsTest extends TestCase
 
     public function testGetSetBitsIndexes(): void
     {
+        assertEquals([], Bits::getSetBitsIndexes(0));
         assertEquals([0, 1, 2], Bits::getSetBitsIndexes(7));
     }
 
@@ -87,5 +90,61 @@ class BitsTest extends TestCase
     {
         assertTrue(Bits::isOddNumber(3));
         assertFalse(Bits::isOddNumber(4));
+    }
+
+    public function testGetMostSignificantBitWithNegativeAndBoundary(): void
+    {
+        assertEquals(0, Bits::getMostSignificantBit(0));
+        assertEquals(0, Bits::getMostSignificantBit(-1));
+        assertEquals(0, Bits::getMostSignificantBit(-2));
+    }
+
+    public function testIsSingleBitWithNegative(): void
+    {
+        assertFalse(Bits::isSingleBit(-1));
+        assertFalse(Bits::isSingleBit(-(1 << 3)));
+    }
+
+    public function testIndexToBitOutOfRange(): void
+    {
+        try {
+            Bits::indexToBit(-1);
+            $this->fail('Expected OutOfRangeException for index -1');
+        } catch (OutOfRangeException $exception) {
+            assertSame("-1", $exception->getMessage());
+        }
+    }
+
+    public function testGetSetBitsIndexesBoundary(): void
+    {
+        $maxValidIndex = PHP_INT_SIZE * 8 - 2;
+        $expectedIndices = range(0, $maxValidIndex);
+
+        assertEquals($expectedIndices, Bits::getSetBitsIndexes(PHP_INT_MAX));
+        assertSame($maxValidIndex + 1, count(Bits::getSetBitsIndexes(PHP_INT_MAX)));
+
+        $mask63 = 1 << (PHP_INT_SIZE * 8 - 1);
+        assertEquals([], Bits::getSetBitsIndexes($mask63));
+        assertSame(0, count(Bits::getSetBitsIndexes($mask63)));
+        assertEquals([], Bits::getSetBits($mask63));
+        assertSame(0, count(Bits::getSetBits($mask63)));
+
+        $mask62 = 1 << (PHP_INT_SIZE * 8 - 2);
+        assertEquals([PHP_INT_SIZE * 8 - 2], Bits::getSetBitsIndexes($mask62));
+        assertSame(1, count(Bits::getSetBitsIndexes($mask62)));
+        assertEquals([1 << PHP_INT_SIZE * 8 - 2], Bits::getSetBits($mask62));
+        assertSame(1, count(Bits::getSetBits($mask62)));
+
+        $mask0 = 0;
+        assertEquals([], Bits::getSetBitsIndexes($mask0));
+        assertSame(0, count(Bits::getSetBitsIndexes($mask0)));
+        assertEquals([], Bits::getSetBits($mask0));
+        assertSame(0, count(Bits::getSetBits($mask0)));
+    }
+
+    public function testGetSetBitsIndexesNegative(): void
+    {
+        $mask = -1;
+        assertEquals([], Bits::getSetBitsIndexes($mask));
     }
 }
