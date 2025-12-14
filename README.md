@@ -1,165 +1,117 @@
+[![PHP](http://poser.pugx.org/yaroslavche/bitmask/require/php)](https://packagist.org/packages/yaroslavche/bitmask)
+[![Latest Stable Version](https://poser.pugx.org/yaroslavche/bitmask/v/stable)](https://packagist.org/packages/yaroslavche/bitmask)
 [![PHP build](https://github.com/yaroslavche/BitMask/actions/workflows/php.yml/badge.svg)](https://github.com/yaroslavche/BitMask/actions/workflows/php.yml)
 [![codecov](https://codecov.io/gh/yaroslavche/bitmask/branch/main/graph/badge.svg)](https://codecov.io/gh/yaroslavche/bitmask)
 [![Infection MSI](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Fyaroslavche%2FBitMask%2Fmain)](https://dashboard.stryker-mutator.io/reports/github.com/yaroslavche/BitMask/main)
-[![PHP](http://poser.pugx.org/yaroslavche/bitmask/require/php)](https://packagist.org/packages/yaroslavche/bitmask)
+[![Total Downloads](https://poser.pugx.org/yaroslavche/bitmask/downloads)](https://packagist.org/packages/yaroslavche/bitmask)
 # BitMask
 
-PHP library for working with bitmask values
+Lightweight PHP library for working with bitmask values with support for PHP enums.
 
-## Getting Started
-Usually enough for checking bits: 
+- Zero dependencies
+- PHP ≥ 8.1
+- Enum-friendly
+- Strict validation (single-bit guarantees)
+
+## Installation
+
+```bash
+composer require yaroslavche/bitmask
+```
+
+## Why BitMask?
+
+Classic bitmask operations are simple but quickly become error-prone and hard to read:
 ```php
+$mask &= ~EXECUTE;
+$mask |= READ | WRITE;
+```
+BitMask provides a small, explicit API and optional enum-based safety without hiding how bitmasks actually work.
+
+## Basic Usage
+```php
+use BitMask\BitMask;
+
 define('READ', 1 << 0);
 define('WRITE', 1 << 1);
 define('EXECUTE', 1 << 2);
 
-$mask = READ | WRITE | EXECUTE;
-echo sprintf('mask: %d', $mask); // mask: 7
-if ($mask & READ) {} // if $mask has a single bit READ
-$mask &= ~EXECUTE; // remove a single bit from the $mask
-$mask |= EXECUTE; // set a single bit to the $mask
-```
+$bitmask = new BitMask(READ | WRITE);
 
-But you can try other way with this package:
-
-```php
-use BitMask\BitMask;
-
-// two arguments: integer mask (default: 0) and most significant bit for boundaries (default: null) 
-$bitmask = new BitMask(READ | WRITE | EXECUTE);
-echo sprintf('mask: %d', $bitmask->get()); // mask: 7
-if ($bitmask->has(READ)) {}
-$bitmask->remove(EXECUTE);
 $bitmask->set(EXECUTE);
+$bitmask->remove(WRITE);
+
+if ($bitmask->has(READ)) {
+// ...
+}
+
+echo $bitmask->get(); // 5
 ```
 
-Exists [EnumBitMask](/src/EnumBitMask.php), which allows the same using PHP enum:
-The `EnumBitMask` allows you to work with bitmasks using PHP enums. It automatically detects if an enum is `int`-backed and uses the case's value. For `int`-backed enums, each case **must represent a single bit value** (e.g., 1, 2, 4, 8, etc.). Otherwise, an `InvalidEnumException` will be thrown.
+## EnumBitMask (recommended)
 
+Work with bitmasks using PHP enums.
+### Unit enums (auto-mapped)
 ```php
 use BitMask\EnumBitMask;
 
 enum Permissions
 {
-    case READ; // Mapped to 1
-    case WRITE; // Mapped to 2
-    case EXECUTE; // Mapped to 4
+    case READ;
+    case WRITE;
+    case EXECUTE;
 }
 
-// Automatically maps UnitEnum based on their position
-$bitmask = new EnumBitMask(Permissions::class, 0b111);
-echo sprintf('mask: %d', $bitmask->get()); // mask: 7
-if ($bitmask->has(Permissions::READ)) {}
-$bitmask->remove(Permissions::EXECUTE);
-$bitmask->set(Permissions::EXECUTE);
+$mask = new EnumBitMask(Permissions::class);
 
-// Works with int-backed enums
+$mask->set(Permissions::READ);
+$mask->set(Permissions::EXECUTE);
+
+$mask->has(Permissions::WRITE); // false
+$mask->get(); // 5
+```
+Enum cases are mapped automatically based on their position:
+`READ` → `1`, `WRITE` → `2`, `EXECUTE` → `4`.
+
+### Int-backed enums
+```php
 enum Flags: int
 {
-    case User = 1;      // 0b001
-    case Admin = 8;     // 0b1000
-    case Guest = 32;    // 0b100000
+    case User  = 1;   // 0b0001
+    case Admin = 8;   // 0b1000
 }
 
-$flagmask = new EnumBitMask(Flags::class, Flags::User | Flags::Admin);
-echo sprintf('mask: %d', $flagmask->get()); // mask: 9
-$flagmask->set(Flags::Guest);
-
-// Throws an InvalidEnumException if a value is not a single bit
-enum BadFlags: int
-{
-    case Bad = 3; // 0b11 - not a single bit
-}
-
-new EnumBitMask(BadFlags::class, 3); // Throws InvalidEnumException
+$mask = new EnumBitMask(Flags::class, Flags::User | Flags::Admin);
+$mask->get(); // 9
 ```
+Each enum value must represent a single bit.
+Otherwise, an `InvalidEnumException` will be thrown.
 
-`EnumBitMask` have a factory methods:
+## Factory Methods
 ```php
-# Create a bit mask using one or multiple enum cases
-$bitmask = EnumBitMask::create(Permissions::class, Permissions::EXECUTE);
-
-# Create a bit mask using all enum cases
-$bitmask = EnumBitMask::all(Permissions::class);
-
-# Create a bit mask with no flags on (equivalent to create with no additional flags)
-$bitmask = EnumBitMask::none(Permissions::class);
-
-# Create a bit mask without specific flags
-$bitmask = EnumBitMask::without(Permissions::class, Permissions::EXECUTE);
+EnumBitMask::create(Permissions::class, Permissions::READ, Permissions::EXECUTE);
+EnumBitMask::all(Permissions::class);
+EnumBitMask::none(Permissions::class);
+EnumBitMask::without(Permissions::class, Permissions::EXECUTE);
 ```
 
-Exists [Bits](/src/Util/Bits.php) helper with static methods:
+## Bits Helper
 
+Low-level static helpers for working with integer bitmasks.
 ```php
 use BitMask\Util\Bits;
 
-$mask = 7; // 1 << 0 | 1 << 1 | 1 << 2
-$integerMostSignificantBit = Bits::getMostSignificantBit($mask); // int 2
-$arraySetBitsIndexes = Bits::getSetBitsIndexes($mask); // array:3 [0, 1, 2]
-$arraySetBits = Bits::getSetBits($mask); // array:3 [1, 2, 4]
-$string = Bits::toString($mask); // string "111"
-$integerBit = Bits::indexToBit(16); // int 65536
-$integerIndex = Bits::bitToIndex(65536); // int 16
-$boolIsSingleBit = Bits::isSingleBit(8); // true
-```
-
-## Installing
-
-Install package via [composer](https://getcomposer.org/) 
-```bash
-composer require yaroslavche/bitmask
+Bits::getMostSignificantBit(7); // 2
+Bits::getSetBitsIndexes(7);     // [0, 1, 2]
+Bits::getSetBits(7);            // [1, 2, 4]
+Bits::toString(7);              // "111"
+Bits::isSingleBit(8);           // true
 ```
 
 ## Contributing
 
-Feel free to fork or contribute =)
-
-#### CI build
-```shell
-$ composer ci:pack
-```
-
-#### Tests
-##### PHPUnit
-```shell
-$ composer phpunit
-$ ./vendor/bin/phpunit
-```
-##### Infection
-```shell
-$ composer infection
-$ ./vendor/bin/infection --min-msi=100 --min-covered-msi=100
-```
-#### Benchmarks
-```shell
-$ composer phpbench
-$ ./vendor/bin/phpbench run benchmarks --report=default
-```
-#### Static analyzer and code style
-##### PHPStan
-```shell
-$ composer phpstan
-$ ./vendor/bin/phpstan analyse src/ -c phpstan.neon --level=9 --no-progress -vvv --memory-limit=1024M
-```
-
-##### Psalm
-```shell
-$ composer psalm
-$ ./vendor/bin/psalm
-```
-##### PHP-CS
-###### Code style check
-```shell
-$ composer phpcs-check
-$ ./vendor/bin/php-cs-fixer check --diff
-
-```
-###### Code style fix
-```shell
-$ composer phpcs-fix
-$ ./vendor/bin/php-cs-fixer fix
-```
+Development and contribution guidelines are described in
+[CONTRIBUTING.md](CONTRIBUTING.md)
 
 ## License
 
